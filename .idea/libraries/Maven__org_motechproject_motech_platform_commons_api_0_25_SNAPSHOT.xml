@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.motechproject:motech-platform-commons-api:0.25-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/motechproject/motech-platform-commons-api/0.25-SNAPSHOT/motech-platform-commons-api-0.25-20140827.133907-41.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/motechproject/motech-platform-commons-api/0.25-SNAPSHOT/motech-platform-commons-api-0.25-20140827.133907-41-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/motechproject/motech-platform-commons-api/0.25-SNAPSHOT/motech-platform-commons-api-0.25-20140827.133907-41-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

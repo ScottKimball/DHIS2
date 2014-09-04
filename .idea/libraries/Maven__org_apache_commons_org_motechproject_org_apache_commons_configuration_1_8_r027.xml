@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.apache.commons:org.motechproject.org.apache.commons.configuration:1.8-r027">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/commons/org.motechproject.org.apache.commons.configuration/1.8-r027/org.motechproject.org.apache.commons.configuration-1.8-r027.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/commons/org.motechproject.org.apache.commons.configuration/1.8-r027/org.motechproject.org.apache.commons.configuration-1.8-r027-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/commons/org.motechproject.org.apache.commons.configuration/1.8-r027/org.motechproject.org.apache.commons.configuration-1.8-r027-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

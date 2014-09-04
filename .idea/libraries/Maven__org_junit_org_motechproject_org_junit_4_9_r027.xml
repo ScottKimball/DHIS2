@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.junit:org.motechproject.org.junit:4.9-r027">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/junit/org.motechproject.org.junit/4.9-r027/org.motechproject.org.junit-4.9-r027.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/junit/org.motechproject.org.junit/4.9-r027/org.motechproject.org.junit-4.9-r027-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/junit/org.motechproject.org.junit/4.9-r027/org.motechproject.org.junit-4.9-r027-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

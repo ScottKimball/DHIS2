@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.codehaus.jackson:org.motechproject.org.codehaus.jackson:1.9.7-r027">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/jackson/org.motechproject.org.codehaus.jackson/1.9.7-r027/org.motechproject.org.codehaus.jackson-1.9.7-r027.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/jackson/org.motechproject.org.codehaus.jackson/1.9.7-r027/org.motechproject.org.codehaus.jackson-1.9.7-r027-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/jackson/org.motechproject.org.codehaus.jackson/1.9.7-r027/org.motechproject.org.codehaus.jackson-1.9.7-r027-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

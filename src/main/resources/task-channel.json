@@ -1,0 +1,72 @@
+{
+    "displayName": "DHIS2",
+    "moduleName": "${project.artifactId}",
+    "moduleVersion": "${parsedVersion.osgiVersion}",
+    "triggerTaskEvents" : [
+
+                            ],
+    "actionTaskEvents": [
+                            {
+                              "displayName" : "Send Individual Record",
+                              "subject" : "send_individual_record",
+                              "actionParameters" : [
+
+                                {
+                                  "key" : "value",
+                                  "displayName" : "value"
+                                },
+                                {
+                                  "key" : "name",
+                                  "displayName" : "name"
+                                },
+                                {
+                                  "key" : "subElements",
+                                  "type" : "MAP",
+                                  "displayName" : "Sub Elements",
+                                  "required": false
+                                },
+                                {
+                                  "key" : "Attributes",
+                                  "type" : "MAP",
+                                  "displayName" : "Attributes",
+                                  "required": false
+                                }
+                              ]
+                            },
+
+                            {
+                              "displayName" : "Send Aggregate Data",
+                              "subject" : "send_aggregate_data",
+                              "actionParameters" : [
+
+                                {
+                                  "key" : "value",
+                                  "displayName" : "value",
+                                  "required" : false
+                                },
+                                {
+                                  "key" : "name",
+                                  "displayName" : "Data Element Name",
+                                  "required" : false
+                                },
+                                {
+                                  "key" : "orgUnit",
+                                  "displayName" : "Org Unit",
+                                  "required" : false
+                                },
+                                {
+                                  "key" : "timePeriod",
+                                  "displayName" : "Time Period",
+                                  "required" : false
+                                },
+                                 {
+                                  "key" : "additionalParameters",
+                                  "displayName" : "Additional Parameters",
+                                  "type" : "MAP"
+                                }
+                              ]
+                            }
+
+
+                          ]
+}
