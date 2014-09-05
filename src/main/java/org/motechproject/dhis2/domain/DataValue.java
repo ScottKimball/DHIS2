@@ -1,22 +1,22 @@
 package org.motechproject.dhis2.domain;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 /**
  * Created by scott on 8/29/14.
  */
 public class DataValue {
 
     private String timePeriod;
-    private String orgUnit;
-    private String dataElement;
+    private OrgUnit orgUnit;
+    private DataElement dataElement;
+    private String value;
 
     // TODO : add data element name and data element value
 
-    public DataValue(String timePeriod, String orgUnit, String datElement) {
+    public DataValue(String timePeriod, OrgUnit orgUnit, DataElement datElement, String value) {
         this.timePeriod = timePeriod;
         this.orgUnit = orgUnit;
         this.dataElement = datElement;
+        this.value = value;
     }
 
     public String getTimePeriod() {
@@ -27,19 +27,28 @@ public class DataValue {
         this.timePeriod = timePeriod;
     }
 
-    public String getOrgUnit() {
+    public OrgUnit getOrgUnit() {
         return orgUnit;
     }
 
-    public void setOrgUnit(String orgUnit) {
+    public void setOrgUnit(OrgUnit orgUnit) {
         this.orgUnit = orgUnit;
     }
 
-    public String getDatElement() {
+    public DataElement getDatElement() {
         return dataElement;
     }
 
-    public void setDatElement(String datElement) {
+    public void setDatElement(DataElement datElement) {
         this.dataElement = datElement;
     }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
 }
+

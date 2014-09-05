@@ -1,8 +1,6 @@
 package org.motechproject.dhis2.event;
 
-import org.motechproject.dhis2.domain.DataValue;
-import org.motechproject.dhis2.domain.IndividualRecord;
-import org.motechproject.dhis2.domain.Program;
+import org.motechproject.dhis2.domain.*;
 import org.motechproject.dhis2.service.SendAggregateDataService;
 import org.motechproject.event.listener.EventRelay;
 import org.slf4j.Logger;
@@ -13,10 +11,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -25,10 +20,12 @@ import java.util.Map;
 @Component
 public class EventHandler {
 
-    private static final String ORG_UNIT = "orgUnit";
+    // hardCoded Values
+    private static final String ORG_UNIT = "OrgUnit";
     private static final String TIME_PERIOD = "timePeriod";
-    private static final String VALUE = "Int_Question";
+    private static final String NAME = "IntQuestion";
     private static final String PARAMS = "additionalParameters";
+
 
     private SendIndividualRecordService sendIndividualRecordService;
     private SendAggregateDataService sendAggregateDataService;
@@ -58,28 +55,65 @@ public class EventHandler {
     public void handleAggregateData (MotechEvent event) {
         logger.debug("Recieved Aggregate Data Event");
         logger.debug("Event details: " + event);
+
         DataValue dataValue = parseAggregateData(event);
-       sendAggregateDataService.send(dataValue);
+
+        sendAggregateDataService.send(dataValue);
     }
 
     private DataValue parseAggregateData (MotechEvent event) {
-        DataValue dataValue;
-        Map <String ,Map> parameters = (Map<String, Map>) event.getParameters().get(PARAMS);
-        Map <String, String> orgUnitMap = parameters.get(ORG_UNIT);
-        Map<String, String> timeMap = parameters.get(TIME_PERIOD);
-        //Map <String, String>
+        Map<String, Object> eventParameters =  event.getParameters();
+        Map<String, Map> params = (Map<String, Map>) eventParameters.get(PARAMS);
+        String s = params.toString();
 
-        //TODO: Add data element domain object ( name, uuid)
+        Scanner sc = new Scanner (s).useDelimiter("[^a-zA-Z0-9]");
+        String value = null;
+        String orgUnit = null;
+        String timePeriod = null;
+        boolean gotValue = false;
+        boolean gotOrgUnit = false;
+        boolean gotTimePeriod = false;
+
+        while (sc.hasNext() && !gotTimePeriod ) {
+            String temp = sc.next();
 
 
+            if (temp.equals(NAME) && !gotValue ) {
 
-        return null;
+                do {
+                   temp = sc.next();
+                    } while (!temp.equals("value"));
+
+                value = sc.next();
+                gotValue = true;
+
+
+            } else if (temp.equals(ORG_UNIT) && !gotOrgUnit ) {
+
+                do {
+                    temp = sc.next();
+                } while (!temp.equals("value"));
+
+                orgUnit =sc.next();
+                gotOrgUnit = true;
+
+            } else if (temp.equals(TIME_PERIOD)) {
+
+                do {
+                    temp = sc.next();
+                } while (!temp.equals("value"));
+
+                timePeriod = sc.next() + "-" + sc.next() + "-" + sc.next();
+                gotTimePeriod = true;
+
+            }
+
+
+        }
+
+       return null;
     }
 
-    private IndividualRecord parseIndividualRecord (MotechEvent event) {
-        // TODO:
 
-        return null;
-    }
 
 }

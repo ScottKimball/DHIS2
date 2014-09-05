@@ -18,7 +18,6 @@ public class SendAggregateDataServiceImpl implements SendAggregateDataService {
 
     public void send(DataValue dataValue) {
         logger.debug("In SendAggregateDataServiceImpl");
-        logger.debug("Data value:\n  " + dataValue);
 
         // TODO:
 
