@@ -1,6 +1,8 @@
 package org.motechproject.dhis2.event;
 
 import org.motechproject.dhis2.domain.*;
+import org.motechproject.dhis2.repository.DataElementDataService;
+import org.motechproject.dhis2.service.DataValueService;
 import org.motechproject.dhis2.service.SendAggregateDataService;
 import org.motechproject.event.listener.EventRelay;
 import org.slf4j.Logger;
@@ -20,10 +22,11 @@ import java.util.*;
 @Component
 public class EventHandler {
 
-    // hardCoded Values
+    // hard coded values from Commcare form
     private static final String ORG_UNIT = "OrgUnit";
     private static final String TIME_PERIOD = "timePeriod";
     private static final String NAME = "IntQuestion";
+    private static final String VALUE = "value";
     private static final String PARAMS = "additionalParameters";
 
 
@@ -31,13 +34,15 @@ public class EventHandler {
     private SendAggregateDataService sendAggregateDataService;
     private Logger logger = LoggerFactory.getLogger(EventHandler.class);
     private EventRelay eventRelay;
+    private DataValueService dataValueService;
 
     @Autowired
     public EventHandler( EventRelay eventRelay, SendIndividualRecordService sendIndividualRecordService,
-                         SendAggregateDataService sendAggregateDataService) {
+                         SendAggregateDataService sendAggregateDataService, DataValueService dataValueService) {
         this.sendIndividualRecordService = sendIndividualRecordService;
         this.eventRelay = eventRelay;
         this.sendAggregateDataService = sendAggregateDataService;
+        this.dataValueService = dataValueService;
     }
 
     @MotechListener(subjects = {EventSubjects.SEND_INDIVIDUAL_RECORD})
@@ -82,7 +87,7 @@ public class EventHandler {
 
                 do {
                    temp = sc.next();
-                    } while (!temp.equals("value"));
+                    } while (!temp.equals(VALUE));
 
                 value = sc.next();
                 gotValue = true;
@@ -92,7 +97,7 @@ public class EventHandler {
 
                 do {
                     temp = sc.next();
-                } while (!temp.equals("value"));
+                } while (!temp.equals(VALUE));
 
                 orgUnit =sc.next();
                 gotOrgUnit = true;
@@ -101,9 +106,9 @@ public class EventHandler {
 
                 do {
                     temp = sc.next();
-                } while (!temp.equals("value"));
+                } while (!temp.equals(VALUE));
 
-                timePeriod = sc.next() + "-" + sc.next() + "-" + sc.next();
+                timePeriod = sc.next()  + sc.next() +  sc.next();
                 gotTimePeriod = true;
 
             }
@@ -111,8 +116,12 @@ public class EventHandler {
 
         }
 
-       return null;
+       DataValue dataValue = dataValueService.create(NAME, value, orgUnit, timePeriod);
+
+       return dataValue;
     }
+
+
 
 
 

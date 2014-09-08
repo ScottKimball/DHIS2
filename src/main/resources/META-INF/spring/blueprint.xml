@@ -8,7 +8,10 @@
     <osgi:service ref="individualRecordService" interface="org.motechproject.dhis2.service.SendIndividualRecordService" />
 
     <osgi:reference id="individualRecordsDataService" interface="org.motechproject.dhis2.repository.IndividualRecordsDataService" />
+    <osgi:reference id="dataElementDataService" interface="org.motechproject.dhis2.repository.DataElementDataService" />
+    <osgi:reference id="dataValueDataService" interface="org.motechproject.dhis2.repository.DataValueDataService" />
     <osgi:reference id="orgUnitDataService" interface="org.motechproject.dhis2.repository.OrgUnitDataService" />
+
     <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay" />
     <osgi:reference id="eventListenerRegistryService" interface="org.motechproject.event.listener.EventListenerRegistryService"/>
 

@@ -4,10 +4,13 @@ import org.motechproject.dhis2.domain.OrgUnit;
 import org.motechproject.dhis2.repository.OrgUnitDataService;
 import org.motechproject.dhis2.service.OrgUnitService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by scott on 9/4/14.
  */
+
+@Service
 public class OrgUnitServiceImpl implements OrgUnitService{
 
     private OrgUnitDataService orgUnitDataService;
