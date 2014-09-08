@@ -57,13 +57,13 @@ public class EventHandler {
     }
 
     @MotechListener(subjects = {EventSubjects.SEND_AGGREGATE_DATA})
-    public void handleAggregateData (MotechEvent event) {
+    public void handleAggregateData (MotechEvent event) throws Exception{
         logger.debug("Recieved Aggregate Data Event");
         logger.debug("Event details: " + event);
 
         DataValue dataValue = parseAggregateData(event);
 
-        sendAggregateDataService.send(dataValue);
+            sendAggregateDataService.send(dataValue);
     }
 
     private DataValue parseAggregateData (MotechEvent event) {
