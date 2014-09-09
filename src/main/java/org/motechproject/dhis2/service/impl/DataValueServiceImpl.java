@@ -21,7 +21,7 @@ public class DataValueServiceImpl implements DataValueService{
     private OrgUnitDataService orgUnitDataService;
     private DataValueDataService dataValueDataService;
 
-    private static final String DATA_SET = "tbd";    // UUID for data set hardcoded in
+    private static final String DATA_SET = "yDNKJcKtXJ6";    // UUID for data set hardcoded in from "Example Data Set"
 
     @Autowired
     public DataValueServiceImpl(DataElementDataService dataElementDataService , OrgUnitDataService orgUnitDataService , DataValueDataService dataValueDataService) {
