@@ -11,6 +11,6 @@ import org.motechproject.mds.service.MotechDataService;
 public interface DataElementDataService extends MotechDataService<DataElement> {
 
     @Lookup
-    public DataElement findByName (@LookupField(name="name") String name);
+    public DataElement findByCommcareFormName(@LookupField(name = "commcareName") String commcareFormName);
 
 }

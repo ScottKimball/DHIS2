@@ -74,9 +74,9 @@ public class DataValue {
 
     @Override
     public String toString() {
-        return "dataElement : " + dataElement.getName() +
+        return "dataElement : " + dataElement.getCommcareName() +
                 "\n timePeriod : " + timePeriod +
-                "\n orgUnit : " + orgUnit.getName() +
+                "\n orgUnit : " + orgUnit.getCommcareName() +
                 "\n value : " + value +
                 "\n dataSet : " + dataSet;
     }

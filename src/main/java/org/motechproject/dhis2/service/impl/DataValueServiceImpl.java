@@ -33,7 +33,7 @@ public class DataValueServiceImpl implements DataValueService{
     @Override
     public DataValue create(String name, String value, String orgUnit, String timePeriod) {
 
-        DataElement dataValueDataElement = dataElementDataService.findByName(name);
+        DataElement dataValueDataElement = dataElementDataService.findByCommcareFormName(name);
         OrgUnit dataValueOrgUnit = orgUnitDataService.findByOrgUnitName(orgUnit);
 
         DataValue dataValue = new DataValue(timePeriod,dataValueOrgUnit, dataValueDataElement, value, DATA_SET);

@@ -2,8 +2,6 @@ package org.motechproject.dhis2.service.impl;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -13,8 +11,6 @@ import org.motechproject.dhis2.service.SendAggregateDataService;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
-
-import java.io.UnsupportedEncodingException;
 
 /**
  * Created by scott on 8/29/14.

@@ -7,8 +7,8 @@
                             ],
     "actionTaskEvents": [
                             {
-                              "displayName" : "Send Individual Record",
-                              "subject" : "send_individual_record",
+                              "displayName" : "Enroll In Program",
+                              "subject" : "enroll_in_program",
                               "actionParameters" : [
 
                                 {
@@ -16,8 +16,8 @@
                                   "displayName" : "value"
                                 },
                                 {
-                                  "key" : "name",
-                                  "displayName" : "name"
+                                  "key" : "commcareName",
+                                  "displayName" : "commcareName"
                                 },
                                 {
                                   "key" : "subElements",
@@ -45,7 +45,7 @@
                                   "required" : false
                                 },
                                 {
-                                  "key" : "name",
+                                  "key" : "commcareName",
                                   "displayName" : "Data Element Name",
                                   "required" : false
                                 },

@@ -1,13 +1,12 @@
 package org.motechproject.dhis2.event;
 
 import org.motechproject.dhis2.domain.*;
-import org.motechproject.dhis2.repository.DataElementDataService;
 import org.motechproject.dhis2.service.DataValueService;
+import org.motechproject.dhis2.service.EnrollmentService;
 import org.motechproject.dhis2.service.SendAggregateDataService;
 import org.motechproject.event.listener.EventRelay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.motechproject.dhis2.service.SendIndividualRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
@@ -29,30 +28,29 @@ public class EventHandler {
     private static final String VALUE = "value";
     private static final String PARAMS = "additionalParameters";
 
-
-    private SendIndividualRecordService sendIndividualRecordService;
     private SendAggregateDataService sendAggregateDataService;
     private Logger logger = LoggerFactory.getLogger(EventHandler.class);
     private EventRelay eventRelay;
     private DataValueService dataValueService;
+    private EnrollmentService enrollmentService;
 
     @Autowired
-    public EventHandler( EventRelay eventRelay, SendIndividualRecordService sendIndividualRecordService,
-                         SendAggregateDataService sendAggregateDataService, DataValueService dataValueService) {
-        this.sendIndividualRecordService = sendIndividualRecordService;
+    public EventHandler( EventRelay eventRelay,
+                         SendAggregateDataService sendAggregateDataService, DataValueService dataValueService, EnrollmentService enrollmentService ){
         this.eventRelay = eventRelay;
         this.sendAggregateDataService = sendAggregateDataService;
         this.dataValueService = dataValueService;
+        this.enrollmentService = enrollmentService;
     }
 
-    @MotechListener(subjects = {EventSubjects.SEND_INDIVIDUAL_RECORD})
-    public void handleIndividualRecord (MotechEvent event) {
+    @MotechListener(subjects = {EventSubjects.ENROLL_IN_PROGRAM})
+    public void handleEnrollment (MotechEvent event) {
 
-        logger.debug("Recieved Individual Record event :" );
+        logger.debug("Recieved enrollment event :" );
         logger.debug(event.toString());
 
-        // TODO:
-
+        Enrollment enrollment = buildEnrollment(event);
+        enrollmentService.send(enrollment);
 
     }
 
@@ -62,8 +60,7 @@ public class EventHandler {
         logger.debug("Event details: " + event);
 
         DataValue dataValue = parseAggregateData(event);
-
-            sendAggregateDataService.send(dataValue);
+        sendAggregateDataService.send(dataValue);
     }
 
     private DataValue parseAggregateData (MotechEvent event) {
@@ -81,7 +78,6 @@ public class EventHandler {
 
         while (sc.hasNext() && !gotTimePeriod ) {
             String temp = sc.next();
-
 
             if (temp.equals(NAME) && !gotValue ) {
 
@@ -112,8 +108,6 @@ public class EventHandler {
                 gotTimePeriod = true;
 
             }
-
-
         }
 
        DataValue dataValue = dataValueService.create(NAME, value, orgUnit, timePeriod);
@@ -121,8 +115,13 @@ public class EventHandler {
        return dataValue;
     }
 
+    private Enrollment buildEnrollment(MotechEvent event) {
 
+        logger.debug("In buildEnrollment");
 
+        // TODO:
 
+        return null;
+    }
 
 }
