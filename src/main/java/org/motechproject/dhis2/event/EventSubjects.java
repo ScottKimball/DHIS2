@@ -7,7 +7,6 @@ public final class EventSubjects {
 
     private EventSubjects() {}
 
-    public static final String SEND_INDIVIDUAL_RECORD = "send_individual_record";
     public static final String SEND_AGGREGATE_DATA = "send_aggregate_data";
     public static final String ENROLL_IN_PROGRAM = "enroll_in_program";
 

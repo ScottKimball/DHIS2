@@ -12,6 +12,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.springframework.stereotype.Component;
 
+import java.awt.*;
 import java.util.*;
 
 
@@ -21,12 +22,8 @@ import java.util.*;
 @Component
 public class EventHandler {
 
-    // hard coded values from Commcare form
-    private static final String ORG_UNIT = "OrgUnit";
-    private static final String TIME_PERIOD = "timePeriod";
-    private static final String NAME = "IntQuestion";
-    private static final String VALUE = "value";
-    private static final String PARAMS = "additionalParameters";
+
+
 
     private SendAggregateDataService sendAggregateDataService;
     private Logger logger = LoggerFactory.getLogger(EventHandler.class);
@@ -65,7 +62,7 @@ public class EventHandler {
 
     private DataValue parseAggregateData (MotechEvent event) {
         Map<String, Object> eventParameters =  event.getParameters();
-        Map<String, Map> params = (Map<String, Map>) eventParameters.get(PARAMS);
+        Map<String, Map> params = (Map<String, Map>) eventParameters.get(EventParams.PARAMS);
         String s = params.toString();
 
         Scanner sc = new Scanner (s).useDelimiter("[^a-zA-Z0-9]");
@@ -79,30 +76,30 @@ public class EventHandler {
         while (sc.hasNext() && !gotTimePeriod ) {
             String temp = sc.next();
 
-            if (temp.equals(NAME) && !gotValue ) {
+            if (temp.equals(EventParams.NAME) && !gotValue ) {
 
                 do {
                    temp = sc.next();
-                    } while (!temp.equals(VALUE));
+                    } while (!temp.equals(EventParams.VALUE));
 
                 value = sc.next();
                 gotValue = true;
 
 
-            } else if (temp.equals(ORG_UNIT) && !gotOrgUnit ) {
+            } else if (temp.equals(EventParams.ORG_UNIT) && !gotOrgUnit ) {
 
                 do {
                     temp = sc.next();
-                } while (!temp.equals(VALUE));
+                } while (!temp.equals(EventParams.VALUE));
 
                 orgUnit =sc.next();
                 gotOrgUnit = true;
 
-            } else if (temp.equals(TIME_PERIOD)) {
+            } else if (temp.equals(EventParams.TIME_PERIOD)) {
 
                 do {
                     temp = sc.next();
-                } while (!temp.equals(VALUE));
+                } while (!temp.equals(EventParams.VALUE));
 
                 timePeriod = sc.next()  + sc.next() +  sc.next();
                 gotTimePeriod = true;
@@ -110,18 +107,80 @@ public class EventHandler {
             }
         }
 
-       DataValue dataValue = dataValueService.create(NAME, value, orgUnit, timePeriod);
+       DataValue dataValue = dataValueService.create(EventParams.NAME, value, orgUnit, timePeriod);
 
        return dataValue;
     }
 
     private Enrollment buildEnrollment(MotechEvent event) {
 
+
         logger.debug("In buildEnrollment");
+
+        Map<String, Object> eventParameters =  event.getParameters();
+        Map<String, Map> params = (Map<String, Map>) eventParameters.get("subElements");
+        String s = params.toString();
+
+        Scanner sc = new Scanner (s).useDelimiter("[^a-zA-Z0-9]");
+        String lastName = null,firstName = null, gender = null,
+                location = null, nationalIdentifier = null, caseId = null, caseType = null;
+        boolean gotLastName = false;
+        boolean gotFirstName = false;
+        boolean gotGender = false;
+        boolean gotLocation = false;
+        boolean gotNationalIdentifier = false;
+        boolean gotCaseId = false;
+        boolean gotCaseType = false;
+
+
+        while (sc.hasNext() && !gotCaseId ) {
+            String temp = sc.next();
+
+            if (temp.equals(EventParams.LAST_NAME) && !gotCaseType ) {
+                lastName = findValue(sc);
+                gotLastName = true;
+
+            } else if (temp.equals(EventParams.FIRST_NAME) && !gotFirstName ) {
+                firstName = findValue(sc);
+                gotFirstName = true;
+
+            } else if (temp.equals(EventParams.GENDER) && !gotGender) {
+                gender = findValue(sc);
+                gotGender = true;
+
+            } else if (temp.equals(EventParams.LOCATION) && !gotLocation) {
+                location = findValue(sc);
+                gotLocation = true;
+
+            } else if (temp.equals(EventParams.NATIONAL_IDENTIFIER) && !gotNationalIdentifier) {
+                nationalIdentifier = findValue(sc);
+                gotNationalIdentifier = true;
+
+            } else if (temp.equals(EventParams.CASE_ID) && !gotCaseId) {
+                caseId = findValue(sc) + sc.next() +sc.next() + sc.next() + sc.next();
+                gotCaseId = true;
+
+            } else if (temp.equals(EventParams.CASE_TYPE)) {
+                caseType = findValue(sc);
+                gotCaseType = true;
+            }
+        }
+
+
 
         // TODO:
 
         return null;
+    }
+
+    private String findValue (Scanner scanner ) {
+        String temp;
+        do {
+            temp = scanner.next();
+        } while (!temp.equals(EventParams.VALUE));
+
+        return scanner.next();
+
     }
 
 }

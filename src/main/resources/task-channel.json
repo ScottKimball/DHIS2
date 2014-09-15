@@ -13,11 +13,14 @@
 
                                 {
                                   "key" : "value",
-                                  "displayName" : "value"
+                                  "displayName" : "value",
+                                  "required" : "false"
                                 },
                                 {
                                   "key" : "commcareName",
-                                  "displayName" : "commcareName"
+                                  "displayName" : "commcareName",
+                                   "required" : "false"
+                                   +
                                 },
                                 {
                                   "key" : "subElements",

@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class EnrollmentServiceImpl implements EnrollmentService {
 
+    private static final String DHIS2_URL = "";
+
 
     @Override
     public void send(Enrollment enrollment) {
