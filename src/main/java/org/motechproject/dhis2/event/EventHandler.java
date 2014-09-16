@@ -121,22 +121,18 @@ public class EventHandler {
         Map<String, Map> params = (Map<String, Map>) eventParameters.get("subElements");
         String s = params.toString();
 
-        Scanner sc = new Scanner (s).useDelimiter("[^a-zA-Z0-9]");
+        Scanner sc = new Scanner (s).useDelimiter("[^a-zA-Z0-9&&[^_-]]");
         String lastName = null,firstName = null, gender = null,
-                location = null, nationalIdentifier = null, caseId = null, caseType = null;
-        boolean gotLastName = false;
-        boolean gotFirstName = false;
-        boolean gotGender = false;
-        boolean gotLocation = false;
-        boolean gotNationalIdentifier = false;
-        boolean gotCaseId = false;
-        boolean gotCaseType = false;
+                location = null, nationalIdentifier = null, caseId = null,
+                caseType = null, dateRegistered = null;
+        boolean gotLastName = false, gotFirstName = false , gotGender = false, gotLocation = false,
+        gotNationalIdentifier = false, gotCaseId = false, gotCaseType = false, gotDateRegistered = false;
 
 
-        while (sc.hasNext() && !gotCaseId ) {
+        while (sc.hasNext() && !gotCaseType ) {
             String temp = sc.next();
 
-            if (temp.equals(EventParams.LAST_NAME) && !gotCaseType ) {
+            if (temp.equals(EventParams.LAST_NAME) && !gotLastName ) {
                 lastName = findValue(sc);
                 gotLastName = true;
 
@@ -156,8 +152,12 @@ public class EventHandler {
                 nationalIdentifier = findValue(sc);
                 gotNationalIdentifier = true;
 
+            } else if (temp.equals(EventParams.DATE_REGISTERED) && !gotDateRegistered) {
+                dateRegistered = findValue(sc);
+                gotDateRegistered = true;
+
             } else if (temp.equals(EventParams.CASE_ID) && !gotCaseId) {
-                caseId = findValue(sc) + sc.next() +sc.next() + sc.next() + sc.next();
+                caseId = sc.next();
                 gotCaseId = true;
 
             } else if (temp.equals(EventParams.CASE_TYPE)) {

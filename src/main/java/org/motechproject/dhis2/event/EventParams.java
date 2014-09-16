@@ -20,4 +20,5 @@ public final class EventParams {
     public static final String NATIONAL_IDENTIFIER = "National_Identifier";
     public static final String CASE_ID = "case_id";
     public static final String CASE_TYPE = "case_type";
+    public static final String DATE_REGISTERED = "Date_Registered";
 }
