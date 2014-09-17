@@ -17,8 +17,8 @@
                                   "required" : "false"
                                 },
                                 {
-                                  "key" : "commcareName",
-                                  "displayName" : "commcareName",
+                                  "key" : "commcareCaseType",
+                                  "displayName" : "commcareCaseType",
                                    "required" : "false"
                                    +
                                 },
@@ -48,7 +48,7 @@
                                   "required" : false
                                 },
                                 {
-                                  "key" : "commcareName",
+                                  "key" : "commcareCaseType",
                                   "displayName" : "Data Element Name",
                                   "required" : false
                                 },

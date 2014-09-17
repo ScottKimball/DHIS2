@@ -11,7 +11,7 @@ import org.motechproject.mds.annotations.Field;
 public class Program {
 
     @Field
-    String commcareName;
+    String commcareCaseType;
 
     @Field
     String dhis2Name;
@@ -19,18 +19,22 @@ public class Program {
     @Field
     String UUID;
 
-    public Program(String commcareName, String dhis2Name, String UUID) {
-        this.commcareName = commcareName;
+    @Field
+    TrackedEntity trackedEntityType;
+
+    public Program(String commcareCaseType, String dhis2Name, String UUID , TrackedEntity trackedEntityInstance) {
+        this.commcareCaseType = commcareCaseType;
         this.dhis2Name = dhis2Name;
         this.UUID = UUID;
+        this.trackedEntityType = trackedEntityInstance;
     }
 
-    public String getCommcareName() {
-        return commcareName;
+    public String getCommcareCaseType() {
+        return commcareCaseType;
     }
 
-    public void setCommcareName(String commcareName) {
-        this.commcareName = commcareName;
+    public void setCommcareCaseType(String commcareCaseType) {
+        this.commcareCaseType = commcareCaseType;
     }
 
     public String getDhis2Name() {
@@ -47,5 +51,13 @@ public class Program {
 
     public void setUUID(String UUID) {
         this.UUID = UUID;
+    }
+
+    public TrackedEntity getTrackedEntityType() {
+        return trackedEntityType;
+    }
+
+    public void setTrackedEntityType(TrackedEntity trackedEntityType) {
+        this.trackedEntityType = trackedEntityType;
     }
 }

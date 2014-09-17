@@ -3,48 +3,39 @@ package org.motechproject.dhis2.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
-import java.util.Map;
+import java.util.List;
 
 /**
- * Created by scott on 9/10/14.
+ * Created by scott on 9/17/14.
  */
-
 @Entity
 public class TrackedEntity {
 
     @Field
-    String commcareName;
-
-    @Field
-    String dhis2Name;
+    String type;
 
     @Field
     String UUID;
 
     @Field
-    Map<String, String> attributes;
+    List<String> requiredAttributes;
 
-    public TrackedEntity(String commcareName, String dhis2Name, String UUID, Map<String, String> attributes) {
-        this.commcareName = commcareName;
-        this.dhis2Name = dhis2Name;
+    public TrackedEntity (String type) {
+        this.type = type;
+    }
+
+    public TrackedEntity(String type, String UUID, List<String> requiredAttributes) {
+        this.type = type;
         this.UUID = UUID;
-        this.attributes = attributes;
+        this.requiredAttributes = requiredAttributes;
     }
 
-    public String getCommcareName() {
-        return commcareName;
+    public String getType() {
+        return type;
     }
 
-    public void setCommcareName(String commcareName) {
-        this.commcareName = commcareName;
-    }
-
-    public String getDhis2Name() {
-        return dhis2Name;
-    }
-
-    public void setDhis2Name(String dhis2Name) {
-        this.dhis2Name = dhis2Name;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getUUID() {
@@ -55,11 +46,11 @@ public class TrackedEntity {
         this.UUID = UUID;
     }
 
-    public Map<String, String> getAttributes() {
-        return attributes;
+    public List<String> getRequiredAttributes() {
+        return requiredAttributes;
     }
 
-    public void setAttributes(Map<String, String> attributes) {
-        this.attributes = attributes;
+    public void setRequiredAttributes(List<String> requiredAttributes) {
+        this.requiredAttributes = requiredAttributes;
     }
 }

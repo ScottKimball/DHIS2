@@ -1,5 +1,7 @@
 package org.motechproject.dhis2.domain;
 
+import org.joda.time.DateTime;
+
 /**
  * Created by scott on 9/10/14.
  */
@@ -7,14 +9,16 @@ package org.motechproject.dhis2.domain;
 
 public class Enrollment {
 
-    Program program;
-    TrackedEntity trackedEntity;
-    OrgUnit orgUnit;
+    private Program program;
+    private TrackedEntityInstance trackedEntityInstance;
+    private OrgUnit orgUnit;
+    private DateTime date;
 
-    public Enrollment(Program program, TrackedEntity trackedEntity, OrgUnit orgUnit) {
+    public Enrollment(Program program, TrackedEntityInstance trackedEntityInstance, OrgUnit orgUnit , DateTime date) {
         this.program = program;
-        this.trackedEntity = trackedEntity;
+        this.trackedEntityInstance = trackedEntityInstance;
         this.orgUnit = orgUnit;
+        this.date = date;
     }
 
     public Program getProgram() {
@@ -25,12 +29,12 @@ public class Enrollment {
         this.program = program;
     }
 
-    public TrackedEntity getTrackedEntity() {
-        return trackedEntity;
+    public TrackedEntityInstance getTrackedEntityInstance() {
+        return trackedEntityInstance;
     }
 
-    public void setTrackedEntity(TrackedEntity trackedEntity) {
-        this.trackedEntity = trackedEntity;
+    public void setTrackedEntityInstance(TrackedEntityInstance trackedEntityInstance) {
+        this.trackedEntityInstance = trackedEntityInstance;
     }
 
     public OrgUnit getOrgUnit() {
@@ -39,5 +43,13 @@ public class Enrollment {
 
     public void setOrgUnit(OrgUnit orgUnit) {
         this.orgUnit = orgUnit;
+    }
+
+    public DateTime getDate() {
+        return date;
+    }
+
+    public void setDate(DateTime date) {
+        this.date = date;
     }
 }

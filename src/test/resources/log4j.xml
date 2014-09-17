@@ -4,16 +4,16 @@
 
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
 
-    <appender commcareName="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+    <appender commcareCaseType="CONSOLE" class="org.apache.log4j.ConsoleAppender">
         <layout class="org.apache.log4j.PatternLayout">
-            <param commcareName="ConversionPattern" value="%d %t %-5p [%c] %m%n"/>
+            <param commcareCaseType="ConversionPattern" value="%d %t %-5p [%c] %m%n"/>
         </layout>
     </appender>
 
-    <logger commcareName="archetype.test.service">
+    <logger commcareCaseType="archetype.test.service">
         <level value="WARN"/>
     </logger>
-    <logger commcareName="org.springframework.web">
+    <logger commcareCaseType="org.springframework.web">
         <level value="ERROR"/>
     </logger>
 

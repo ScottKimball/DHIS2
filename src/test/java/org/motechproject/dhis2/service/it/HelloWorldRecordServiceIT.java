@@ -37,14 +37,14 @@ public class HelloWorldRecordServiceIT extends BasePaxIT {
         HelloWorldRecord testRecord = new HelloWorldRecord("testName", "test message");
         helloRecordService.add(testRecord);
 
-        HelloWorldRecord record = helloRecordService.findRecordByName(testRecord.getCommcareName());
+        HelloWorldRecord record = helloRecordService.findRecordByName(testRecord.getCommcareCaseType());
         assertEquals(testRecord, record);
 
         List<HelloWorldRecord> records = helloRecordService.getRecords();
         assertTrue(records.contains(testRecord));
 
         helloRecordService.delete(testRecord);
-        record = helloRecordService.findRecordByName(testRecord.getCommcareName());
+        record = helloRecordService.findRecordByName(testRecord.getCommcareCaseType());
         assertNull(record);
     }
 
