@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.springframework.stereotype.Component;
+import org.w3c.dom.Attr;
 
 import java.util.*;
 
@@ -51,6 +52,9 @@ public class EventHandler {
 
     }
 
+    /*
+
+     */
     @MotechListener(subjects = {EventSubjects.ENROLL_IN_PROGRAM})
     public void handleEnrollment (MotechEvent event) {
 
@@ -125,7 +129,8 @@ public class EventHandler {
     }
 
     /*
-    Parses the malformed event and creates new correctly formed event
+    Parses the malformed event and creates new correctly formed event. Once the Commcare / Tasks issue has been
+    resolved, this method can be removed.
      */
     private MotechEvent parseEnrollmentData(MotechEvent event) {
 
@@ -185,8 +190,21 @@ public class EventHandler {
     }
 
 
-    /* right now we know which form fields we have and
-     and I'm creating the entities on the fly rather than getting them from mds */
+    /* Ths method builds an enrollment object from a motech event. Right now, it builds new entities on the fly
+     * but eventually the following sequence will occur:
+      * 1.  Get the form name
+      * 2. Query mds to get the list of form fields for that form
+      * 3. Pull the form field values off the event
+      * 4. Query mds for program associated with the form case type
+      * 5. Query mds for the Tracked entity associated with the program
+      * 6. Create a new tracked entity instance (instance)
+      *     a. For each Tracked entity required attribute
+      *         1. add a new attribute to instance.attributeList with associated form field value
+      *     b. at this point, uuid is null. Will have to wait for interacting with dhis2 to get uuid
+      * 7. query mds for associated org unit
+      * 8. get date from event parameters
+      * 9. construct new enrollment (program , date. orgUnit, instance)
+       * */
     private Enrollment buildEnrollment (MotechEvent event) {
 
         String trackedEntityUUID = "temp tracked entity UUID"; // uuid for person tracked entity
@@ -205,25 +223,26 @@ public class EventHandler {
                 trackedEntity);
 
 
-        // attributes for tracked entity instance
-        Map <String ,String> attributeMap = new HashMap<String, String>();
-        attributeMap.put("lastName",(String) params.get(EventParams.LAST_NAME));
-        attributeMap.put("firstName" ,(String) params.get(EventParams.FIRST_NAME));
-        attributeMap.put("gender" ,(String) params.get(EventParams.GENDER));
-        attributeMap.put("nationalIdentifier" , (String) params.get(EventParams.NATIONAL_IDENTIFIER));
+        // pulls form fields off event parameters and adds them to tracked entity instance attribute list
+        List<Attribute> attributeList = new ArrayList<Attribute>();
+        attributeList.add(new Attribute("lastName","last nameUuid",(String) params.get(EventParams.LAST_NAME)));
+        attributeList.add(new Attribute("firstName","firstNameUuid",(String) params.get(EventParams.FIRST_NAME)));
+        attributeList.add(new Attribute("gender","last name uuid",(String) params.get(EventParams.LAST_NAME)));
+        attributeList.add(new Attribute("nationalIdentifier","nationalIdentifierUUID",(String)
+                params.get(EventParams.NATIONAL_IDENTIFIER)));
 
-        // create tracked entity instance
         TrackedEntityInstance trackedEntityInstance = new TrackedEntityInstance(commcareUUID,trackedEntity,
-                attributeMap);
+                attributeList);
 
         // create org unit
         OrgUnit orgUnit = new OrgUnit((String) params.get(EventParams.LOCATION) ,
                 (String) params.get(EventParams.LOCATION),orgUnitUUID);
 
+        // create date
         DateTime date = new DateTime();
         DateTime.parse((String)params.get(EventParams.DATE_REGISTERED));
 
-        Enrollment enrollment = new Enrollment(program,trackedEntityInstance, orgUnit,date );
+        Enrollment enrollment = new Enrollment(program,trackedEntityInstance,orgUnit,date );
 
         return enrollment;
     }

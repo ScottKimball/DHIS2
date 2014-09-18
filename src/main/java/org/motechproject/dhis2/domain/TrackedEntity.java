@@ -18,13 +18,14 @@ public class TrackedEntity {
     String UUID;
 
     @Field
-    List<String> requiredAttributes;
+    List<Attribute> requiredAttributes;
 
     public TrackedEntity (String type) {
         this.type = type;
     }
 
-    public TrackedEntity(String type, String UUID, List<String> requiredAttributes) {
+
+    public TrackedEntity(String type, String UUID, List<Attribute> requiredAttributes) {
         this.type = type;
         this.UUID = UUID;
         this.requiredAttributes = requiredAttributes;
@@ -46,11 +47,11 @@ public class TrackedEntity {
         this.UUID = UUID;
     }
 
-    public List<String> getRequiredAttributes() {
+    public List<Attribute> getRequiredAttributes() {
         return requiredAttributes;
     }
 
-    public void setRequiredAttributes(List<String> requiredAttributes) {
+    public void setRequiredAttributes(List<Attribute> requiredAttributes) {
         this.requiredAttributes = requiredAttributes;
     }
 }

@@ -21,6 +21,11 @@ public class Enrollment {
         this.date = date;
     }
 
+    public String toJson () {
+        return null;
+        // TODO:
+    }
+
     public Program getProgram() {
         return program;
     }

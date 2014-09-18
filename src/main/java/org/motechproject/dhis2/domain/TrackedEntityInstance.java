@@ -3,7 +3,7 @@ package org.motechproject.dhis2.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * Created by scott on 9/10/14.
@@ -23,17 +23,17 @@ public class TrackedEntityInstance {
     String UUID;
 
     @Field
-    Map<String, String> attributes;
+    List<Attribute> attributes;
 
     public TrackedEntityInstance() {};
 
-    public TrackedEntityInstance(String commcareId, TrackedEntity trackedEntityType, Map<String, String> attributes) {
+    public TrackedEntityInstance(String commcareId, TrackedEntity trackedEntityType, List<Attribute> attributes) {
         this.commcareId = commcareId;
         this.trackedEntityType = trackedEntityType;
         this.attributes = attributes;
     }
 
-    public TrackedEntityInstance(String commcareId, TrackedEntity trackedEntityType, String UUID, Map<String, String> attributes) {
+    public TrackedEntityInstance(String commcareId, TrackedEntity trackedEntityType, String UUID, List<Attribute> attributes) {
         this.commcareId = commcareId;
         this.trackedEntityType = trackedEntityType;
         this.UUID = UUID;
@@ -68,11 +68,11 @@ public class TrackedEntityInstance {
         this.UUID = UUID;
     }
 
-    public Map<String, String> getAttributes() {
+    public List<Attribute> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(Map<String, String> attributes) {
+    public void setAttributes(List<Attribute> attributes) {
         this.attributes = attributes;
     }
 }
