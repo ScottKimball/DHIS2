@@ -207,10 +207,16 @@ public class EventHandler {
        * */
     private Enrollment buildEnrollment (MotechEvent event) {
 
-        String trackedEntityUUID = "temp tracked entity UUID"; // uuid for person tracked entity
-        String commcareUUID = "temp commcare UUID" ; // commcare provides uuid for each case instance
-        String programUUID = "temp program UUID";
-        String orgUnitUUID = "temp org unit UUID";
+        String trackedEntityUUID = "cyl5vuJ5ETQ"; // uuid for person tracked entity
+        String commcareUUID =(String) event.getParameters().get(EventParams.CASE_ID);  // case_ID
+        String programUUID = "ur1Edk5Oe2n";
+        String orgUnitUUID = "g8upMTyEZGZ";
+
+        /*I got these from /api/trackedEntityAttributes.xml */
+        String lastNameUUID = "hwlRTFIFSUq";
+        String firstNameUUID = "dv3nChNSIxy";
+        String genderUUID = "cejWyOfXge6";
+        String nationalIdentifierUUID = "AuPLng5hLbE";
 
         Map<String , Object> params = event.getParameters();
 
@@ -225,10 +231,10 @@ public class EventHandler {
 
         // pulls form fields off event parameters and adds them to tracked entity instance attribute list
         List<Attribute> attributeList = new ArrayList<Attribute>();
-        attributeList.add(new Attribute("lastName","last nameUuid",(String) params.get(EventParams.LAST_NAME)));
-        attributeList.add(new Attribute("firstName","firstNameUuid",(String) params.get(EventParams.FIRST_NAME)));
-        attributeList.add(new Attribute("gender","last name uuid",(String) params.get(EventParams.LAST_NAME)));
-        attributeList.add(new Attribute("nationalIdentifier","nationalIdentifierUUID",(String)
+        attributeList.add(new Attribute("lastName",lastNameUUID,(String) params.get(EventParams.LAST_NAME)));
+        attributeList.add(new Attribute("firstName",firstNameUUID,(String) params.get(EventParams.FIRST_NAME)));
+        attributeList.add(new Attribute("gender",genderUUID,(String) params.get(EventParams.LAST_NAME)));
+        attributeList.add(new Attribute("nationalIdentifier",nationalIdentifierUUID,(String)
                 params.get(EventParams.NATIONAL_IDENTIFIER)));
 
         TrackedEntityInstance trackedEntityInstance = new TrackedEntityInstance(commcareUUID,trackedEntity,

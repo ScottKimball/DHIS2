@@ -1,6 +1,7 @@
 package org.motechproject.dhis2.domain;
 
 import org.motechproject.mds.annotations.Entity;
+import org.motechproject.mds.annotations.Field;
 
 /**
  * Created by scott on 8/29/14.
@@ -8,10 +9,19 @@ import org.motechproject.mds.annotations.Entity;
 @Entity
 public class DataValue {
 
+    @Field
     private String timePeriod;
+
+    @Field
     private OrgUnit orgUnit;
+
+    @Field
     private DataElement dataElement;
+
+    @Field
     private String value;
+
+    @Field
     private String dataSet;
 
     // TODO : add data element name and data element value

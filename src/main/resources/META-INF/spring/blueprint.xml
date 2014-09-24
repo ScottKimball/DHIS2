@@ -13,6 +13,7 @@
     <osgi:reference id="stageDataService" interface="org.motechproject.dhis2.repository.StageDataService" />
     <osgi:reference id="trackedEntityInstanceDataService" interface="org.motechproject.dhis2.repository.TrackedEntityInstanceDataService" />
     <osgi:reference id="trackedEntityDataService" interface="org.motechproject.dhis2.repository.TrackedEntityDataService" />
+    <osgi:reference id="attributeDataService" interface="org.motechproject.dhis2.repository.AttributeDataService" />
 
 
     <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay" />

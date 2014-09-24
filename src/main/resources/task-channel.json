@@ -20,7 +20,6 @@
                                   "key" : "commcareCaseType",
                                   "displayName" : "commcareCaseType",
                                    "required" : "false"
-                                   +
                                 },
                                 {
                                   "key" : "subElements",
