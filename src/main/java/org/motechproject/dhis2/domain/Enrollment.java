@@ -4,11 +4,11 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by scott on 9/10/14.
@@ -35,20 +35,28 @@ public class Enrollment {
 
     public String trackedEntityToJson () {
         ObjectNode root = objectMapper.createObjectNode();
-        root.put("orgUnit", orgUnit.getUUID());
-        root.put("trackedEntity", trackedEntityInstance.getTrackedEntityType().getUUID());
-
-        ArrayNode attributes = objectMapper.createArrayNode();
+        root.put("orgUnit", orgUnit.getDhis2Uuid());
+        root.put("trackedEntity", trackedEntityInstance.getTrackedEntityType().getDhis2Uuid());
 
         ArrayNode nodeList = objectMapper.createArrayNode();
 
+
         for (Attribute attribute : trackedEntityInstance.getAttributes()) {
+
+            /* Have to filter out National identifier as it has to be "unique" upon enrollment in program
+            This may pose a problem further on.
+             */
+
+            if (attribute.getName().equals("nationalIdentifier"))
+                continue;
+
             ObjectNode node = objectMapper.createObjectNode();
-            node.put("attribute", attribute.getUuid());
+            node.put("attribute", attribute.getDhis2Uuid());
             node.put("value", attribute.getValue());
             nodeList.add(node);
 
         }
+
         root.putArray("attributes").addAll(nodeList);
 
         try {
@@ -62,12 +70,32 @@ public class Enrollment {
 
     public String enrollmentToJson () {
 
+        Map<String, Attribute> trackedEntityAttributeMap = new HashMap<String, Attribute>();
+        List<Attribute> trackedEntityAttributeList = trackedEntityInstance.getAttributes();
+
+        for (Attribute attribute : trackedEntityAttributeList) {
+            trackedEntityAttributeMap.put(attribute.getName(),attribute);
+        }
 
         ObjectNode root = objectMapper.createObjectNode();
-        root.put("program",program.getUUID());
-        root.put("trackedEntityInstance",trackedEntityInstance.getUUID());
-        root.put("dateOfEnrollment",date.toString("MM-dd-yyyy"));
-        root.put("dateOfIncident",date.toString("MM-dd-yyyy"));
+        root.put("program",program.getDhis2Uuid());
+        root.put("trackedEntityInstance",trackedEntityInstance.getDhis2Uuid());
+
+        ArrayNode nodeList = objectMapper.createArrayNode();
+
+        List<Attribute> programRequiredAttributes = program.getRequiredAttributes();
+        for (Attribute attribute : programRequiredAttributes) {
+            ObjectNode node = objectMapper.createObjectNode();
+            node.put("attribute", attribute.getDhis2Uuid());
+
+            Attribute trackedEntityAttribute = trackedEntityAttributeMap.get(attribute.getName());
+            node.put("value", trackedEntityAttribute.getValue());
+            nodeList.add(node);
+
+        }
+        root.putArray("attributes").addAll(nodeList);
+       // root.put("dateOfEnrollment",date.toString("MM-dd-yyyy"));
+       // root.put("dateOfIncident",date.toString("MM-dd-yyyy"));
 
         try {
             String result = objectMapper.writeValueAsString(root);
@@ -114,14 +142,17 @@ public class Enrollment {
     public static void main (String [] args) {
 
         List<Attribute> testList = new ArrayList<Attribute>();
-        testList.add(new Attribute("testName", "testUUID", "testValue"));
+        Attribute testAttribute = new Attribute("testName", "testUUID", "testValue");
+        testList.add(testAttribute);
         testList.add(new Attribute("testname2", "testuuid2","testvalue2"));
         List<Attribute> entityList = new ArrayList<Attribute>();
         entityList.add(new Attribute("test","test","test"));
         TrackedEntity entity = new TrackedEntity("Person");
-        entity.setUUID("trackedEntityUUID");
+        entity.setDhis2Uuid("trackedEntityUUID");
 
-        Program testProgram = new Program(null,null,null,null);
+        List<Attribute> programRequiredAttributes = new ArrayList<Attribute>();
+        programRequiredAttributes.add(testAttribute);
+        Program testProgram = new Program(null,null,null,null,programRequiredAttributes);
 
         TrackedEntityInstance instance = new TrackedEntityInstance("id");
         instance.setAttributes(testList);
@@ -135,7 +166,7 @@ public class Enrollment {
 
         System.out.println(testEnrollment.trackedEntityToJson());
 
-        instance.setUUID("testTrackeEntityUUID");
+        instance.setDhis2Uuid("testTrackeEntityUUID");
 
         System.out.println(testEnrollment.enrollmentToJson());
     }

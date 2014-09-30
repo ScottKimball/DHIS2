@@ -2,9 +2,7 @@ package org.motechproject.dhis2.event;
 
 import org.joda.time.DateTime;
 import org.motechproject.dhis2.domain.*;
-import org.motechproject.dhis2.repository.OrgUnitDataService;
 import org.motechproject.dhis2.repository.ProgramDataService;
-import org.motechproject.dhis2.service.DataValueService;
 import org.motechproject.dhis2.service.EnrollmentService;
 import org.motechproject.dhis2.service.SendAggregateDataService;
 import org.motechproject.event.listener.EventRelay;
@@ -14,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.springframework.stereotype.Component;
-import org.w3c.dom.Attr;
 
 import java.util.*;
 
@@ -31,24 +28,21 @@ public class EventHandler {
     private SendAggregateDataService sendAggregateDataService;
     private Logger logger = LoggerFactory.getLogger(EventHandler.class);
     private EventRelay eventRelay;
-    private DataValueService dataValueService;
     private EnrollmentService enrollmentService;
     private ProgramDataService programDataService;
-    private OrgUnitDataService orgUnitDataService;
+
 
 
     @Autowired
     public EventHandler( EventRelay eventRelay,
-                         SendAggregateDataService sendAggregateDataService, DataValueService dataValueService,
-                         EnrollmentService enrollmentService, ProgramDataService programDataService ,
-                         OrgUnitDataService orgUnitDataService
+                         SendAggregateDataService sendAggregateDataService,
+                         EnrollmentService enrollmentService, ProgramDataService programDataService
                         ){
         this.eventRelay = eventRelay;
         this.sendAggregateDataService = sendAggregateDataService;
-        this.dataValueService = dataValueService;
         this.enrollmentService = enrollmentService;
         this.programDataService = programDataService;
-        this.orgUnitDataService = orgUnitDataService;
+
 
     }
 
@@ -123,9 +117,10 @@ public class EventHandler {
             }
         }
 
-       DataValue dataValue = dataValueService.create(EventParams.NAME, value, orgUnit, timePeriod);
 
-       return dataValue;
+     //  DataValue dataValue = dataValueService.create(EventParams.NAME, value, orgUnit, timePeriod);
+
+       return null;
     }
 
     /*
@@ -222,20 +217,27 @@ public class EventHandler {
 
         // create tracked entity
         TrackedEntity trackedEntity = new TrackedEntity("Person");
-        trackedEntity.setUUID(trackedEntityUUID);
+        trackedEntity.setDhis2Uuid(trackedEntityUUID);
 
+
+        //Required Attribute for program
+        Attribute programRequiredAttribute = new Attribute("nationalIdentifier",nationalIdentifierUUID,null);
+        // list for programattribute list
+        List<Attribute> programAttributeList = new ArrayList<Attribute>();
+        programAttributeList.add(programRequiredAttribute);
         // create program
         Program program = new Program((String) params.get(EventParams.CASE_TYPE) ,"TB Visit" ,programUUID,
-                trackedEntity);
+                trackedEntity , programAttributeList);
 
 
         // pulls form fields off event parameters and adds them to tracked entity instance attribute list
         List<Attribute> attributeList = new ArrayList<Attribute>();
-        attributeList.add(new Attribute("lastName",lastNameUUID,(String) params.get(EventParams.LAST_NAME)));
-        attributeList.add(new Attribute("firstName",firstNameUUID,(String) params.get(EventParams.FIRST_NAME)));
-        attributeList.add(new Attribute("gender",genderUUID,(String) params.get(EventParams.LAST_NAME)));
-        attributeList.add(new Attribute("nationalIdentifier",nationalIdentifierUUID,(String)
-                params.get(EventParams.NATIONAL_IDENTIFIER)));
+
+        attributeList.add( new Attribute("lastName", lastNameUUID, (String) params.get(EventParams.LAST_NAME)));
+        attributeList.add(new Attribute("firstName", firstNameUUID, (String) params.get(EventParams.FIRST_NAME)));
+        attributeList.add(new Attribute("gender", genderUUID, (String) params.get(EventParams.LAST_NAME)));
+        attributeList.add(new Attribute("nationalIdentifier",nationalIdentifierUUID,
+                (String) params.get(EventParams.NATIONAL_IDENTIFIER)));
 
         TrackedEntityInstance trackedEntityInstance = new TrackedEntityInstance(commcareUUID,trackedEntity,
                 attributeList);

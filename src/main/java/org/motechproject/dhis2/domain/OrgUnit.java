@@ -17,13 +17,13 @@ public class OrgUnit {
     private String dhis2Name;
 
     @Field
-    private String UUID;
+    private String dhis2Uuid;
 
 
-    public OrgUnit(String commcareName, String dhis2Name, String UUID) {
+    public OrgUnit(String commcareName, String dhis2Name, String dhis2Uuid) {
         this.commcareName = commcareName;
         this.dhis2Name = dhis2Name;
-        this.UUID = UUID;
+        this.dhis2Uuid = dhis2Uuid;
     }
 
     public String getCommcareName() {
@@ -34,12 +34,12 @@ public class OrgUnit {
         this.commcareName = commcareName;
     }
 
-    public String getUUID() {
-        return UUID;
+    public String getDhis2Uuid() {
+        return dhis2Uuid;
     }
 
-    public void setUUID(String UUID) {
-        this.UUID = UUID;
+    public void setDhis2Uuid(String dhis2Uuid) {
+        this.dhis2Uuid = dhis2Uuid;
     }
 
     public String getDhis2Name() {

@@ -1,14 +1,10 @@
 package org.motechproject.dhis2.service.impl;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.util.EntityUtils;
 import org.motechproject.dhis2.domain.Enrollment;
 import org.motechproject.dhis2.domain.TrackedEntityInstance;
 import org.motechproject.dhis2.http.HttpService;
 import org.motechproject.dhis2.http.Request;
-import org.motechproject.dhis2.repository.OrgUnitDataService;
-import org.motechproject.dhis2.repository.ProgramDataService;
+import org.motechproject.dhis2.http.Response;
 import org.motechproject.dhis2.repository.TrackedEntityInstanceDataService;
 import org.motechproject.dhis2.service.EnrollmentService;
 import org.motechproject.dhis2.service.SendAggregateDataService;
@@ -16,9 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-
-import java.io.IOException;
 
 /**
  * Created by scott on 9/10/14.
@@ -49,35 +42,40 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         String body = enrollment.trackedEntityToJson();
 
         Request request = new Request(URL + TRACKED_ENTITY_PATH, body);
-        HttpEntity response = httpService.send(request);
+        Response response = httpService.send(request);
 
-        try {
-            String entityString = EntityUtils.toString(response, "UTF-8");
-            logger.debug("In EnrollmentServiceImpl.send:" + entityString);
+        TrackedEntityInstance instance = enrollment.getTrackedEntityInstance();
 
-        } catch (IOException e) {
-            logger.debug(e.toString());
+        if (!response.getStatus().equals("SUCCESS")) {
+            logger.debug("Unsuccessful post to DHIS2: " + response);
+            return;
         }
 
-
         logger.debug(response.toString());
+        instance.setDhis2Uuid(response.getReference());
+     //   trackedEntityInstanceDataService.create(instance);
 
-        //TODO : Get UUID from http response
-        /*
+        request.setUrl(URL + ENROLLMENT_PATH);
+        request.setJsonBody(enrollment.enrollmentToJson());
 
-        // set UUID and then persist the instance
-        String uuid = "trackedEntityInstanceUUID";
-        enrollment.getTrackedEntityInstance().setUUID(uuid);
-
-        body = enrollment.enrollmentToJson();
-        request = new Request(URL + ENROLLMENT_PATH , body );
         response = httpService.send(request);
-    */
 
+        if (!response.getStatus().equals("SUCCESS")) {
+            logger.debug("Unsuccessful post to DHIS2: " + response);
+            return;
+        }
 
+        logger.debug("Successful enrollment: " + response);
+
+            /*
+            String entityString = EntityUtils.toString(response, "UTF-8");
+            response = mapper.readValue(entityString, mapper.getTypeFactory().
+                    constructMapType(HashMap.class, String.class, String.class));
+
+            logger.debug("Enrollment response:" + entityString);
+
+*/
     }
-
-
 
 
 }

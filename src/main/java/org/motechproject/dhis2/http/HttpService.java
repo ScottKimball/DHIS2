@@ -8,6 +8,8 @@ import org.apache.http.entity.StringEntity;
 
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import org.apache.http.util.EntityUtils;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,30 +24,29 @@ public class HttpService {
 
     private static final String USERNAME = "admin";
     private static final String PASSWORD = "district";
-
+    private ObjectMapper objectMapper = new ObjectMapper();
     private Logger logger = LoggerFactory.getLogger(HttpService.class);
 
 
     /*
-    Constructs an HTTP POST request and returns the response
-     */
-    public HttpEntity send (Request request) {
+        Constructs an HTTP POST request and returns the response
+         */
+    public Response send (Request request) {
 
         DefaultHttpClient httpClient = new DefaultHttpClient();
         HttpPost httpPost = new HttpPost(request.getUrl());
         httpPost.addHeader("content-type", "application/json");
         httpPost.addHeader("accept", "application/json");
 
-         //String encoding = Base64Encoder.encode(USERNAME + ":" + PASSWORD);
-         //httpPost.setHeader("Authorization", "Basic" + USERNAME + ":" + PASSWORD);
-
         try {
             StringEntity params = new StringEntity(request.getJsonBody());
             httpPost.setEntity(params);
-            HttpResponse response = httpClient.execute(httpPost);
-            HttpEntity entity = response.getEntity();
+            HttpResponse httpResponse = httpClient.execute(httpPost);
+            HttpEntity entity = httpResponse.getEntity();
+            String entityString = EntityUtils.toString(entity, "UTF-8");
+            Response response = objectMapper.readValue(entityString, Response.class);
 
-           return entity;
+           return response;
 
         } catch (Exception e) {
 

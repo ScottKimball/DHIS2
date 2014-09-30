@@ -14,23 +14,23 @@ public class Attribute {
     private String name;
 
     @Field
-    private String uuid;
+    private String dhis2Uuid;
 
     @Field
     private String value;
 
-    public Attribute(String name, String uuid, String value) {
-        this.uuid = uuid;
+    public Attribute(String name, String dhis2Uuid, String value) {
+        this.dhis2Uuid = dhis2Uuid;
         this.value = value;
         this.name =name;
     }
 
-    public String getUuid() {
-        return uuid;
+    public String getDhis2Uuid() {
+        return dhis2Uuid;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setDhis2Uuid(String dhis2Uuid) {
+        this.dhis2Uuid = dhis2Uuid;
     }
 
     public String getValue() {

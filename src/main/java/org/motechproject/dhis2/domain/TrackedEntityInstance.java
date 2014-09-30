@@ -20,7 +20,7 @@ public class TrackedEntityInstance {
     TrackedEntity trackedEntityType;
 
     @Field
-    String UUID;
+    String dhis2Uuid;
 
     @Field
     List<Attribute> attributes;
@@ -33,10 +33,10 @@ public class TrackedEntityInstance {
         this.attributes = attributes;
     }
 
-    public TrackedEntityInstance(String commcareId, TrackedEntity trackedEntityType, String UUID, List<Attribute> attributes) {
+    public TrackedEntityInstance(String commcareId, TrackedEntity trackedEntityType, String dhis2Uuid, List<Attribute> attributes) {
         this.commcareId = commcareId;
         this.trackedEntityType = trackedEntityType;
-        this.UUID = UUID;
+        this.dhis2Uuid = dhis2Uuid;
         this.attributes = attributes;
     }
 
@@ -60,12 +60,12 @@ public class TrackedEntityInstance {
         this.trackedEntityType = trackedEntityType;
     }
 
-    public String getUUID() {
-        return UUID;
+    public String getDhis2Uuid() {
+        return dhis2Uuid;
     }
 
-    public void setUUID(String UUID) {
-        this.UUID = UUID;
+    public void setDhis2Uuid(String dhis2Uuid) {
+        this.dhis2Uuid = dhis2Uuid;
     }
 
     public List<Attribute> getAttributes() {

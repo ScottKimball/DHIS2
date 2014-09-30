@@ -19,7 +19,7 @@ public class Stage {
     String dhis2Name;
 
     @Field
-    String  UUID;
+    String dhis2Uuid;
 
     @Field
     Program program;
@@ -27,10 +27,10 @@ public class Stage {
     @Field
     Map<String , String> attributes;
 
-    public Stage(String commcareName, String dhis2Name, String UUID, Program program, Map<String, String> attributes) {
+    public Stage(String commcareName, String dhis2Name, String dhis2Uuid, Program program, Map<String, String> attributes) {
         this.commcareName = commcareName;
         this.dhis2Name = dhis2Name;
-        this.UUID = UUID;
+        this.dhis2Uuid = dhis2Uuid;
         this.program = program;
         this.attributes = attributes;
     }
@@ -51,12 +51,12 @@ public class Stage {
         this.dhis2Name = dhis2Name;
     }
 
-    public String getUUID() {
-        return UUID;
+    public String getDhis2Uuid() {
+        return dhis2Uuid;
     }
 
-    public void setUUID(String UUID) {
-        this.UUID = UUID;
+    public void setDhis2Uuid(String dhis2Uuid) {
+        this.dhis2Uuid = dhis2Uuid;
     }
 
     public Program getProgram() {

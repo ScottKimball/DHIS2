@@ -15,7 +15,7 @@ public class TrackedEntity {
     String type;
 
     @Field
-    String UUID;
+    String dhis2Uuid;
 
     @Field
     List<Attribute> requiredAttributes;
@@ -25,9 +25,9 @@ public class TrackedEntity {
     }
 
 
-    public TrackedEntity(String type, String UUID, List<Attribute> requiredAttributes) {
+    public TrackedEntity(String type, String dhis2Uuid, List<Attribute> requiredAttributes) {
         this.type = type;
-        this.UUID = UUID;
+        this.dhis2Uuid = dhis2Uuid;
         this.requiredAttributes = requiredAttributes;
     }
 
@@ -39,12 +39,12 @@ public class TrackedEntity {
         this.type = type;
     }
 
-    public String getUUID() {
-        return UUID;
+    public String getDhis2Uuid() {
+        return dhis2Uuid;
     }
 
-    public void setUUID(String UUID) {
-        this.UUID = UUID;
+    public void setDhis2Uuid(String dhis2Uuid) {
+        this.dhis2Uuid = dhis2Uuid;
     }
 
     public List<Attribute> getRequiredAttributes() {

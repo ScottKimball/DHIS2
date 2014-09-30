@@ -75,11 +75,11 @@ public class DataValue {
     }
 
     public String getDataElementUUID () {
-        return dataElement.getUUID();
+        return dataElement.getDhis2Uuid();
     }
 
     public String getOrgUnitUUID () {
-        return orgUnit.getUUID();
+        return orgUnit.getDhis2Uuid();
     }
 
     @Override
