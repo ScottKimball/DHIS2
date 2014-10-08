@@ -5,6 +5,7 @@ import org.motechproject.dhis2.domain.*;
 import org.motechproject.dhis2.repository.ProgramDataService;
 import org.motechproject.dhis2.service.EnrollmentService;
 import org.motechproject.dhis2.service.SendAggregateDataService;
+import org.motechproject.dhis2.service.StageService;
 import org.motechproject.event.listener.EventRelay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,16 @@ import java.util.*;
 @Component
 public class EventHandler {
 
+    /*HardWired UUID values */
+    private String trackedEntityUUID = "cyl5vuJ5ETQ"; // uuid for person tracked entity
+    private String programUUID = "ur1Edk5Oe2n";
+    private String orgUnitUUID = "g8upMTyEZGZ";
+    private String lastNameUUID = "hwlRTFIFSUq";
+    private String firstNameUUID = "dv3nChNSIxy";
+    private String genderUUID = "cejWyOfXge6";
+    private String nationalIdentifierUUID = "AuPLng5hLbE";
+    private String stage_uuid = "vxQUcroMY0r";
+
 
 
 
@@ -30,25 +41,25 @@ public class EventHandler {
     private EventRelay eventRelay;
     private EnrollmentService enrollmentService;
     private ProgramDataService programDataService;
+    private StageService stageService;
 
 
 
     @Autowired
     public EventHandler( EventRelay eventRelay,
                          SendAggregateDataService sendAggregateDataService,
-                         EnrollmentService enrollmentService, ProgramDataService programDataService
+                         EnrollmentService enrollmentService, ProgramDataService programDataService,
+                         StageService stageService
                         ){
         this.eventRelay = eventRelay;
         this.sendAggregateDataService = sendAggregateDataService;
         this.enrollmentService = enrollmentService;
         this.programDataService = programDataService;
+        this.stageService = stageService;
 
 
     }
 
-    /*
-
-     */
     @MotechListener(subjects = {EventSubjects.ENROLL_IN_PROGRAM})
     public void handleEnrollment (MotechEvent event) {
 
@@ -69,6 +80,42 @@ public class EventHandler {
         DataValue dataValue = parseAggregateData(event);
         sendAggregateDataService.send(dataValue);
     }
+
+    @MotechListener(subjects  = {EventSubjects.TB_REGISTRATION})
+    public void handleTbRegistration (MotechEvent event) {
+        logger.debug("In TB Registration handler");
+    }
+
+    @MotechListener(subjects = {EventSubjects.TB_FOLLOW_UP})
+    public void handleTbFollowUp(MotechEvent event) {
+        final String STAGE_NAME = "TB Follow Up";
+        logger.debug("In Handle Tb follow up");
+        final String INSTANCE_UUID = "IzHblRD2sDH";
+
+        Map<String,Object> params = event.getParameters();
+
+        String followUpDate = (String) params.get("followUpDate");
+
+        // had to hardwire in value in tasks as field is not currently exposed
+        String commcareId =(String) params.get("caseId");
+
+
+        /* We will have to query mds for form information by looking up the form fields for the particular
+        form in MDS. Right now we just create new Program information. */
+        String formName = event.getSubject();
+        Program program = new Program(formName,"TB Program", programUUID,new TrackedEntity("Person"),null );
+
+
+        /* This is where we will query mds for for the trackedEntityInstance. Right now we just
+         create a new tracked entity instance */
+        TrackedEntityInstance instance = new TrackedEntityInstance(commcareId,
+                new TrackedEntity("Person") ,INSTANCE_UUID, null,new OrgUnit(null,null,orgUnitUUID));
+
+        Stage stage = new Stage(formName,STAGE_NAME,stage_uuid,program,null,followUpDate,instance,instance.getOrgUnit());
+        stageService.send(stage);
+
+        }
+
 
     private DataValue parseAggregateData (MotechEvent event) {
         Map<String, Object> eventParameters =  event.getParameters();
@@ -202,17 +249,7 @@ public class EventHandler {
        * */
     private Enrollment buildEnrollment (MotechEvent event) {
 
-        String trackedEntityUUID = "cyl5vuJ5ETQ"; // uuid for person tracked entity
         String commcareUUID =(String) event.getParameters().get(EventParams.CASE_ID);  // case_ID
-        String programUUID = "ur1Edk5Oe2n";
-        String orgUnitUUID = "g8upMTyEZGZ";
-
-        /*I got these from /api/trackedEntityAttributes.xml */
-        String lastNameUUID = "hwlRTFIFSUq";
-        String firstNameUUID = "dv3nChNSIxy";
-        String genderUUID = "cejWyOfXge6";
-        String nationalIdentifierUUID = "AuPLng5hLbE";
-
         Map<String , Object> params = event.getParameters();
 
         // create tracked entity

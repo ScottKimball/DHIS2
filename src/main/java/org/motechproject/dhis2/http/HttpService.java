@@ -31,7 +31,7 @@ public class HttpService {
     /*
         Constructs an HTTP POST request and returns the response
          */
-    public Response send (Request request) {
+    public String send (Request request) {
 
         DefaultHttpClient httpClient = new DefaultHttpClient();
         HttpPost httpPost = new HttpPost(request.getUrl());
@@ -44,9 +44,9 @@ public class HttpService {
             HttpResponse httpResponse = httpClient.execute(httpPost);
             HttpEntity entity = httpResponse.getEntity();
             String entityString = EntityUtils.toString(entity, "UTF-8");
-            Response response = objectMapper.readValue(entityString, Response.class);
 
-           return response;
+
+           return entityString;
 
         } catch (Exception e) {
 

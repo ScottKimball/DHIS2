@@ -37,6 +37,151 @@
                             },
 
                             {
+                              "displayName" : "TB Registration",
+                              "subject" : "tb_registration",
+                              "actionParameters" : [
+
+                                {
+                                  "key" : "instanceId",
+                                  "displayName" : "Instance ID",
+                                  "required" : "false"
+                                },
+                                {
+                                  "key" : "userId",
+                                  "displayName" : "User ID",
+                                   "required" : "false"
+                                },
+                                {
+                                  "key" : "deviceId",
+                                  "displayName" : "Devicd ID",
+                                   "required" : "false"
+                                },
+                                {
+                                  "key" : "userName",
+                                  "displayName" : "Username",
+                                   "required" : "false"
+                                },
+                                {
+                                    "key" : "applicationVersion",
+                                    "displayName" : "Application Version",
+                                    "required" : "false"
+                                 },
+
+                                 {
+                                     "key" : "timeStart",
+                                     "displayName" : "Time Start",
+                                     "required" : "false"
+                                  },
+                                  {
+                                    "key" : "timeEnd",
+                                    "displayName" : "Time End",
+                                    "required" : "false"
+                                 },
+                                 {
+                                   "key" : "patientLastName",
+                                   "displayName" : "PatientLastName",
+                                   "required" : "false"
+                                },
+                                {
+                                  "key" : "patientFirstName",
+                                  "displayName" : "Patient First Name",
+                                  "required" : "false"
+                               },
+                               {
+                                 "key" : "patientGender",
+                                 "displayName" : "Patient Gender",
+                                 "required" : "false"
+                              },
+                              {
+                                 "key" : "patientLocation",
+                                  "displayName" : "Patient Location",
+                                  "required" : "false"
+                                },
+                                 {
+                                 "key" : "nationalIdentifier",
+                                  "displayName" : "National Identifier",
+                                  "required" : "false"
+                                },
+
+                                 {
+                                 "key" : "registrationDate",
+                                  "displayName" : "Registration Date",
+                                  "required" : "false"
+                                },
+
+
+                                {
+                                  "key" : "Other",
+                                  "type" : "MAP",
+                                  "displayName" : "Attributes",
+                                  "required": false
+                                }
+                              ]
+                            },
+
+                             {
+                              "displayName" : "TB Follow Up",
+                              "subject" : "tb_follow_up",
+                              "actionParameters" : [
+
+                                {
+                                  "key" : "instanceId",
+                                  "displayName" : "Instance ID",
+                                  "required" : "false"
+                                },
+                                {
+                                  "key" : "userId",
+                                  "displayName" : "User ID",
+                                   "required" : "false"
+                                },
+                                {
+                                  "key" : "deviceId",
+                                  "displayName" : "Devicd ID",
+                                   "required" : "false"
+                                },
+                                {
+                                  "key" : "userName",
+                                  "displayName" : "Username",
+                                   "required" : "false"
+                                },
+                                {
+                                    "key" : "applicationVersion",
+                                    "displayName" : "Application Version",
+                                    "required" : "false"
+                                 },
+
+                                 {
+                                     "key" : "timeStart",
+                                     "displayName" : "Time Start",
+                                     "required" : "false"
+                                  },
+                                  {
+                                    "key" : "timeEnd",
+                                    "displayName" : "Time End",
+                                    "required" : "false"
+                                 },
+
+                                 {
+                                 "key" : "followUpDate",
+                                  "displayName" : "Follow Up Date",
+                                  "required" : "false"
+                                },
+                                 {
+                                 "key" : "caseId",
+                                  "displayName" : "Case ID",
+                                  "required" : "false"
+                                },
+
+                                {
+                                  "key" : "Other",
+                                  "type" : "MAP",
+                                  "displayName" : "Attributes",
+                                  "required": false
+                                }
+                              ]
+                            },
+
+                            {
                               "displayName" : "Send Aggregate Data",
                               "subject" : "send_aggregate_data",
                               "actionParameters" : [

@@ -25,6 +25,9 @@ public class TrackedEntityInstance {
     @Field
     List<Attribute> attributes;
 
+    @Field
+    OrgUnit orgUnit;
+
     public TrackedEntityInstance() {};
 
     public TrackedEntityInstance(String commcareId, TrackedEntity trackedEntityType, List<Attribute> attributes) {
@@ -38,6 +41,23 @@ public class TrackedEntityInstance {
         this.trackedEntityType = trackedEntityType;
         this.dhis2Uuid = dhis2Uuid;
         this.attributes = attributes;
+    }
+
+    public TrackedEntityInstance(String commcareId, TrackedEntity trackedEntityType, String dhis2Uuid, List<Attribute> attributes, OrgUnit orgUnit) {
+        this.commcareId = commcareId;
+        this.trackedEntityType = trackedEntityType;
+        this.dhis2Uuid = dhis2Uuid;
+        this.attributes = attributes;
+        this.orgUnit = orgUnit;
+    }
+
+
+    public OrgUnit getOrgUnit() {
+        return orgUnit;
+    }
+
+    public void setOrgUnit(OrgUnit orgUnit) {
+        this.orgUnit = orgUnit;
     }
 
     public TrackedEntityInstance(String commcareId) {

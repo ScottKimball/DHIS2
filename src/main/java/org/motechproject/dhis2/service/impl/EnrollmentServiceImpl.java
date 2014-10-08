@@ -1,5 +1,6 @@
 package org.motechproject.dhis2.service.impl;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.motechproject.dhis2.domain.Enrollment;
 import org.motechproject.dhis2.domain.TrackedEntityInstance;
 import org.motechproject.dhis2.http.HttpService;
@@ -28,6 +29,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
     private HttpService httpService;
     private TrackedEntityInstanceDataService trackedEntityInstanceDataService;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     public EnrollmentServiceImpl(HttpService httpService , TrackedEntityInstanceDataService trackedEntityInstanceDataService) {
@@ -37,12 +39,22 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
     @Override
     public void send(Enrollment enrollment) {
+        Response response;
 
         // create tracked entity instance in DHIS2
         String body = enrollment.trackedEntityToJson();
 
         Request request = new Request(URL + TRACKED_ENTITY_PATH, body);
-        Response response = httpService.send(request);
+        String entityString = httpService.send(request);
+
+        try {
+           response = objectMapper.readValue(entityString, Response.class);
+
+        } catch (Exception e) {
+            logger.debug(e.toString());
+            return;
+        }
+
 
         TrackedEntityInstance instance = enrollment.getTrackedEntityInstance();
 
@@ -58,7 +70,15 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         request.setUrl(URL + ENROLLMENT_PATH);
         request.setJsonBody(enrollment.enrollmentToJson());
 
-        response = httpService.send(request);
+        entityString = httpService.send(request);
+
+        try {
+            response = objectMapper.readValue(entityString, Response.class);
+
+        } catch (Exception e) {
+            logger.debug(e.toString());
+            return;
+        }
 
         if (!response.getStatus().equals("SUCCESS")) {
             logger.debug("Unsuccessful post to DHIS2: " + response);
@@ -67,14 +87,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
         logger.debug("Successful enrollment: " + response);
 
-            /*
-            String entityString = EntityUtils.toString(response, "UTF-8");
-            response = mapper.readValue(entityString, mapper.getTypeFactory().
-                    constructMapType(HashMap.class, String.class, String.class));
 
-            logger.debug("Enrollment response:" + entityString);
-
-*/
     }
 
 

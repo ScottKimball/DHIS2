@@ -1,6 +1,7 @@
 package org.motechproject.dhis2.http;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.springframework.context.annotation.Import;
 
 import java.io.StringWriter;
 
@@ -8,12 +9,18 @@ import java.io.StringWriter;
  * Created by scott on 9/25/14.
  * Model for DHIS2 Json Response:
  * {"status":"SUCCESS","importCount":{"imported":1,"updated":0,"ignored":0,"deleted":0},"reference":"GmHEBGJtymq"}
+ *
+ * {"imported":0,"updated":0,"ignored":0,"importSummaries":[{"status":"SUCCESS","dataValueCount":
+ * {"imported":0,"updated":0,"ignored":0,"deleted":0},"importCount":{"imported":0,"updated":0,"ignored":0,"deleted":0},
+ * "reference":"zoOLDFn9XIQ","href":"http://localhost:8080/api/events/zoOLDFn9XIQ"}]}
  */
 public class Response {
 
     private String status;
     private String reference;
     private ImportCount importCount;
+
+
 
     private static class ImportCount {
         private int imported;
@@ -26,6 +33,12 @@ public class Response {
             this.imported = imported;
             this.updated = updated;
             this.deleted = deleted;
+            this.ignored = ignored;
+        }
+
+        private ImportCount(int imported, int updated, int ignored) {
+            this.imported = imported;
+            this.updated = updated;
             this.ignored = ignored;
         }
 
@@ -80,6 +93,8 @@ public class Response {
         this.status = status;
         this.reference = reference;
     }
+
+
 
     public Response() {}
 
