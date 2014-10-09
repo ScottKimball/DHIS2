@@ -46,7 +46,6 @@ public class Enrollment {
             /* Have to filter out National identifier as it has to be "unique" upon enrollment in program
             This may pose a problem further on.
              */
-
             if (attribute.getName().equals("nationalIdentifier"))
                 continue;
 

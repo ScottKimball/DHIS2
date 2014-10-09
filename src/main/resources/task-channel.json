@@ -12,27 +12,51 @@
                               "actionParameters" : [
 
                                 {
-                                  "key" : "value",
-                                  "displayName" : "value",
+                                  "key" : "instanceId",
+                                  "displayName" : "Instance ID",
                                   "required" : "false"
                                 },
                                 {
-                                  "key" : "commcareCaseType",
-                                  "displayName" : "commcareCaseType",
+                                  "key" : "caseId",
+                                  "displayName" : "Case ID",
                                    "required" : "false"
                                 },
                                 {
-                                  "key" : "subElements",
-                                  "type" : "MAP",
-                                  "displayName" : "Sub Elements",
-                                  "required": false
+                                  "key" : "lastName",
+                                  "displayName" : "Patient Last Name",
+                                   "required" : "false"
                                 },
+
                                 {
-                                  "key" : "Attributes",
-                                  "type" : "MAP",
-                                  "displayName" : "Attributes",
-                                  "required": false
+                                  "key" : "firstName",
+                                  "displayName" : "Patient First Name",
+                                   "required" : "false"
+                                },
+
+                                {
+                                  "key" : "gender",
+                                  "displayName" : "Patient Gender",
+                                   "required" : "false"
+                                },
+
+                                {
+                                  "key" : "location",
+                                  "displayName" : "Location",
+                                   "required" : "false"
+                                },
+
+                                {
+                                  "key" : "nationalIdentifier",
+                                  "displayName" : "National Identifier",
+                                   "required" : "false"
+                                },
+
+                                {
+                                  "key" : "registrationDate",
+                                  "displayName" : "Registration Date",
+                                   "required" : "false"
                                 }
+
                               ]
                             },
 
@@ -46,6 +70,11 @@
                                   "displayName" : "Instance ID",
                                   "required" : "false"
                                 },
+                                 {
+                                  "key" : "caseId",
+                                  "displayName" : "Case ID",
+                                  "required" : "false"
+                                },
                                 {
                                   "key" : "userId",
                                   "displayName" : "User ID",
@@ -53,7 +82,7 @@
                                 },
                                 {
                                   "key" : "deviceId",
-                                  "displayName" : "Devicd ID",
+                                  "displayName" : "Device ID",
                                    "required" : "false"
                                 },
                                 {
@@ -214,6 +243,6 @@
                               ]
                             }
 
-
                           ]
+
 }

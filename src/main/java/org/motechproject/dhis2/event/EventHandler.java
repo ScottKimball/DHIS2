@@ -84,13 +84,16 @@ public class EventHandler {
     @MotechListener(subjects  = {EventSubjects.TB_REGISTRATION})
     public void handleTbRegistration (MotechEvent event) {
         logger.debug("In TB Registration handler");
+        Enrollment enrollment = buildEnrollment(event);
+        enrollmentService.send(enrollment);
     }
 
     @MotechListener(subjects = {EventSubjects.TB_FOLLOW_UP})
     public void handleTbFollowUp(MotechEvent event) {
         final String STAGE_NAME = "TB Follow Up";
-        logger.debug("In Handle Tb follow up");
         final String INSTANCE_UUID = "IzHblRD2sDH";
+
+        logger.debug("In Handle Tb follow up");
 
         Map<String,Object> params = event.getParameters();
 
@@ -99,12 +102,10 @@ public class EventHandler {
         // had to hardwire in value in tasks as field is not currently exposed
         String commcareId =(String) params.get("caseId");
 
-
         /* We will have to query mds for form information by looking up the form fields for the particular
         form in MDS. Right now we just create new Program information. */
         String formName = event.getSubject();
         Program program = new Program(formName,"TB Program", programUUID,new TrackedEntity("Person"),null );
-
 
         /* This is where we will query mds for for the trackedEntityInstance. Right now we just
          create a new tracked entity instance */
