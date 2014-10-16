@@ -6,59 +6,7 @@
 
                             ],
     "actionTaskEvents": [
-                            {
-                              "displayName" : "Enroll In Program",
-                              "subject" : "enroll_in_program",
-                              "actionParameters" : [
 
-                                {
-                                  "key" : "instanceId",
-                                  "displayName" : "Instance ID",
-                                  "required" : "false"
-                                },
-                                {
-                                  "key" : "caseId",
-                                  "displayName" : "Case ID",
-                                   "required" : "false"
-                                },
-                                {
-                                  "key" : "lastName",
-                                  "displayName" : "Patient Last Name",
-                                   "required" : "false"
-                                },
-
-                                {
-                                  "key" : "firstName",
-                                  "displayName" : "Patient First Name",
-                                   "required" : "false"
-                                },
-
-                                {
-                                  "key" : "gender",
-                                  "displayName" : "Patient Gender",
-                                   "required" : "false"
-                                },
-
-                                {
-                                  "key" : "location",
-                                  "displayName" : "Location",
-                                   "required" : "false"
-                                },
-
-                                {
-                                  "key" : "nationalIdentifier",
-                                  "displayName" : "National Identifier",
-                                   "required" : "false"
-                                },
-
-                                {
-                                  "key" : "registrationDate",
-                                  "displayName" : "Registration Date",
-                                   "required" : "false"
-                                }
-
-                              ]
-                            },
 
                             {
                               "displayName" : "TB Registration",
@@ -206,39 +154,6 @@
                                   "type" : "MAP",
                                   "displayName" : "Attributes",
                                   "required": false
-                                }
-                              ]
-                            },
-
-                            {
-                              "displayName" : "Send Aggregate Data",
-                              "subject" : "send_aggregate_data",
-                              "actionParameters" : [
-
-                                {
-                                  "key" : "value",
-                                  "displayName" : "value",
-                                  "required" : false
-                                },
-                                {
-                                  "key" : "commcareCaseType",
-                                  "displayName" : "Data Element Name",
-                                  "required" : false
-                                },
-                                {
-                                  "key" : "orgUnit",
-                                  "displayName" : "Org Unit",
-                                  "required" : false
-                                },
-                                {
-                                  "key" : "timePeriod",
-                                  "displayName" : "Time Period",
-                                  "required" : false
-                                },
-                                 {
-                                  "key" : "additionalParameters",
-                                  "displayName" : "Additional Parameters",
-                                  "type" : "MAP"
                                 }
                               ]
                             }
