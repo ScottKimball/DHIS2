@@ -24,13 +24,10 @@ public class HttpService {
 
     private static final String USERNAME = "admin";
     private static final String PASSWORD = "district";
-    private ObjectMapper objectMapper = new ObjectMapper();
     private Logger logger = LoggerFactory.getLogger(HttpService.class);
 
 
-    /*
-        Constructs an HTTP POST request and returns the response
-         */
+    /*  Constructs an HTTP POST request and returns the response  */
     public String send (Request request) {
 
         DefaultHttpClient httpClient = new DefaultHttpClient();

@@ -96,6 +96,42 @@
                               ]
                             },
 
+                            {
+                                "displayName" : "TB Register Entity",
+                                "subject" : "tb_register_entity",
+                                "actionParameters" : [
+
+
+                                    {
+                                        "key" : "caseId",
+                                        "displayName" : "Case ID",
+                                        "required" : "false"
+                                    },
+
+                                    {
+                                        "key" : "patientLastName",
+                                        "displayName" : "PatientLastName",
+                                        "required" : "false"
+                                    },
+                                    {
+                                        "key" : "patientFirstName",
+                                        "displayName" : "Patient First Name",
+                                        "required" : "false"
+                                    },
+                                    {
+                                        "key" : "patientGender",
+                                        "displayName" : "Patient Gender",
+                                        "required" : "false"
+                                    },
+                                    {
+                                        "key" : "patientLocation",
+                                        "displayName" : "Patient Location",
+                                        "required" : "false"
+                                    }
+
+                                ]
+                            },
+
                              {
                               "displayName" : "TB Follow Up",
                               "subject" : "tb_follow_up",

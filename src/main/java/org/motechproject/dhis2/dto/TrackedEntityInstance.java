@@ -1,7 +1,8 @@
-package org.motechproject.dhis2.domain;
+package org.motechproject.dhis2.dto;
 
-import org.motechproject.mds.annotations.Entity;
-import org.motechproject.mds.annotations.Field;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.node.ArrayNode;
+import org.codehaus.jackson.node.ObjectNode;
 
 import java.util.List;
 
@@ -9,24 +10,13 @@ import java.util.List;
  * Created by scott on 9/10/14.
  */
 
-@Entity
 public class TrackedEntityInstance {
 
-    @Field
-    String commcareId;
-
-
-    @Field
-    TrackedEntity trackedEntityType;
-
-    @Field
-    String dhis2Uuid;
-
-    @Field
-    List<Attribute> attributes;
-
-    @Field
-    OrgUnit orgUnit;
+    private String commcareId;
+    private TrackedEntity trackedEntityType;
+    private String dhis2Uuid;
+    private List<Attribute> attributes;
+    private OrgUnit orgUnit;
 
     public TrackedEntityInstance() {};
 
@@ -51,6 +41,9 @@ public class TrackedEntityInstance {
         this.orgUnit = orgUnit;
     }
 
+    public TrackedEntityInstance(String commcareId) {
+        this.commcareId = commcareId;
+    }
 
     public OrgUnit getOrgUnit() {
         return orgUnit;
@@ -58,10 +51,6 @@ public class TrackedEntityInstance {
 
     public void setOrgUnit(OrgUnit orgUnit) {
         this.orgUnit = orgUnit;
-    }
-
-    public TrackedEntityInstance(String commcareId) {
-        this.commcareId = commcareId;
     }
 
     public String getCommcareId() {
@@ -94,5 +83,35 @@ public class TrackedEntityInstance {
 
     public void setAttributes(List<Attribute> attributes) {
         this.attributes = attributes;
+    }
+
+    public String toJson() {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        ObjectNode root = objectMapper.createObjectNode();
+        root.put("orgUnit", orgUnit.getDhis2Uuid());
+        root.put("trackedEntity", trackedEntityType.getDhis2Uuid());
+
+        ArrayNode nodeList = objectMapper.createArrayNode();
+
+        for (Attribute attribute : attributes) {
+
+
+            ObjectNode node = objectMapper.createObjectNode();
+            node.put("attribute", attribute.getDhis2Uuid());
+            node.put("value", attribute.getValue());
+            nodeList.add(node);
+        }
+
+        root.putArray("attributes").addAll(nodeList);
+
+        try {
+            String result = objectMapper.writeValueAsString(root);
+            return result;
+        } catch (Exception e) {
+
+        }
+
+        return null;
     }
 }

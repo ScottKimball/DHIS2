@@ -1,7 +1,5 @@
-package org.motechproject.dhis2.domain;
+package org.motechproject.dhis2.dto;
 
-import org.motechproject.mds.annotations.Entity;
-import org.motechproject.mds.annotations.Field;
 
 import java.util.List;
 
@@ -9,22 +7,12 @@ import java.util.List;
  * Created by scott on 9/10/14.
  */
 
-@Entity
 public class Program {
 
-    @Field
     String commcareCaseType;
-
-    @Field
     String dhis2Name;
-
-    @Field
     String dhis2Uuid;
-
-    @Field
     TrackedEntity trackedEntityType;
-
-    @Field
     List<Attribute> requiredAttributes;
 
     public Program(String commcareCaseType, String dhis2Name, String dhis2Uuid, TrackedEntity trackedEntityInstance ,
@@ -39,6 +27,7 @@ public class Program {
     public List<Attribute> getRequiredAttributes() {
         return requiredAttributes;
     }
+
 
     public void setRequiredAttributes(List<Attribute> requiredAttributes) {
         this.requiredAttributes = requiredAttributes;

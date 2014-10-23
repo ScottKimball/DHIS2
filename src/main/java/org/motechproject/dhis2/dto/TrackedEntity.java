@@ -1,24 +1,16 @@
-package org.motechproject.dhis2.domain;
-
-import org.motechproject.mds.annotations.Entity;
-import org.motechproject.mds.annotations.Field;
+package org.motechproject.dhis2.dto;
 
 import java.util.List;
 
 /**
  * Created by scott on 9/17/14.
  */
-@Entity
+
 public class TrackedEntity {
 
-    @Field
-    String type;
-
-    @Field
-    String dhis2Uuid;
-
-    @Field
-    List<Attribute> requiredAttributes;
+    private String type;
+    private String dhis2Uuid;
+    private List<Attribute> requiredAttributes;
 
     public TrackedEntity (String type) {
         this.type = type;
@@ -54,4 +46,6 @@ public class TrackedEntity {
     public void setRequiredAttributes(List<Attribute> requiredAttributes) {
         this.requiredAttributes = requiredAttributes;
     }
+
+
 }

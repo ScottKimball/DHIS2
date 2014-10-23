@@ -1,22 +1,15 @@
-package org.motechproject.dhis2.domain;
+package org.motechproject.dhis2.dto;
 
-import org.motechproject.mds.annotations.Entity;
-import org.motechproject.mds.annotations.Field;
 
 /**
  * Created by scott on 9/18/14.
  */
 
-@Entity
+
 public class Attribute {
 
-    @Field
     private String name;
-
-    @Field
     private String dhis2Uuid;
-
-    @Field
     private String value;
 
     public Attribute(String name, String dhis2Uuid, String value) {

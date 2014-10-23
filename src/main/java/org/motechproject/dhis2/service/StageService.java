@@ -1,6 +1,6 @@
 package org.motechproject.dhis2.service;
 
-import org.motechproject.dhis2.domain.Stage;
+import org.motechproject.dhis2.dto.Stage;
 
 /**
  * Created by scott on 10/8/14.

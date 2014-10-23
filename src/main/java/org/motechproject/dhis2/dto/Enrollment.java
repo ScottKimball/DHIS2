@@ -1,4 +1,4 @@
-package org.motechproject.dhis2.domain;
+package org.motechproject.dhis2.dto;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
@@ -16,9 +16,6 @@ import java.util.Map;
 
 public class Enrollment {
 
-
-    private ObjectMapper objectMapper;
-
     private Program program;
     private TrackedEntityInstance trackedEntityInstance;
     private OrgUnit orgUnit;
@@ -30,10 +27,10 @@ public class Enrollment {
         this.orgUnit = orgUnit;
         this.date = date;
 
-        this.objectMapper = new ObjectMapper();
     }
 
     public String trackedEntityToJson () {
+        ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode root = objectMapper.createObjectNode();
         root.put("orgUnit", orgUnit.getDhis2Uuid());
         root.put("trackedEntity", trackedEntityInstance.getTrackedEntityType().getDhis2Uuid());
@@ -68,6 +65,7 @@ public class Enrollment {
     }
 
     public String enrollmentToJson () {
+        ObjectMapper objectMapper = new ObjectMapper();
 
         Map<String, Attribute> trackedEntityAttributeMap = new HashMap<String, Attribute>();
         List<Attribute> trackedEntityAttributeList = trackedEntityInstance.getAttributes();

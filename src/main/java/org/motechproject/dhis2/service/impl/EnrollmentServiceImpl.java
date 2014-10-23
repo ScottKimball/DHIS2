@@ -1,14 +1,13 @@
 package org.motechproject.dhis2.service.impl;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.motechproject.dhis2.domain.Enrollment;
-import org.motechproject.dhis2.domain.TrackedEntityInstance;
+import org.motechproject.dhis2.dto.Enrollment;
+import org.motechproject.dhis2.dto.TrackedEntityInstance;
 import org.motechproject.dhis2.http.HttpService;
 import org.motechproject.dhis2.http.Request;
 import org.motechproject.dhis2.http.Response;
 import org.motechproject.dhis2.repository.TrackedEntityInstanceDataService;
 import org.motechproject.dhis2.service.EnrollmentService;
-import org.motechproject.dhis2.service.SendAggregateDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +17,14 @@ import org.springframework.stereotype.Service;
  * Created by scott on 9/10/14.
  */
 
-// TODO:
 @Service
 public class EnrollmentServiceImpl implements EnrollmentService {
 
     private static final String URL = "http://admin:district@localhost:8080"; // dhis2 base url
     private static final String TRACKED_ENTITY_PATH = "/api/trackedEntityInstances";
     private static final String ENROLLMENT_PATH = "/api/enrollments";
-    private Logger logger = LoggerFactory.getLogger(SendAggregateDataService.class);
+
+    private Logger logger = LoggerFactory.getLogger(EnrollmentServiceImpl.class);
 
     private HttpService httpService;
     private TrackedEntityInstanceDataService trackedEntityInstanceDataService;

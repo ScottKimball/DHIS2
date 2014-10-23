@@ -1,9 +1,7 @@
-package org.motechproject.dhis2.domain;
+package org.motechproject.dhis2.dto;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
-import org.motechproject.mds.annotations.Entity;
-import org.motechproject.mds.annotations.Field;
 
 import java.util.Map;
 
@@ -11,36 +9,16 @@ import java.util.Map;
  * Created by scott on 9/10/14.
  */
 
-@Entity
 public class Stage {
 
-    @Field
-    String commcareName;
-
-    @Field
-    String dhis2Name;
-
-    @Field
-    String dhis2Uuid;
-
-    @Field
-    Program program;
-
-    @Field
-    Map<String , String> attributes;
-
-    @Field
-    String date;
-
-    @Field
-    TrackedEntityInstance trackedEntityInstance;
-
-    @Field
-    OrgUnit orgUnit;
-
-    private ObjectMapper objectMapper;
-
-
+    private String commcareName;
+    private String dhis2Name;
+    private String dhis2Uuid;
+    private Program program;
+    private Map<String , String> attributes;
+    private String date;
+    private TrackedEntityInstance trackedEntityInstance;
+    private OrgUnit orgUnit;
 
     public Stage(String commcareName, String dhis2Name, String dhis2Uuid, Program program,
                  Map<String, String> attributes, String date,
@@ -54,7 +32,6 @@ public class Stage {
         this.date = date;
         this.trackedEntityInstance = trackedEntityInstance;
         this.orgUnit = orgUnit;
-        objectMapper = new ObjectMapper();
     }
 
     public String getDate() {
@@ -133,6 +110,7 @@ public class Stage {
   "status" : "COMPLETED"
 }
    */
+        ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode root = objectMapper.createObjectNode();
         root.put("program", getProgram().getDhis2Uuid());
         root.put("orgUnit", getOrgUnit().getDhis2Uuid());
@@ -153,7 +131,6 @@ public class Stage {
     }
 
     public static void main(String[] args) {
-        // program orgunit trackedentityinstance
 
         Program program = new Program(null,null,"programUUID",null,null);
         OrgUnit orgUnit = new OrgUnit(null,null,"orgUnitUUID");

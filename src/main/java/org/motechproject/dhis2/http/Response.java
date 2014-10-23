@@ -10,9 +10,6 @@ import java.io.StringWriter;
  * Model for DHIS2 Json Response:
  * {"status":"SUCCESS","importCount":{"imported":1,"updated":0,"ignored":0,"deleted":0},"reference":"GmHEBGJtymq"}
  *
- * {"imported":0,"updated":0,"ignored":0,"importSummaries":[{"status":"SUCCESS","dataValueCount":
- * {"imported":0,"updated":0,"ignored":0,"deleted":0},"importCount":{"imported":0,"updated":0,"ignored":0,"deleted":0},
- * "reference":"zoOLDFn9XIQ","href":"http://localhost:8080/api/events/zoOLDFn9XIQ"}]}
  */
 public class Response {
 

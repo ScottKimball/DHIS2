@@ -6,14 +6,12 @@
     <import resource="classpath*:META-INF/motech/*.xml" />
 
 
-    <osgi:reference id="dataElementDataService" interface="org.motechproject.dhis2.repository.DataElementDataService" />
-    <osgi:reference id="dataValueDataService" interface="org.motechproject.dhis2.repository.DataValueDataService" />
     <osgi:reference id="programDataService" interface="org.motechproject.dhis2.repository.ProgramDataService" />
     <osgi:reference id="stageDataService" interface="org.motechproject.dhis2.repository.StageDataService" />
     <osgi:reference id="trackedEntityInstanceDataService" interface="org.motechproject.dhis2.repository.TrackedEntityInstanceDataService" />
     <osgi:reference id="trackedEntityDataService" interface="org.motechproject.dhis2.repository.TrackedEntityDataService" />
     <osgi:reference id="attributeDataService" interface="org.motechproject.dhis2.repository.AttributeDataService" />
-
+    <osgi:reference id="orgUnitDataService" interface="org.motechproject.dhis2.repository.OrgUnitDataService" />
 
     <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay" />
     <osgi:reference id="eventListenerRegistryService" interface="org.motechproject.event.listener.EventListenerRegistryService"/>

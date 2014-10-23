@@ -1,8 +1,6 @@
 package org.motechproject.dhis2.service;
 
-import org.motechproject.dhis2.domain.Enrollment;
-import org.motechproject.dhis2.http.HttpService;
-import org.motechproject.event.MotechEvent;
+import org.motechproject.dhis2.dto.Enrollment;
 
 
 /**

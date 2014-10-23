@@ -1,10 +1,14 @@
 package org.motechproject.dhis2.event;
 
 import org.joda.time.DateTime;
-import org.motechproject.dhis2.domain.*;
+import org.motechproject.dhis2.dto.*;
+import org.motechproject.dhis2.domain.OrgUnitMapper;
+import org.motechproject.dhis2.domain.TrackedEntityMapper;
+import org.motechproject.dhis2.repository.OrgUnitDataService;
 import org.motechproject.dhis2.repository.ProgramDataService;
+import org.motechproject.dhis2.repository.TrackedEntityDataService;
 import org.motechproject.dhis2.service.EnrollmentService;
-import org.motechproject.dhis2.service.SendAggregateDataService;
+import org.motechproject.dhis2.service.RegistrationService;
 import org.motechproject.dhis2.service.StageService;
 import org.motechproject.event.listener.EventRelay;
 import org.slf4j.Logger;
@@ -33,27 +37,88 @@ public class EventHandler {
     private String nationalIdentifierUUID = "AuPLng5hLbE";
     private String stage_uuid = "vxQUcroMY0r";
 
-    private SendAggregateDataService sendAggregateDataService;
     private Logger logger = LoggerFactory.getLogger(EventHandler.class);
     private EventRelay eventRelay;
     private EnrollmentService enrollmentService;
     private ProgramDataService programDataService;
     private StageService stageService;
+    private TrackedEntityDataService trackedEntityDataService;
+    private OrgUnitDataService orgUnitDataService;
+    private RegistrationService registrationService;
 
 
     @Autowired
     public EventHandler( EventRelay eventRelay,
-                         SendAggregateDataService sendAggregateDataService,
                          EnrollmentService enrollmentService, ProgramDataService programDataService,
-                         StageService stageService
+                         StageService stageService,
+                         TrackedEntityDataService trackedEntityDataService,
+                         OrgUnitDataService orgUnitDataService,
+                         RegistrationService registrationService
                         ){
         this.eventRelay = eventRelay;
-        this.sendAggregateDataService = sendAggregateDataService;
         this.enrollmentService = enrollmentService;
         this.programDataService = programDataService;
         this.stageService = stageService;
+        this.trackedEntityDataService = trackedEntityDataService;
+        this.orgUnitDataService = orgUnitDataService;
+        this.registrationService = registrationService;
 
 
+    }
+
+
+    /*This will be the generic entity registration event handler*/
+    @MotechListener(subjects = {EventSubjects.REGISTER_ENTITY})
+    public void handleRegistration(MotechEvent event) {
+
+    }
+
+    /*This will be the generic program enrollment event handler */
+    @MotechListener(subjects = {EventSubjects.ENROLL_IN_PROGRAM})
+    public void handleEnrollment(MotechEvent event) {
+
+    }
+
+    /*This will be the generic program stage event handler */
+    @MotechListener(subjects = {EventSubjects.UPDATE_PROGRAM_STAGE})
+    public void handleStageUpdate(MotechEvent event) {
+
+    }
+
+    @MotechListener(subjects = {EventSubjects.TB_REGISTER_ENTITY})
+    public void handleTbEntityRegistration(MotechEvent event){
+
+        Map<String , Object> params = event.getParameters();
+
+        String commcareUUID =(String) params.get(EventParams.CASE_ID);
+
+        /*TODO: Replace with call to MDS */
+        //TrackedEntityMapper trackedEntityMapper = trackedEntityDataService.findByName("Person");
+        //TrackedEntity trackedEntity = new TrackedEntity(trackedEntityMapper.getName());
+        TrackedEntity trackedEntity = new TrackedEntity("Person", trackedEntityUUID, null);
+        trackedEntity.setDhis2Uuid(trackedEntityUUID);
+
+        /*This is where we will make a call to DHIS2 to get the list of attributes for the program
+        * and then iterate down the list and pull the corresponding fields off of the event*/
+        List<Attribute> attributeList = new ArrayList<Attribute>();
+        attributeList.add( new Attribute("lastName", lastNameUUID, (String) params.get(EventParams.LAST_NAME)));
+        attributeList.add(new Attribute("firstName", firstNameUUID, (String) params.get(EventParams.FIRST_NAME)));
+        attributeList.add(new Attribute("gender", genderUUID, (String) params.get(EventParams.LAST_NAME)));
+
+
+        OrgUnitMapper orgUnitMapper = orgUnitDataService.findByName((String) params.get(EventParams.LOCATION));
+
+       /*TODO: Replace with call to MDS */
+        OrgUnit orgUnit = new OrgUnit(orgUnitMapper.getName(),null,orgUnitUUID);
+
+
+        TrackedEntityInstance trackedEntityInstance = new TrackedEntityInstance(commcareUUID,trackedEntity,
+                attributeList);
+
+        TrackedEntityInstance instance = new TrackedEntityInstance(commcareUUID,trackedEntity,null,attributeList,
+                orgUnit);
+
+        registrationService.send(instance);
     }
 
 
@@ -92,7 +157,6 @@ public class EventHandler {
         stageService.send(stage);
 
         }
-
 
 
     /* Ths method builds an enrollment object from a motech event. Right now, it builds new entities on the fly
