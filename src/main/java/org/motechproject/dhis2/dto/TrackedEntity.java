@@ -12,16 +12,13 @@ public class TrackedEntity {
     private String dhis2Uuid;
     private List<Attribute> requiredAttributes;
 
-    public TrackedEntity (String type) {
-        this.type = type;
-    }
 
 
-    public TrackedEntity(String type, String dhis2Uuid, List<Attribute> requiredAttributes) {
+    public TrackedEntity(String type, String dhis2Uuid) {
         this.type = type;
         this.dhis2Uuid = dhis2Uuid;
-        this.requiredAttributes = requiredAttributes;
     }
+
 
     public String getType() {
         return type;

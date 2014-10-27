@@ -11,5 +11,5 @@ import org.motechproject.mds.service.MotechDataService;
 public interface ProgramDataService extends MotechDataService<ProgramMapper> {
 
     @Lookup
-    public ProgramMapper findByName (@LookupField(name = "name") String name);
+    public ProgramMapper findByExternalName(@LookupField(name = "externalName") String externalName);
 }

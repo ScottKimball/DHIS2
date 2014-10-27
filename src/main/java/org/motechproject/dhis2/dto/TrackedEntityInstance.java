@@ -12,7 +12,7 @@ import java.util.List;
 
 public class TrackedEntityInstance {
 
-    private String commcareId;
+    private String externalId;
     private TrackedEntity trackedEntityType;
     private String dhis2Uuid;
     private List<Attribute> attributes;
@@ -20,29 +20,29 @@ public class TrackedEntityInstance {
 
     public TrackedEntityInstance() {};
 
-    public TrackedEntityInstance(String commcareId, TrackedEntity trackedEntityType, List<Attribute> attributes) {
-        this.commcareId = commcareId;
+    public TrackedEntityInstance(String externalId, TrackedEntity trackedEntityType, List<Attribute> attributes) {
+        this.externalId = externalId;
         this.trackedEntityType = trackedEntityType;
         this.attributes = attributes;
     }
 
-    public TrackedEntityInstance(String commcareId, TrackedEntity trackedEntityType, String dhis2Uuid, List<Attribute> attributes) {
-        this.commcareId = commcareId;
+    public TrackedEntityInstance(String externalId, TrackedEntity trackedEntityType, String dhis2Uuid, List<Attribute> attributes) {
+        this.externalId = externalId;
         this.trackedEntityType = trackedEntityType;
         this.dhis2Uuid = dhis2Uuid;
         this.attributes = attributes;
     }
 
-    public TrackedEntityInstance(String commcareId, TrackedEntity trackedEntityType, String dhis2Uuid, List<Attribute> attributes, OrgUnit orgUnit) {
-        this.commcareId = commcareId;
+    public TrackedEntityInstance(String externalId, TrackedEntity trackedEntityType, String dhis2Uuid, List<Attribute> attributes, OrgUnit orgUnit) {
+        this.externalId = externalId;
         this.trackedEntityType = trackedEntityType;
         this.dhis2Uuid = dhis2Uuid;
         this.attributes = attributes;
         this.orgUnit = orgUnit;
     }
 
-    public TrackedEntityInstance(String commcareId) {
-        this.commcareId = commcareId;
+    public TrackedEntityInstance(String externalId) {
+        this.externalId = externalId;
     }
 
     public OrgUnit getOrgUnit() {
@@ -53,12 +53,12 @@ public class TrackedEntityInstance {
         this.orgUnit = orgUnit;
     }
 
-    public String getCommcareId() {
-        return commcareId;
+    public String getExternalId() {
+        return externalId;
     }
 
-    public void setCommcareId(String commcareId) {
-        this.commcareId = commcareId;
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
     }
 
     public TrackedEntity getTrackedEntityType() {

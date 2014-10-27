@@ -144,7 +144,7 @@ public class Enrollment {
         testList.add(new Attribute("testname2", "testuuid2","testvalue2"));
         List<Attribute> entityList = new ArrayList<Attribute>();
         entityList.add(new Attribute("test","test","test"));
-        TrackedEntity entity = new TrackedEntity("Person");
+        TrackedEntity entity = new TrackedEntity("Person",null);
         entity.setDhis2Uuid("trackedEntityUUID");
 
         List<Attribute> programRequiredAttributes = new ArrayList<Attribute>();
@@ -155,7 +155,7 @@ public class Enrollment {
         instance.setAttributes(testList);
         instance.setTrackedEntityType(entity);
 
-        OrgUnit orgUnit = new OrgUnit("commcarename" ,null, "uuid");
+        OrgUnit orgUnit = new OrgUnit("commcarename" , "uuid");
         DateTime date = new DateTime();
         date = DateTime.now();
 

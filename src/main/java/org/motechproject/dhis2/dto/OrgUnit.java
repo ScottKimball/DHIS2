@@ -8,23 +8,22 @@ package org.motechproject.dhis2.dto;
 
 public class OrgUnit {
 
-    private String commcareName;
+    private String externalName;
     private String dhis2Name;
     private String dhis2Uuid;
 
 
-    public OrgUnit(String commcareName, String dhis2Name, String dhis2Uuid) {
-        this.commcareName = commcareName;
-        this.dhis2Name = dhis2Name;
+    public OrgUnit(String externalName, String dhis2Uuid) {
+        this.externalName = externalName;
         this.dhis2Uuid = dhis2Uuid;
     }
 
-    public String getCommcareName() {
-        return commcareName;
+    public String getExternalName() {
+        return externalName;
     }
 
-    public void setCommcareName(String commcareName) {
-        this.commcareName = commcareName;
+    public void setExternalName(String externalName) {
+        this.externalName = externalName;
     }
 
     public String getDhis2Uuid() {

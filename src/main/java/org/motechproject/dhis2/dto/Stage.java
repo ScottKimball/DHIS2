@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class Stage {
 
-    private String commcareName;
+    private String externalName;
     private String dhis2Name;
     private String dhis2Uuid;
     private Program program;
@@ -20,11 +20,11 @@ public class Stage {
     private TrackedEntityInstance trackedEntityInstance;
     private OrgUnit orgUnit;
 
-    public Stage(String commcareName, String dhis2Name, String dhis2Uuid, Program program,
+    public Stage(String externalName, String dhis2Name, String dhis2Uuid, Program program,
                  Map<String, String> attributes, String date,
                  TrackedEntityInstance trackedEntityInstance,
                  OrgUnit orgUnit) {
-        this.commcareName = commcareName;
+        this.externalName = externalName;
         this.dhis2Name = dhis2Name;
         this.dhis2Uuid = dhis2Uuid;
         this.program = program;
@@ -50,12 +50,12 @@ public class Stage {
         this.trackedEntityInstance = trackedEntityInstance;
     }
 
-    public String getCommcareName() {
-        return commcareName;
+    public String getExternalName() {
+        return externalName;
     }
 
-    public void setCommcareName(String commcareName) {
-        this.commcareName = commcareName;
+    public void setExternalName(String externalName) {
+        this.externalName = externalName;
     }
 
     public String getDhis2Name() {
@@ -133,7 +133,7 @@ public class Stage {
     public static void main(String[] args) {
 
         Program program = new Program(null,null,"programUUID",null,null);
-        OrgUnit orgUnit = new OrgUnit(null,null,"orgUnitUUID");
+        OrgUnit orgUnit = new OrgUnit(null,"orgUnitUUID");
         TrackedEntityInstance instance = new TrackedEntityInstance(null,null,"trackedEntityUUID",null);
         Stage stage = new Stage("name","name","stageUUID",program,null,"2015-10-06",instance,orgUnit);
 

@@ -9,15 +9,15 @@ import java.util.List;
 
 public class Program {
 
-    String commcareCaseType;
+    String externalProgramName;
     String dhis2Name;
     String dhis2Uuid;
     TrackedEntity trackedEntityType;
     List<Attribute> requiredAttributes;
 
-    public Program(String commcareCaseType, String dhis2Name, String dhis2Uuid, TrackedEntity trackedEntityInstance ,
+    public Program(String externalProgramName, String dhis2Name, String dhis2Uuid, TrackedEntity trackedEntityInstance ,
                    List<Attribute> requiredAttributes) {
-        this.commcareCaseType = commcareCaseType;
+        this.externalProgramName = externalProgramName;
         this.dhis2Name = dhis2Name;
         this.dhis2Uuid = dhis2Uuid;
         this.trackedEntityType = trackedEntityInstance;
@@ -33,12 +33,12 @@ public class Program {
         this.requiredAttributes = requiredAttributes;
     }
 
-    public String getCommcareCaseType() {
-        return commcareCaseType;
+    public String getExternalProgramName() {
+        return externalProgramName;
     }
 
-    public void setCommcareCaseType(String commcareCaseType) {
-        this.commcareCaseType = commcareCaseType;
+    public void setExternalProgramName(String externalProgramName) {
+        this.externalProgramName = externalProgramName;
     }
 
     public String getDhis2Name() {

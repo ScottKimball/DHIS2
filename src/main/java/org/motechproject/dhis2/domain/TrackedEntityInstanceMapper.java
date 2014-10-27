@@ -11,22 +11,39 @@ import org.motechproject.mds.annotations.Field;
 public class TrackedEntityInstanceMapper {
 
     @Field
-    private String name;
+    private String externalName;
+
+    @Field
+    private String dhis2Name;
 
     @Field
     private String dhis2Uuid;
 
-    public TrackedEntityInstanceMapper(String name, String dhis2Uuid) {
-        this.name = name;
+    public TrackedEntityInstanceMapper(String externalName, String dhis2Name, String dhis2Uuid) {
+        this.externalName = externalName;
+        this.dhis2Name = dhis2Name;
         this.dhis2Uuid = dhis2Uuid;
     }
 
-    public String getName() {
-        return name;
+    public TrackedEntityInstanceMapper(String dhis2Uuid, String externalName) {
+        this.dhis2Uuid = dhis2Uuid;
+        this.externalName = externalName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getDhis2Name() {
+        return dhis2Name;
+    }
+
+    public void setDhis2Name(String dhis2Name) {
+        this.dhis2Name = dhis2Name;
+    }
+
+    public String getExternalName() {
+        return externalName;
+    }
+
+    public void setExternalName(String externalName) {
+        this.externalName = externalName;
     }
 
     public String getDhis2Uuid() {

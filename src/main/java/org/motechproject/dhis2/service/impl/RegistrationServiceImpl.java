@@ -55,7 +55,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         logger.debug(response.toString());
 
         TrackedEntityInstanceMapper trackedEntityInstanceMapper =
-                new TrackedEntityInstanceMapper(trackedEntityInstance.getCommcareId(),response.getReference());
+                new TrackedEntityInstanceMapper(trackedEntityInstance.getExternalId(),response.getReference());
         trackedEntityInstanceDataService.create(trackedEntityInstanceMapper);
         logger.debug("Entity saved.UUID: " + trackedEntityInstanceMapper.getDhis2Uuid() );
 

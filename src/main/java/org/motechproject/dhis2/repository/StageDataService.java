@@ -11,7 +11,7 @@ import org.motechproject.mds.service.MotechDataService;
 public interface StageDataService extends MotechDataService<StageMapper> {
 
     @Lookup
-    public StageMapper findByName (@LookupField(name = "name") String name);
+    public StageMapper findByExternalName(@LookupField(name = "externalName") String externalName);
 
 
 }
