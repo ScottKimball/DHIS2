@@ -13,30 +13,18 @@ import java.util.List;
 public class TrackedEntityInstance {
 
     private String externalId;
-    private TrackedEntity trackedEntityType;
+    private String trackedEntityType;
     private String dhis2Uuid;
     private List<Attribute> attributes;
-    private OrgUnit orgUnit;
+    private String orgUnit;
 
     public TrackedEntityInstance() {};
 
-    public TrackedEntityInstance(String externalId, TrackedEntity trackedEntityType, List<Attribute> attributes) {
-        this.externalId = externalId;
-        this.trackedEntityType = trackedEntityType;
-        this.attributes = attributes;
-    }
 
-    public TrackedEntityInstance(String externalId, TrackedEntity trackedEntityType, String dhis2Uuid, List<Attribute> attributes) {
-        this.externalId = externalId;
-        this.trackedEntityType = trackedEntityType;
-        this.dhis2Uuid = dhis2Uuid;
-        this.attributes = attributes;
-    }
 
-    public TrackedEntityInstance(String externalId, TrackedEntity trackedEntityType, String dhis2Uuid, List<Attribute> attributes, OrgUnit orgUnit) {
+    public TrackedEntityInstance(String externalId, String trackedEntityType, List<Attribute> attributes, String orgUnit) {
         this.externalId = externalId;
         this.trackedEntityType = trackedEntityType;
-        this.dhis2Uuid = dhis2Uuid;
         this.attributes = attributes;
         this.orgUnit = orgUnit;
     }
@@ -45,11 +33,11 @@ public class TrackedEntityInstance {
         this.externalId = externalId;
     }
 
-    public OrgUnit getOrgUnit() {
+    public String getOrgUnit() {
         return orgUnit;
     }
 
-    public void setOrgUnit(OrgUnit orgUnit) {
+    public void setOrgUnit(String orgUnit) {
         this.orgUnit = orgUnit;
     }
 
@@ -61,11 +49,11 @@ public class TrackedEntityInstance {
         this.externalId = externalId;
     }
 
-    public TrackedEntity getTrackedEntityType() {
+    public String getTrackedEntityType() {
         return trackedEntityType;
     }
 
-    public void setTrackedEntityType(TrackedEntity trackedEntityType) {
+    public void setTrackedEntityType(String trackedEntityType) {
         this.trackedEntityType = trackedEntityType;
     }
 
@@ -89,8 +77,8 @@ public class TrackedEntityInstance {
         ObjectMapper objectMapper = new ObjectMapper();
 
         ObjectNode root = objectMapper.createObjectNode();
-        root.put("orgUnit", orgUnit.getDhis2Uuid());
-        root.put("trackedEntity", trackedEntityType.getDhis2Uuid());
+        root.put("orgUnit", orgUnit);
+        root.put("trackedEntity", trackedEntityType);
 
         ArrayNode nodeList = objectMapper.createArrayNode();
 

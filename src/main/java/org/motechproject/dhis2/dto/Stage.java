@@ -134,7 +134,8 @@ public class Stage {
 
         Program program = new Program(null,null,"programUUID",null,null);
         OrgUnit orgUnit = new OrgUnit(null,"orgUnitUUID");
-        TrackedEntityInstance instance = new TrackedEntityInstance(null,null,"trackedEntityUUID",null);
+        TrackedEntityInstance instance = new TrackedEntityInstance(null,null,null,null);
+        instance.setDhis2Uuid("trackedEntityUUID");
         Stage stage = new Stage("name","name","stageUUID",program,null,"2015-10-06",instance,orgUnit);
 
         System.out.println(stage.toJson());

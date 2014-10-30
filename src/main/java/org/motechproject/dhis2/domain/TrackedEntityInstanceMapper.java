@@ -19,13 +19,8 @@ public class TrackedEntityInstanceMapper {
     @Field
     private String dhis2Uuid;
 
-    public TrackedEntityInstanceMapper(String externalName, String dhis2Name, String dhis2Uuid) {
-        this.externalName = externalName;
-        this.dhis2Name = dhis2Name;
-        this.dhis2Uuid = dhis2Uuid;
-    }
 
-    public TrackedEntityInstanceMapper(String dhis2Uuid, String externalName) {
+    public TrackedEntityInstanceMapper(String externalName,String dhis2Uuid) {
         this.dhis2Uuid = dhis2Uuid;
         this.externalName = externalName;
     }

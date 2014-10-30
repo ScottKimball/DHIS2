@@ -2,6 +2,7 @@ package org.motechproject.dhis2.service.impl;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.motechproject.dhis2.dto.Enrollment;
+import org.motechproject.dhis2.dto.Program;
 import org.motechproject.dhis2.dto.TrackedEntityInstance;
 import org.motechproject.dhis2.http.HttpService;
 import org.motechproject.dhis2.http.Request;
@@ -38,38 +39,12 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
     @Override
     public void send(Enrollment enrollment) {
-        Response response;
 
-        // create tracked entity instance in DHIS2
-        String body = enrollment.trackedEntityToJson();
+        Response response;
+        String body = enrollment.toJson();
 
         Request request = new Request(URL + TRACKED_ENTITY_PATH, body);
         String entityString = httpService.send(request);
-
-        try {
-           response = objectMapper.readValue(entityString, Response.class);
-
-        } catch (Exception e) {
-            logger.debug(e.toString());
-            return;
-        }
-
-
-        TrackedEntityInstance instance = enrollment.getTrackedEntityInstance();
-
-        if (!response.getStatus().equals("SUCCESS")) {
-            logger.debug("Unsuccessful post to DHIS2: " + response);
-            return;
-        }
-
-        logger.debug(response.toString());
-        instance.setDhis2Uuid(response.getReference());
-     //   trackedEntityInstanceDataService.create(instance);
-
-        request.setUrl(URL + ENROLLMENT_PATH);
-        request.setJsonBody(enrollment.enrollmentToJson());
-
-        entityString = httpService.send(request);
 
         try {
             response = objectMapper.readValue(entityString, Response.class);

@@ -9,76 +9,17 @@
 
 
                             {
-                              "displayName" : "TB Registration",
-                              "subject" : "tb_registration",
+                              "displayName" : "TB Enroll In Program",
+                              "subject" : "tb_enroll_in_program",
                               "actionParameters" : [
 
-                                {
-                                  "key" : "instanceId",
-                                  "displayName" : "Instance ID",
-                                  "required" : "false"
-                                },
-                                 {
-                                  "key" : "caseId",
-                                  "displayName" : "Case ID",
-                                  "required" : "false"
-                                },
-                                {
-                                  "key" : "userId",
-                                  "displayName" : "User ID",
-                                   "required" : "false"
-                                },
-                                {
-                                  "key" : "deviceId",
-                                  "displayName" : "Device ID",
-                                   "required" : "false"
-                                },
-                                {
-                                  "key" : "userName",
-                                  "displayName" : "Username",
-                                   "required" : "false"
-                                },
-                                {
-                                    "key" : "applicationVersion",
-                                    "displayName" : "Application Version",
-                                    "required" : "false"
-                                 },
 
-                                 {
-                                     "key" : "timeStart",
-                                     "displayName" : "Time Start",
-                                     "required" : "false"
-                                  },
                                   {
-                                    "key" : "timeEnd",
-                                    "displayName" : "Time End",
-                                    "required" : "false"
-                                 },
-                                 {
-                                   "key" : "patientLastName",
-                                   "displayName" : "PatientLastName",
-                                   "required" : "false"
-                                },
-                                {
-                                  "key" : "patientFirstName",
-                                  "displayName" : "Patient First Name",
-                                  "required" : "false"
-                               },
-                               {
-                                 "key" : "patientGender",
-                                 "displayName" : "Patient Gender",
-                                 "required" : "false"
-                              },
-                              {
-                                 "key" : "patientLocation",
-                                  "displayName" : "Patient Location",
-                                  "required" : "false"
-                                },
-                                 {
-                                 "key" : "nationalIdentifier",
-                                  "displayName" : "National Identifier",
-                                  "required" : "false"
-                                },
+                                      "key" : "externalId",
+                                      "displayName" : "Case ID",
+                                      "required" : "false"
+                                  },
+
 
                                  {
                                  "key" : "registrationDate",
@@ -87,12 +28,15 @@
                                 },
 
 
-                                {
-                                  "key" : "Other",
-                                  "type" : "MAP",
-                                  "displayName" : "Attributes",
-                                  "required": false
-                                }
+                                  {
+                                      "key" : "nationalIdentifier",
+                                      "displayName" : "National Identifier",
+                                      "required" : "false"
+                                  }
+
+
+
+
                               ]
                             },
 
@@ -103,7 +47,7 @@
 
 
                                     {
-                                        "key" : "caseId",
+                                        "key" : "externalId",
                                         "displayName" : "Case ID",
                                         "required" : "false"
                                     },
@@ -180,7 +124,7 @@
                                   "required" : "false"
                                 },
                                  {
-                                 "key" : "caseId",
+                                 "key" : "externalId",
                                   "displayName" : "Case ID",
                                   "required" : "false"
                                 },

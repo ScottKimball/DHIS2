@@ -8,7 +8,7 @@ public final class EventSubjects {
 
     private EventSubjects() {}
 
-    public static final String TB_REGISTRATION ="tb_registration";
+    public static final String TB_ENROLL ="tb_enroll_in_program";
     public static final String TB_FOLLOW_UP = "tb_follow_up";
     public static final String TB_REGISTER_ENTITY = "tb_register_entity";
 

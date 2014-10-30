@@ -170,8 +170,8 @@
                     <instructions>
                         <Blueprint-Enabled>true</Blueprint-Enabled>
                         <Resource-Path>helloworld/resources</Resource-Path>
-                        <Context-File>META-INF/motech/applicationContext.xml</Context-File>
-                        <Context-Path>helloworld</Context-Path>
+                     <!--   <Context-File>META-INF/motech/applicationContext.xml</Context-File> -->
+                        <Context-Path>dhis2</Context-Path>
                         <Export-Package>org.motechproject.dhis2.service;version=${project.version},
                             org.motechproject.dhis2.repository;version=${project.version},
                             org.motechproject.dhis2.domain;version=${project.version},</Export-Package>

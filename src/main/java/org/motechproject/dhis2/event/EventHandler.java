@@ -1,12 +1,9 @@
 package org.motechproject.dhis2.event;
 
 import org.joda.time.DateTime;
-import org.motechproject.dhis2.domain.TrackedEntityMapper;
+import org.motechproject.dhis2.domain.*;
 import org.motechproject.dhis2.dto.*;
-import org.motechproject.dhis2.domain.OrgUnitMapper;
-import org.motechproject.dhis2.repository.OrgUnitDataService;
-import org.motechproject.dhis2.repository.ProgramDataService;
-import org.motechproject.dhis2.repository.TrackedEntityDataService;
+import org.motechproject.dhis2.repository.*;
 import org.motechproject.dhis2.service.EnrollmentService;
 import org.motechproject.dhis2.service.RegistrationService;
 import org.motechproject.dhis2.service.StageService;
@@ -17,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.springframework.stereotype.Component;
+
 
 import java.util.*;
 
@@ -45,6 +43,8 @@ public class EventHandler {
     private TrackedEntityDataService trackedEntityDataService;
     private OrgUnitDataService orgUnitDataService;
     private RegistrationService registrationService;
+    private AttributeDataService attributeDataService;
+    private TrackedEntityInstanceDataService trackedEntityInstanceDataService;
 
 
     @Autowired
@@ -53,7 +53,9 @@ public class EventHandler {
                          StageService stageService,
                          TrackedEntityDataService trackedEntityDataService,
                          OrgUnitDataService orgUnitDataService,
-                         RegistrationService registrationService
+                         RegistrationService registrationService,
+                         AttributeDataService attributeDataService,
+                         TrackedEntityInstanceDataService trackedEntityInstanceDataService
                         ){
         this.eventRelay = eventRelay;
         this.enrollmentService = enrollmentService;
@@ -62,6 +64,8 @@ public class EventHandler {
         this.trackedEntityDataService = trackedEntityDataService;
         this.orgUnitDataService = orgUnitDataService;
         this.registrationService = registrationService;
+        this.attributeDataService = attributeDataService;
+        this.trackedEntityInstanceDataService = trackedEntityInstanceDataService;
 
 
     }
@@ -90,39 +94,70 @@ public class EventHandler {
 
         Map<String , Object> params = event.getParameters();
 
-        String externalUUID =(String) params.get(EventParams.CASE_ID);
+        String externalUUID =(String) params.get(EventParams.EXTERNAL_ID);
 
         /*TODO: Replace with call to MDS */
         TrackedEntityMapper trackedEntityMapper = trackedEntityDataService.findByExternalName("Person");
-        TrackedEntity trackedEntity = new TrackedEntity(trackedEntityMapper.getExternalName(),
-                trackedEntityMapper.getDhis2Uuid());
+     //   TrackedEntity trackedEntity = new TrackedEntity(trackedEntityMapper.getExternalName(),
+       //         trackedEntityMapper.getDhis2Uuid());
+        String trackedEntity = trackedEntityMapper.getDhis2Uuid();
 
 
         /*This is where we will make a call to DHIS2 to get the list of attributes for the program
         * and then iterate down the list and pull the corresponding fields off of the event*/
+
         List<Attribute> attributeList = new ArrayList<Attribute>();
-        attributeList.add( new Attribute("lastName", lastNameUUID, (String) params.get(EventParams.LAST_NAME)));
-        attributeList.add(new Attribute("firstName", firstNameUUID, (String) params.get(EventParams.FIRST_NAME)));
-        attributeList.add(new Attribute("gender", genderUUID, (String) params.get(EventParams.LAST_NAME)));
+
+        AttributeMapper lastName = attributeDataService.findByDhis2Name("lastName");
+        attributeList.add(new Attribute(lastName.getDhis2Name(),lastName.getDhis2Uuid(),
+                (String) params.get(EventParams.LAST_NAME)));
+
+        AttributeMapper firstName = attributeDataService.findByDhis2Name("firstName");
+        attributeList.add(new Attribute(firstName.getDhis2Name(),firstName.getDhis2Uuid(),
+                (String)params.get(EventParams.FIRST_NAME)));
+
+        AttributeMapper gender = attributeDataService.findByDhis2Name("gender");
+        attributeList.add(new Attribute(gender.getDhis2Name(),gender.getDhis2Uuid(),
+                (String)params.get(EventParams.GENDER)));
+
 
         OrgUnitMapper orgUnitMapper = orgUnitDataService.findByExternalName((String) params.get(EventParams.LOCATION));
-        OrgUnit orgUnit = new OrgUnit(orgUnitMapper.getExternalName(),orgUnitUUID);
 
-
-        TrackedEntityInstance trackedEntityInstance = new TrackedEntityInstance(externalUUID,trackedEntity,
-                attributeList);
-
-        TrackedEntityInstance instance = new TrackedEntityInstance(externalUUID,trackedEntity,null,attributeList,
-                orgUnit);
+        String orgUnit = orgUnitMapper.getDhis2Uuid();
+        TrackedEntityInstance instance = new TrackedEntityInstance(externalUUID,trackedEntity,attributeList,orgUnit);
 
         registrationService.send(instance);
     }
 
 
-    @MotechListener(subjects  = {EventSubjects.TB_REGISTRATION})
+    @MotechListener(subjects  = {EventSubjects.TB_ENROLL})
     public void handleTbRegistration (MotechEvent event) {
-        logger.debug("In TB Registration handler");
-        Enrollment enrollment = buildEnrollment(event);
+
+        Map<String,Object> params =  event.getParameters();
+
+        /*Get program UUID from Commmcare Case Type*/
+        ProgramMapper programMapper = programDataService.findByExternalName((String)params.get("programName"));
+
+        /*Get trackedEntityInstance UUID from MDS*/
+        TrackedEntityInstanceMapper instanceMapper = trackedEntityInstanceDataService.
+                findByExternalName((String) params.get("caseId"));
+
+        /*This is where we would make a call to DHIS2 to get the program details. Here we just hardwire in data*/
+        List<String> attributeNames = new ArrayList<String>();
+        attributeNames.add("National Identifier");
+
+        Program program = new Program("TB_Visit",programMapper.getDhis2Name(),programMapper.getDhis2Uuid(),null,null);
+        List<Attribute> programAttributes = new ArrayList<Attribute>();
+        AttributeMapper attributeMapper;
+
+        for (String s : attributeNames) {
+            attributeMapper = attributeDataService.findByDhis2Name(s);
+            programAttributes.add(new Attribute(attributeMapper.getDhis2Name(),attributeMapper.getDhis2Uuid(),
+                    (String)params.get(attributeMapper.getExternalName())));
+        }
+        Enrollment enrollment = new Enrollment(programMapper.getDhis2Uuid(),instanceMapper.getDhis2Uuid(),
+                null,programAttributes);
+
         enrollmentService.send(enrollment);
     }
 
@@ -147,77 +182,14 @@ public class EventHandler {
 
         /* This is where we will query mds for for the trackedEntityInstance. Right now we just
          create a new tracked entity instance */
-        TrackedEntityInstance instance = new TrackedEntityInstance(commcareId,
-                new TrackedEntity("Person",null) ,INSTANCE_UUID, null,new OrgUnit(null,orgUnitUUID));
+      //  TrackedEntityInstance instance = new TrackedEntityInstance(commcareId,
+        //        new TrackedEntity("Person",null) ,INSTANCE_UUID, null,new OrgUnit(null,orgUnitUUID));
 
-        Stage stage = new Stage(formName,STAGE_NAME,stage_uuid,program,null,followUpDate,instance,instance.getOrgUnit());
-        stageService.send(stage);
+     //   Stage stage = new Stage(formName,STAGE_NAME,stage_uuid,program,null,followUpDate,instance,instance.getOrgUnit());
+     //   stageService.send(stage);
 
         }
 
 
-    /* Ths method builds an enrollment object from a motech event. Right now, it builds new entities on the fly
-     * but eventually the following sequence will occur:
-      * 1.  Get the form name
-      * 2. Query mds to get the list of form fields for that form
-      * 3. Pull the form field values off the event
-      * 4. Query mds for program associated with the form case type
-      * 5. Query mds for the Tracked entity associated with the program
-      * 6. Create a new tracked entity instance (instance)
-      *     a. For each Tracked entity required attribute
-      *         1. add a new attribute to instance.attributeList with associated form field value
-      *     b. at this point, uuid is null. Will have to wait for interacting with dhis2 to get uuid
-      * 7. query mds for associated org unit
-      * 8. get date from event parameters
-      * 9. construct new enrollment (program , date. orgUnit, instance)
-       * */
-    private Enrollment buildEnrollment (MotechEvent event) {
-        /*
-        String commcareUUID =(String) event.getParameters().get(EventParams.CASE_ID);  // case_ID
-        Map<String , Object> params = event.getParameters();
-
-        // create tracked entity
-        TrackedEntity trackedEntity = new TrackedEntity("Person");
-        trackedEntity.setDhis2Uuid(trackedEntityUUID);
-
-
-        //Required Attribute for program
-        Attribute programRequiredAttribute = new Attribute("nationalIdentifier",nationalIdentifierUUID,null);
-
-        // list for programattribute list
-        List<Attribute> programAttributeList = new ArrayList<Attribute>();
-        programAttributeList.add(programRequiredAttribute);
-
-        // create program
-        Program program = new Program((String) params.get(EventParams.CASE_TYPE) ,"TB Visit" ,programUUID,
-                trackedEntity , programAttributeList);
-
-
-        // pulls form fields off event parameters and adds them to tracked entity instance attribute list
-        List<Attribute> attributeList = new ArrayList<Attribute>();
-
-        attributeList.add( new Attribute("lastName", lastNameUUID, (String) params.get(EventParams.LAST_NAME)));
-        attributeList.add(new Attribute("firstName", firstNameUUID, (String) params.get(EventParams.FIRST_NAME)));
-        attributeList.add(new Attribute("gender", genderUUID, (String) params.get(EventParams.LAST_NAME)));
-        attributeList.add(new Attribute("nationalIdentifier",nationalIdentifierUUID,
-                (String) params.get(EventParams.NATIONAL_IDENTIFIER)));
-
-        TrackedEntityInstance trackedEntityInstance = new TrackedEntityInstance(commcareUUID,trackedEntity,
-                attributeList);
-
-        // create org unit
-        OrgUnit orgUnit = new OrgUnit((String) params.get(EventParams.LOCATION) ,
-                (String) params.get(EventParams.LOCATION),orgUnitUUID);
-
-        // create date
-        DateTime date = new DateTime();
-        DateTime.parse((String)params.get(EventParams.DATE_REGISTERED));
-
-        Enrollment enrollment = new Enrollment(program,trackedEntityInstance,orgUnit,date );
-
-        return enrollment;
-        */
-        return null;
-    }
 
 }

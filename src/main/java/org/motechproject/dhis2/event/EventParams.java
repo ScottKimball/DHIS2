@@ -18,7 +18,7 @@ public final class EventParams {
     public static final String GENDER = "patientGender";
     public static final String LOCATION = "patientLocation";
     public static final String NATIONAL_IDENTIFIER = "nationalIdentifier";
-    public static final String CASE_ID = "caseId";
+    public static final String EXTERNAL_ID = "externalId";
     public static final String CASE_TYPE = "caseType";
     public static final String DATE_REGISTERED = "registrationDate";
 }

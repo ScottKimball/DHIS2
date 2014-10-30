@@ -13,4 +13,7 @@ public interface AttributeDataService extends MotechDataService <AttributeMapper
     @Lookup
     public AttributeMapper findByExternalName (@LookupField(name = "externalName") String name);
 
+    @Lookup
+    public AttributeMapper findByDhis2Name (@LookupField(name = "dhis2Name") String dhis2Name);
+
 }
