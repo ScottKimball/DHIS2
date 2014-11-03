@@ -49,6 +49,38 @@
                             },
 
                             {
+                                "displayName" : "TB Follow Up (Stage update)",
+                                "subject" : "tb_follow_up",
+                                "actionParameters" : [
+
+
+                                    {
+                                        "key" : "externalId",
+                                        "displayName" : "External ID",
+                                        "required" : "true"
+                                    },
+
+
+                                    {
+                                        "key" : "program",
+                                        "displayName" : "DHIS2 Program",
+                                        "required" : "true"
+                                    },
+
+
+
+                                    {
+                                        "key" : "date",
+                                        "displayName" : "Follow Up Date",
+                                        "required" : "false"
+                                    }
+
+
+
+                                ]
+                            },
+
+                            {
                                 "displayName" : "TB Register Entity",
                                 "subject" : "tb_register_entity",
                                 "actionParameters" : [

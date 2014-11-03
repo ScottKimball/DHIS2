@@ -2,8 +2,6 @@ package org.motechproject.dhis2.service.impl;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.motechproject.dhis2.dto.Enrollment;
-import org.motechproject.dhis2.dto.Program;
-import org.motechproject.dhis2.dto.TrackedEntityInstance;
 import org.motechproject.dhis2.http.HttpService;
 import org.motechproject.dhis2.http.Request;
 import org.motechproject.dhis2.http.Response;

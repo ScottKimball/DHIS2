@@ -14,24 +14,19 @@ public class Stage {
     private String externalName;
     private String dhis2Name;
     private String dhis2Uuid;
-    private Program program;
+    private String program;
     private Map<String , String> attributes;
     private String date;
-    private TrackedEntityInstance trackedEntityInstance;
-    private OrgUnit orgUnit;
+    private String trackedEntityInstance;
+    private String orgUnit;
 
-    public Stage(String externalName, String dhis2Name, String dhis2Uuid, Program program,
-                 Map<String, String> attributes, String date,
-                 TrackedEntityInstance trackedEntityInstance,
-                 OrgUnit orgUnit) {
-        this.externalName = externalName;
-        this.dhis2Name = dhis2Name;
-        this.dhis2Uuid = dhis2Uuid;
+
+    public Stage(String program, String orgUnit, String date, String dhis2Uuid, String trackedEntityInstance) {
         this.program = program;
-        this.attributes = attributes;
-        this.date = date;
-        this.trackedEntityInstance = trackedEntityInstance;
         this.orgUnit = orgUnit;
+        this.date = date;
+        this.dhis2Uuid = dhis2Uuid;
+        this.trackedEntityInstance = trackedEntityInstance;
     }
 
     public String getDate() {
@@ -42,11 +37,11 @@ public class Stage {
         this.date = date;
     }
 
-    public TrackedEntityInstance getTrackedEntityInstance() {
+    public String getTrackedEntityInstance() {
         return trackedEntityInstance;
     }
 
-    public void setTrackedEntityInstance(TrackedEntityInstance trackedEntityInstance) {
+    public void setTrackedEntityInstance(String trackedEntityInstance) {
         this.trackedEntityInstance = trackedEntityInstance;
     }
 
@@ -74,11 +69,11 @@ public class Stage {
         this.dhis2Uuid = dhis2Uuid;
     }
 
-    public Program getProgram() {
+    public String getProgram() {
         return program;
     }
 
-    public void setProgram(Program program) {
+    public void setProgram(String program) {
         this.program = program;
     }
 
@@ -90,13 +85,15 @@ public class Stage {
         this.attributes = attributes;
     }
 
-    public OrgUnit getOrgUnit() {
+    public String getOrgUnit() {
         return orgUnit;
     }
 
-    public void setOrgUnit(OrgUnit orgUnit) {
+    public void setOrgUnit(String orgUnit) {
         this.orgUnit = orgUnit;
     }
+
+
 
     public String toJson() {
 
@@ -112,11 +109,11 @@ public class Stage {
    */
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode root = objectMapper.createObjectNode();
-        root.put("program", getProgram().getDhis2Uuid());
-        root.put("orgUnit", getOrgUnit().getDhis2Uuid());
+        root.put("program", getProgram());
+        root.put("orgUnit", getOrgUnit());
         root.put("eventDate",getDate());
         root.put("programStage",getDhis2Uuid());
-        root.put("trackedEntityInstance",getTrackedEntityInstance().getDhis2Uuid());
+        root.put("trackedEntityInstance",getTrackedEntityInstance());
         root.put("status","COMPLETED");
 
 
@@ -132,11 +129,12 @@ public class Stage {
 
     public static void main(String[] args) {
 
-        Program program = new Program(null,null,"programUUID",null,null);
-        OrgUnit orgUnit = new OrgUnit(null,"orgUnitUUID");
-        TrackedEntityInstance instance = new TrackedEntityInstance(null,null,null,null);
-        instance.setDhis2Uuid("trackedEntityUUID");
-        Stage stage = new Stage("name","name","stageUUID",program,null,"2015-10-06",instance,orgUnit);
+        String program = "ProgramUUID";
+        String orgUnit = "OrgUnitUUID";
+        String instance = "InstanceUUID";
+        String date = "date";
+        String stageUUID = "stageUUID";
+        Stage stage = new Stage(program,orgUnit,date,stageUUID,instance);
 
         System.out.println(stage.toJson());
     }

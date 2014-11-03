@@ -12,4 +12,7 @@ public interface ProgramDataService extends MotechDataService<ProgramMapper> {
 
     @Lookup
     public ProgramMapper findByExternalName(@LookupField(name = "externalName") String externalName);
+
+    @Lookup
+    public ProgramMapper findByDhis2Name(@LookupField(name = "dhis2Name") String dhis2Name);
 }

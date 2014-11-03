@@ -29,34 +29,6 @@ public class Enrollment {
 
 
 
-    public String toJson () {
-
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        ObjectNode root = objectMapper.createObjectNode();
-        root.put("program",program);
-        root.put("trackedEntityInstance",trackedEntityInstance);
-
-        ArrayNode nodeList = objectMapper.createArrayNode();
-
-        for (Attribute attribute : attributes) {
-            ObjectNode node = objectMapper.createObjectNode();
-            node.put("attribute", attribute.getDhis2Uuid());
-
-            node.put("value", attribute.getValue());
-            nodeList.add(node);
-
-        }
-        root.putArray("attributes").addAll(nodeList);
-
-        try {
-            String result = objectMapper.writeValueAsString(root);
-            return result;
-        } catch (Exception e) {
-
-        }
-        return null;
-    }
 
     public String getProgram() {
         return program;
@@ -88,6 +60,35 @@ public class Enrollment {
 
     public void setAttributes(List<Attribute> attributes) {
         this.attributes = attributes;
+    }
+
+    public String toJson () {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        ObjectNode root = objectMapper.createObjectNode();
+        root.put("program",program);
+        root.put("trackedEntityInstance",trackedEntityInstance);
+
+        ArrayNode nodeList = objectMapper.createArrayNode();
+
+        for (Attribute attribute : attributes) {
+            ObjectNode node = objectMapper.createObjectNode();
+            node.put("attribute", attribute.getDhis2Uuid());
+
+            node.put("value", attribute.getValue());
+            nodeList.add(node);
+
+        }
+        root.putArray("attributes").addAll(nodeList);
+
+        try {
+            String result = objectMapper.writeValueAsString(root);
+            return result;
+        } catch (Exception e) {
+
+        }
+        return null;
     }
 
     public static void main (String [] args) {

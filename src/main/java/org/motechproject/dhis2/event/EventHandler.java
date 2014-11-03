@@ -45,6 +45,7 @@ public class EventHandler {
     private RegistrationService registrationService;
     private AttributeDataService attributeDataService;
     private TrackedEntityInstanceDataService trackedEntityInstanceDataService;
+    private StageDataService stageDataService;
 
 
     @Autowired
@@ -55,7 +56,8 @@ public class EventHandler {
                          OrgUnitDataService orgUnitDataService,
                          RegistrationService registrationService,
                          AttributeDataService attributeDataService,
-                         TrackedEntityInstanceDataService trackedEntityInstanceDataService
+                         TrackedEntityInstanceDataService trackedEntityInstanceDataService,
+                         StageDataService stageDataService
                         ){
         this.eventRelay = eventRelay;
         this.enrollmentService = enrollmentService;
@@ -66,6 +68,7 @@ public class EventHandler {
         this.registrationService = registrationService;
         this.attributeDataService = attributeDataService;
         this.trackedEntityInstanceDataService = trackedEntityInstanceDataService;
+        this.stageDataService = stageDataService;
 
 
     }
@@ -134,7 +137,8 @@ public class EventHandler {
         Map<String,Object> params =  event.getParameters();
 
 
-        ProgramMapper programMapper = programDataService.findByExternalName((String)params.get(params.get(EventParams.PROGRAM)));
+        ProgramMapper programMapper = programDataService.findByExternalName((String)params.
+                get(params.get(EventParams.PROGRAM)));
 
         /*Get trackedEntityInstance UUID from MDS*/
         TrackedEntityInstanceMapper instanceMapper = trackedEntityInstanceDataService.
@@ -161,31 +165,29 @@ public class EventHandler {
 
     @MotechListener(subjects = {EventSubjects.TB_FOLLOW_UP})
     public void handleTbFollowUp(MotechEvent event) {
-        final String STAGE_NAME = "TB Follow Up";
-        final String INSTANCE_UUID = "IzHblRD2sDH";
 
         logger.debug("In Handle Tb follow up");
 
         Map<String,Object> params = event.getParameters();
 
-        String followUpDate = (String) params.get("followUpDate");
+        /*Get instance uuid*/
+        TrackedEntityInstanceMapper instanceMapper = trackedEntityInstanceDataService.findByExternalName((String)params.get("externalId"));
 
-        // had to hardwire in value in tasks as field is not currently exposed
-        String commcareId =(String) params.get("caseId");
+        /*TODO: call to dhis2 for orgUnit info*/
+        /*Right now just hardwire it in*/
+        OrgUnitMapper orgUnitMapper = orgUnitDataService.findByExternalName("Njandama_MCHP");
 
-        /* We will have to query mds for form information by looking up the form fields for the particular
-        form in MDS. Right now we just create new Program information. */
-        String formName = event.getSubject();
-        Program program = new Program(formName,"TB Program", programUUID,new TrackedEntity("Person",null),null );
+        String program = (String)params.get("program");
+        ProgramMapper programMapper = programDataService.findByDhis2Name(program);
 
-        /* This is where we will query mds for for the trackedEntityInstance. Right now we just
-         create a new tracked entity instance */
-      //  TrackedEntityInstance instance = new TrackedEntityInstance(commcareId,
-        //        new TrackedEntity("Person",null) ,INSTANCE_UUID, null,new OrgUnit(null,orgUnitUUID));
+        String followUpDate = (String) params.get("date");
 
-     //   Stage stage = new Stage(formName,STAGE_NAME,stage_uuid,program,null,followUpDate,instance,instance.getOrgUnit());
-     //   stageService.send(stage);
+        StageMapper stageMapper = stageDataService.findByExternalName(event.getSubject());
 
+        Stage stage = new Stage(programMapper.getDhis2Uuid(),orgUnitMapper.getDhis2Uuid(),followUpDate,
+                stageMapper.getDhis2Uuid(),instanceMapper.getDhis2Uuid());
+
+        stageService.send(stage);
         }
 
 
