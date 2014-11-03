@@ -43,7 +43,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         Response response;
         String body = enrollment.toJson();
 
-        Request request = new Request(URL + TRACKED_ENTITY_PATH, body);
+        Request request = new Request(URL + ENROLLMENT_PATH, body);
         String entityString = httpService.send(request);
 
         try {

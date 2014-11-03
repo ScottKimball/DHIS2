@@ -13,6 +13,7 @@
     <osgi:reference id="attributeDataService" interface="org.motechproject.dhis2.repository.AttributeDataService" />
     <osgi:reference id="orgUnitDataService" interface="org.motechproject.dhis2.repository.OrgUnitDataService" />
 
+
     <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay" />
     <osgi:reference id="eventListenerRegistryService" interface="org.motechproject.event.listener.EventListenerRegistryService"/>
 

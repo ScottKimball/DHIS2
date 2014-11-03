@@ -16,12 +16,20 @@
 
                                   {
                                       "key" : "externalId",
-                                      "displayName" : "Case ID",
-                                      "required" : "false"
+                                      "displayName" : "External ID",
+                                      "required" : "true"
                                   },
 
 
-                                 {
+                                  {
+                                      "key" : "program",
+                                      "displayName" : "DHIS2 Program",
+                                      "required" : "true"
+                                  },
+
+
+
+                                  {
                                  "key" : "registrationDate",
                                   "displayName" : "Registration Date",
                                   "required" : "false"
@@ -74,69 +82,9 @@
                                     }
 
                                 ]
-                            },
-
-                             {
-                              "displayName" : "TB Follow Up",
-                              "subject" : "tb_follow_up",
-                              "actionParameters" : [
-
-                                {
-                                  "key" : "instanceId",
-                                  "displayName" : "Instance ID",
-                                  "required" : "false"
-                                },
-                                {
-                                  "key" : "userId",
-                                  "displayName" : "User ID",
-                                   "required" : "false"
-                                },
-                                {
-                                  "key" : "deviceId",
-                                  "displayName" : "Devicd ID",
-                                   "required" : "false"
-                                },
-                                {
-                                  "key" : "userName",
-                                  "displayName" : "Username",
-                                   "required" : "false"
-                                },
-                                {
-                                    "key" : "applicationVersion",
-                                    "displayName" : "Application Version",
-                                    "required" : "false"
-                                 },
-
-                                 {
-                                     "key" : "timeStart",
-                                     "displayName" : "Time Start",
-                                     "required" : "false"
-                                  },
-                                  {
-                                    "key" : "timeEnd",
-                                    "displayName" : "Time End",
-                                    "required" : "false"
-                                 },
-
-                                 {
-                                 "key" : "followUpDate",
-                                  "displayName" : "Follow Up Date",
-                                  "required" : "false"
-                                },
-                                 {
-                                 "key" : "externalId",
-                                  "displayName" : "Case ID",
-                                  "required" : "false"
-                                },
-
-                                {
-                                  "key" : "Other",
-                                  "type" : "MAP",
-                                  "displayName" : "Attributes",
-                                  "required": false
-                                }
-                              ]
                             }
+
+
 
                           ]
 

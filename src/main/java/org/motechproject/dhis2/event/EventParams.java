@@ -21,4 +21,5 @@ public final class EventParams {
     public static final String EXTERNAL_ID = "externalId";
     public static final String CASE_TYPE = "caseType";
     public static final String DATE_REGISTERED = "registrationDate";
+    public static final String PROGRAM = "program";
 }

@@ -3,9 +3,7 @@ package org.motechproject.dhis2.dto;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
-import org.joda.time.DateTime;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,11 +16,11 @@ public class Enrollment {
 
     private String program;
     private String trackedEntityInstance;
-    private DateTime date;
+    private String date;
     private List<Attribute> attributes;
 
 
-    public Enrollment(String program, String trackedEntityInstance, DateTime date, List<Attribute> attributes) {
+    public Enrollment(String program, String trackedEntityInstance, String date, List<Attribute> attributes) {
         this.program = program;
         this.trackedEntityInstance = trackedEntityInstance;
         this.date = date;
@@ -32,10 +30,8 @@ public class Enrollment {
 
 
     public String toJson () {
+
         ObjectMapper objectMapper = new ObjectMapper();
-
-        Map<String, Attribute> trackedEntityAttributeMap = new HashMap<String, Attribute>();
-
 
         ObjectNode root = objectMapper.createObjectNode();
         root.put("program",program);
@@ -43,13 +39,11 @@ public class Enrollment {
 
         ArrayNode nodeList = objectMapper.createArrayNode();
 
-
         for (Attribute attribute : attributes) {
             ObjectNode node = objectMapper.createObjectNode();
             node.put("attribute", attribute.getDhis2Uuid());
 
-            Attribute trackedEntityAttribute = trackedEntityAttributeMap.get(attribute.getName());
-            node.put("value", trackedEntityAttribute.getValue());
+            node.put("value", attribute.getValue());
             nodeList.add(node);
 
         }
@@ -80,11 +74,11 @@ public class Enrollment {
         this.trackedEntityInstance = trackedEntityInstance;
     }
 
-    public DateTime getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(DateTime date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

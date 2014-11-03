@@ -96,10 +96,8 @@ public class EventHandler {
 
         String externalUUID =(String) params.get(EventParams.EXTERNAL_ID);
 
-        /*TODO: Replace with call to MDS */
+        /*TODO: Replace with call to DHIS2 */
         TrackedEntityMapper trackedEntityMapper = trackedEntityDataService.findByExternalName("Person");
-     //   TrackedEntity trackedEntity = new TrackedEntity(trackedEntityMapper.getExternalName(),
-       //         trackedEntityMapper.getDhis2Uuid());
         String trackedEntity = trackedEntityMapper.getDhis2Uuid();
 
 
@@ -135,28 +133,28 @@ public class EventHandler {
 
         Map<String,Object> params =  event.getParameters();
 
-        /*Get program UUID from Commmcare Case Type*/
-        ProgramMapper programMapper = programDataService.findByExternalName((String)params.get("programName"));
+
+        ProgramMapper programMapper = programDataService.findByExternalName((String)params.get(params.get(EventParams.PROGRAM)));
 
         /*Get trackedEntityInstance UUID from MDS*/
         TrackedEntityInstanceMapper instanceMapper = trackedEntityInstanceDataService.
-                findByExternalName((String) params.get("caseId"));
+                findByExternalName((String) params.get(EventParams.EXTERNAL_ID));
 
         /*This is where we would make a call to DHIS2 to get the program details. Here we just hardwire in data*/
         List<String> attributeNames = new ArrayList<String>();
-        attributeNames.add("National Identifier");
+        attributeNames.add("nationalIdentifier");
 
-        Program program = new Program("TB_Visit",programMapper.getDhis2Name(),programMapper.getDhis2Uuid(),null,null);
         List<Attribute> programAttributes = new ArrayList<Attribute>();
         AttributeMapper attributeMapper;
 
         for (String s : attributeNames) {
             attributeMapper = attributeDataService.findByDhis2Name(s);
             programAttributes.add(new Attribute(attributeMapper.getDhis2Name(),attributeMapper.getDhis2Uuid(),
-                    (String)params.get(attributeMapper.getExternalName())));
+                    (String)params.get(attributeMapper.getDhis2Name())));
         }
+        String date = (String) params.get(EventParams.DATE_REGISTERED);
         Enrollment enrollment = new Enrollment(programMapper.getDhis2Uuid(),instanceMapper.getDhis2Uuid(),
-                null,programAttributes);
+                date,programAttributes);
 
         enrollmentService.send(enrollment);
     }
