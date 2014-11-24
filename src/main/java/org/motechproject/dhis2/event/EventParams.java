@@ -13,13 +13,19 @@ public final class EventParams {
     public static final String NAME = "IntQuestion";
     public static final String VALUE = "value";
     public static final String PARAMS = "additionalParameters";
-    public static final String FIRST_NAME = "patientFirstName";
-    public static final String LAST_NAME = "patientLastName";
-    public static final String GENDER = "patientGender";
-    public static final String LOCATION = "patientLocation";
+    public static final String FIRST_NAME = "First Name";
+    public static final String LAST_NAME = "Last Name";
+    public static final String GENDER = "Gender";
+    public static final String LOCATION = "Location";
     public static final String NATIONAL_IDENTIFIER = "nationalIdentifier";
-    public static final String EXTERNAL_ID = "externalId";
     public static final String CASE_TYPE = "caseType";
+
+
     public static final String DATE_REGISTERED = "registrationDate";
+
+
     public static final String PROGRAM = "program";
+    public static final String EXTERNAL_ID = "externalId";
+    public static final String ENTITY_TYPE = "entityType";
+
 }

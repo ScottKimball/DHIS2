@@ -1,8 +1,13 @@
 package org.motechproject.dhis2.event;
 
+import com.google.gson.Gson;
+
+import com.jayway.jsonpath.JsonPath;
 import org.joda.time.DateTime;
 import org.motechproject.dhis2.domain.*;
 import org.motechproject.dhis2.dto.*;
+import org.motechproject.dhis2.http.HttpQuery;
+import org.motechproject.dhis2.http.Request;
 import org.motechproject.dhis2.repository.*;
 import org.motechproject.dhis2.service.EnrollmentService;
 import org.motechproject.dhis2.service.RegistrationService;
@@ -35,6 +40,10 @@ public class EventHandler {
     private String nationalIdentifierUUID = "AuPLng5hLbE";
     private String stage_uuid = "vxQUcroMY0r";
 
+    private static final String URL = "http://admin:district@localhost:8080/api";
+    private static final String PROGRAM_PATH = "/programs/";
+
+
     private Logger logger = LoggerFactory.getLogger(EventHandler.class);
     private EventRelay eventRelay;
     private EnrollmentService enrollmentService;
@@ -46,6 +55,7 @@ public class EventHandler {
     private AttributeDataService attributeDataService;
     private TrackedEntityInstanceDataService trackedEntityInstanceDataService;
     private StageDataService stageDataService;
+    private HttpQuery httpQuery;
 
 
     @Autowired
@@ -57,7 +67,8 @@ public class EventHandler {
                          RegistrationService registrationService,
                          AttributeDataService attributeDataService,
                          TrackedEntityInstanceDataService trackedEntityInstanceDataService,
-                         StageDataService stageDataService
+                         StageDataService stageDataService,
+                         HttpQuery httpQuery
                         ){
         this.eventRelay = eventRelay;
         this.enrollmentService = enrollmentService;
@@ -69,6 +80,7 @@ public class EventHandler {
         this.attributeDataService = attributeDataService;
         this.trackedEntityInstanceDataService = trackedEntityInstanceDataService;
         this.stageDataService = stageDataService;
+        this.httpQuery = httpQuery;
 
 
     }
@@ -96,31 +108,37 @@ public class EventHandler {
     public void handleTbEntityRegistration(MotechEvent event){
 
         Map<String , Object> params = event.getParameters();
+        List<Attribute> attributeList = new ArrayList<Attribute>();
 
         String externalUUID =(String) params.get(EventParams.EXTERNAL_ID);
 
-        /*TODO: Replace with call to DHIS2 */
-        TrackedEntityMapper trackedEntityMapper = trackedEntityDataService.findByExternalName("Person");
+        /*Get tracked Entity UUID */
+        String entityType = (String) params.get("entityType");
+        TrackedEntityMapper trackedEntityMapper = trackedEntityDataService.findByExternalName(entityType);
         String trackedEntity = trackedEntityMapper.getDhis2Uuid();
 
+        /*Get program UUID*/
+        String program = (String) params.get("program");
+        ProgramMapper programMapper = programDataService.findByDhis2Name(program);
 
-        /*This is where we will make a call to DHIS2 to get the list of attributes for the program
-        * and then iterate down the list and pull the corresponding fields off of the event*/
+        /*Get program information from DHIS2 server*/
+        Request programRequest = new Request(URL + PROGRAM_PATH + programMapper.getDhis2Uuid(),"");
+        Object jsonResponse = httpQuery.send(programRequest);
+        List<Object> programTrackedEntityAttributes = JsonPath.read(jsonResponse, "$..programTrackedEntityAttributes[*].attribute");
 
-        List<Attribute> attributeList = new ArrayList<Attribute>();
+        /*
+        * Iterates down program attributes and adds them to attribute list.
+        * */
+        for (Object o : programTrackedEntityAttributes) {
+            String attributeName = JsonPath.read(o,"$.name");
+            String attributeId = JsonPath.read(o,"$.id");
+            String attributeValue = (String) params.get(attributeName);
 
-        AttributeMapper lastName = attributeDataService.findByDhis2Name("lastName");
-        attributeList.add(new Attribute(lastName.getDhis2Name(),lastName.getDhis2Uuid(),
-                (String) params.get(EventParams.LAST_NAME)));
-
-        AttributeMapper firstName = attributeDataService.findByDhis2Name("firstName");
-        attributeList.add(new Attribute(firstName.getDhis2Name(),firstName.getDhis2Uuid(),
-                (String)params.get(EventParams.FIRST_NAME)));
-
-        AttributeMapper gender = attributeDataService.findByDhis2Name("gender");
-        attributeList.add(new Attribute(gender.getDhis2Name(),gender.getDhis2Uuid(),
-                (String)params.get(EventParams.GENDER)));
-
+          /*  Might need to check if required attribute is present here */
+            if(attributeValue != null) {
+                attributeList.add(new Attribute(attributeName,attributeId,attributeValue));
+            }
+        }
 
         OrgUnitMapper orgUnitMapper = orgUnitDataService.findByExternalName((String) params.get(EventParams.LOCATION));
 

@@ -85,30 +85,42 @@
                                 "subject" : "tb_register_entity",
                                 "actionParameters" : [
 
+                                    {
+                                        "key" : "program",
+                                        "displayName" : "DHIS2 Program",
+                                        "required" : "true"
+                                    },
+
 
                                     {
                                         "key" : "externalId",
-                                        "displayName" : "Case ID",
+                                        "displayName" : "External ID",
+                                        "required" : "true"
+                                    },
+
+                                    {
+                                        "key" : "entityType",
+                                        "displayName" : "Tracked Entity Type",
                                         "required" : "false"
                                     },
 
                                     {
-                                        "key" : "patientLastName",
+                                        "key" : "Last name",
                                         "displayName" : "PatientLastName",
                                         "required" : "false"
                                     },
                                     {
-                                        "key" : "patientFirstName",
+                                        "key" : "First name",
                                         "displayName" : "Patient First Name",
                                         "required" : "false"
                                     },
                                     {
-                                        "key" : "patientGender",
-                                        "displayName" : "Patient Gender",
+                                        "key" : "Gender",
+                                        "displayName" : "Gender",
                                         "required" : "false"
                                     },
                                     {
-                                        "key" : "patientLocation",
+                                        "key" : "Location",
                                         "displayName" : "Patient Location",
                                         "required" : "false"
                                     }
