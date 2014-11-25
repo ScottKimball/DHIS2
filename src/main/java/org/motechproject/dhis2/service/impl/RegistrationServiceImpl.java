@@ -54,10 +54,20 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         logger.debug(response.toString());
 
-        TrackedEntityInstanceMapper trackedEntityInstanceMapper =
-                new TrackedEntityInstanceMapper(trackedEntityInstance.getExternalId(),response.getReference());
-        trackedEntityInstanceDataService.create(trackedEntityInstanceMapper);
-        logger.debug("Entity saved.UUID: " + trackedEntityInstanceMapper.getDhis2Uuid() );
+        TrackedEntityInstanceMapper trackedEntityInstanceMapper = trackedEntityInstanceDataService.
+                findByExternalName(trackedEntityInstance.getExternalId());
+
+        if (trackedEntityInstanceMapper != null) {
+            logger.debug("Entity updated.\nUUID: " + trackedEntityInstanceMapper.getDhis2Uuid() );
+
+        } else {
+            trackedEntityInstanceMapper =
+                    new TrackedEntityInstanceMapper(trackedEntityInstance.getExternalId(),response.getReference());
+
+            trackedEntityInstanceDataService.create(trackedEntityInstanceMapper);
+            logger.debug("Entity saved.\nUUID: " + trackedEntityInstanceMapper.getDhis2Uuid() );
+
+        }
 
     }
 }

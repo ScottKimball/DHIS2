@@ -28,7 +28,6 @@
                                   },
 
 
-
                                   {
                                  "key" : "registrationDate",
                                   "displayName" : "Registration Date",
@@ -37,9 +36,10 @@
 
 
                                   {
-                                      "key" : "nationalIdentifier",
-                                      "displayName" : "National Identifier",
-                                      "required" : "false"
+                                      "key" : "additionalAttributes",
+                                      "displayName" : "Additional Attributes",
+                                      "required" : "false",
+                                      "type" : "MAP"
                                   }
 
 

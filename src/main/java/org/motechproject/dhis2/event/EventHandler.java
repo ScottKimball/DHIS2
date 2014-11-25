@@ -1,11 +1,9 @@
 package org.motechproject.dhis2.event;
 
-import com.google.gson.Gson;
-
 import com.jayway.jsonpath.JsonPath;
-import org.joda.time.DateTime;
 import org.motechproject.dhis2.domain.*;
 import org.motechproject.dhis2.dto.*;
+import org.motechproject.dhis2.http.HttpConstants;
 import org.motechproject.dhis2.http.HttpQuery;
 import org.motechproject.dhis2.http.Request;
 import org.motechproject.dhis2.repository.*;
@@ -30,7 +28,7 @@ import java.util.*;
 @Component
 public class EventHandler {
 
-    /*HardWired UUID values */
+    /*HardWired UUID values (Not needed currently but keeping them for reference right now)
     private String trackedEntityUUID = "cyl5vuJ5ETQ"; // uuid for person tracked entity
     private String programUUID = "ur1Edk5Oe2n";
     private String orgUnitUUID = "g8upMTyEZGZ";
@@ -39,10 +37,7 @@ public class EventHandler {
     private String genderUUID = "cejWyOfXge6";
     private String nationalIdentifierUUID = "AuPLng5hLbE";
     private String stage_uuid = "vxQUcroMY0r";
-
-    private static final String URL = "http://admin:district@localhost:8080/api";
-    private static final String PROGRAM_PATH = "/programs/";
-
+    */
 
     private Logger logger = LoggerFactory.getLogger(EventHandler.class);
     private EventRelay eventRelay;
@@ -109,26 +104,27 @@ public class EventHandler {
 
         Map<String , Object> params = event.getParameters();
         List<Attribute> attributeList = new ArrayList<Attribute>();
-
         String externalUUID =(String) params.get(EventParams.EXTERNAL_ID);
 
         /*Get tracked Entity UUID */
-        String entityType = (String) params.get("entityType");
+        String entityType = (String) params.get(EventParams.ENTITY_TYPE);
         TrackedEntityMapper trackedEntityMapper = trackedEntityDataService.findByExternalName(entityType);
         String trackedEntity = trackedEntityMapper.getDhis2Uuid();
 
         /*Get program UUID*/
-        String program = (String) params.get("program");
+        String program = (String) params.get(EventParams.PROGRAM);
         ProgramMapper programMapper = programDataService.findByDhis2Name(program);
 
         /*Get program information from DHIS2 server*/
-        Request programRequest = new Request(URL + PROGRAM_PATH + programMapper.getDhis2Uuid(),"");
+        Request programRequest = new Request(HttpConstants.BASE_URL + HttpConstants.PROGRAM_PATH +
+                programMapper.getDhis2Uuid(),"");
         Object jsonResponse = httpQuery.send(programRequest);
-        List<Object> programTrackedEntityAttributes = JsonPath.read(jsonResponse, "$..programTrackedEntityAttributes[*].attribute");
 
-        /*
-        * Iterates down program attributes and adds them to attribute list.
-        * */
+        /*TODO: Find a solution that doesn't use Object as the type */
+        List<Object> programTrackedEntityAttributes = JsonPath.read
+                (jsonResponse, "$..programTrackedEntityAttributes[*].attribute");
+
+        /* Iterates down program attributes and adds them to attribute list. */
         for (Object o : programTrackedEntityAttributes) {
             String attributeName = JsonPath.read(o,"$.name");
             String attributeId = JsonPath.read(o,"$.id");
@@ -137,7 +133,12 @@ public class EventHandler {
           /*  Might need to check if required attribute is present here */
             if(attributeValue != null) {
                 attributeList.add(new Attribute(attributeName,attributeId,attributeValue));
-            }
+
+            /*TODO: Check if the attribute is mandatory. If so, throw exception, print error, and terminate.
+             * TODO: user could also have provided mapping. check to see if there is a mapping from DHIS2 name
+              * TODO: to  external name */
+            } else if (false) {}
+
         }
 
         OrgUnitMapper orgUnitMapper = orgUnitDataService.findByExternalName((String) params.get(EventParams.LOCATION));
@@ -150,31 +151,81 @@ public class EventHandler {
 
 
     @MotechListener(subjects  = {EventSubjects.TB_ENROLL})
-    public void handleTbRegistration (MotechEvent event) {
+    public void handleTbEnrollment(MotechEvent event) {
 
         Map<String,Object> params =  event.getParameters();
-
-
-        ProgramMapper programMapper = programDataService.findByExternalName((String)params.
-                get(params.get(EventParams.PROGRAM)));
-
-        /*Get trackedEntityInstance UUID from MDS*/
-        TrackedEntityInstanceMapper instanceMapper = trackedEntityInstanceDataService.
-                findByExternalName((String) params.get(EventParams.EXTERNAL_ID));
-
-        /*This is where we would make a call to DHIS2 to get the program details. Here we just hardwire in data*/
-        List<String> attributeNames = new ArrayList<String>();
-        attributeNames.add("nationalIdentifier");
-
+        Map<String,String> additionalParams =(Map) params.get(EventParams.ADDITIONAL_ATTRIBUTES);
         List<Attribute> programAttributes = new ArrayList<Attribute>();
-        AttributeMapper attributeMapper;
 
-        for (String s : attributeNames) {
-            attributeMapper = attributeDataService.findByDhis2Name(s);
-            programAttributes.add(new Attribute(attributeMapper.getDhis2Name(),attributeMapper.getDhis2Uuid(),
-                    (String)params.get(attributeMapper.getDhis2Name())));
+        String program = (String) params.get(EventParams.PROGRAM);
+        ProgramMapper programMapper = programDataService.findByDhis2Name(program);
+
+        /*Get all program attributes from DHIS2. At some point, we should have a boolean flag for
+        * whether or not attributes are mapped locally.*/
+        Request programRequest = new Request(HttpConstants.BASE_URL + HttpConstants.PROGRAM_PATH +
+                programMapper.getDhis2Uuid(),"");
+        Object jsonResponse = httpQuery.send(programRequest);
+
+
+        Iterator<Map.Entry<String,String>> itr = additionalParams.entrySet().iterator();
+
+        /*Iterates over additional attributes. There are three possibilities for each attribute in the map:
+        * 1. The external name is different than the DHIS2 name. If this is the case, the user must provide a mapping
+        * using AttributeMapper in the MDS browser.
+        * 2. The external name is the same as the DHIS2 name. If this is the case, We will grab the attribute
+        * information from the DHIS2 server. The user must make sure the names are unique for valid mapping.
+        * 3. The external name provided does not correspond to an attribute in DHIS2. If so, it is ignored.
+        * */
+        while(itr.hasNext()) {
+
+            Map.Entry<String,String> entrySet = itr.next();
+            String key = entrySet.getKey();
+            AttributeMapper mapper = attributeDataService.findByExternalName(key);
+
+            /*External name is different than DHIS2 name and user has entered mapping into MDS databrowser*/
+            if (mapper != null) {
+                programAttributes.add(new Attribute(mapper.getExternalName(),mapper.getDhis2Uuid(),
+                        entrySet.getValue()));
+
+            /*External name is identical to DHIS2 name. */
+            } else {
+
+                /*This could return more than one entry. If so, that indicates a user error. User must use unique
+                * names in order to have a valid mapping.*/
+                List<Object> attributeNameList = JsonPath.read(jsonResponse,"$..programTrackedEntityAttributes[*]." +
+                        "attribute.[?(@.name ==" + key +  ")]");
+
+                if (attributeNameList.size() == 0 ) {
+                    logger.warn("No attribute found for attribute name \"" + key + "\"" + " .Attribute not included " +
+                                    "in the submission to the DHIS2 server");
+
+                } else if (attributeNameList.size() > 1) {
+                    logger.warn("Multiple attributes found for attribute name   \"" + key + "\"" + ". Names must be " +
+                            "unique. Attribute not included in submission to DHIS2 server");
+
+                } else {
+                    Object desiredAttribute = attributeNameList.get(0);
+                    String attributeName = JsonPath.read(desiredAttribute,"$.name");
+                    String attributeId = JsonPath.read(desiredAttribute,"$.id");
+                    String attributeValue = entrySet.getValue();
+
+                    if(attributeValue != null) {
+                        programAttributes.add(new Attribute(attributeName,attributeId,attributeValue));
+
+                     /*TODO: Check if the attribute is mandatory. If so, throw exception, print error, and terminate. */
+                    } else if (false) {}
+
+                }
+
+            }
         }
+
+         /*Get trackedEntityInstance UUID from MDS*/
+        String externalId = (String) params.get(EventParams.EXTERNAL_ID);
+        TrackedEntityInstanceMapper instanceMapper = trackedEntityInstanceDataService.findByExternalName(externalId);
+
         String date = (String) params.get(EventParams.DATE_REGISTERED);
+        date = date != null ? date : "";
         Enrollment enrollment = new Enrollment(programMapper.getDhis2Uuid(),instanceMapper.getDhis2Uuid(),
                 date,programAttributes);
 
@@ -185,7 +236,6 @@ public class EventHandler {
     public void handleTbFollowUp(MotechEvent event) {
 
         logger.debug("In Handle Tb follow up");
-
         Map<String,Object> params = event.getParameters();
 
         /*Get instance uuid*/
