@@ -1,32 +1,37 @@
-package org.motechproject.dhis2.dto;
+package org.motechproject.dhis2.dto.impl;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
+import org.motechproject.dhis2.dto.Attribute;
+import org.motechproject.dhis2.dto.Dto;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by scott on 9/10/14.
  */
 
-public class Stage {
+public class Stage implements Dto {
 
     private String externalName;
     private String dhis2Name;
     private String dhis2Uuid;
     private String program;
-    private Map<String , String> attributes;
+    private List<Attribute> attributes;
     private String date;
     private String trackedEntityInstance;
     private String orgUnit;
 
 
-    public Stage(String program, String orgUnit, String date, String dhis2Uuid, String trackedEntityInstance) {
+    public Stage(String program, String orgUnit, String date, String dhis2Uuid, String trackedEntityInstance, List<Attribute> attributes) {
         this.program = program;
         this.orgUnit = orgUnit;
         this.date = date;
         this.dhis2Uuid = dhis2Uuid;
         this.trackedEntityInstance = trackedEntityInstance;
+        this.attributes = attributes;
     }
 
     public String getDate() {
@@ -77,11 +82,11 @@ public class Stage {
         this.program = program;
     }
 
-    public Map<String, String> getAttributes() {
+    public List<Attribute> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(Map<String, String> attributes) {
+    public void setAttributes(List<Attribute> attributes) {
         this.attributes = attributes;
     }
 
@@ -116,12 +121,25 @@ public class Stage {
         root.put("trackedEntityInstance",getTrackedEntityInstance());
         root.put("status","COMPLETED");
 
+        ArrayNode nodeList = objectMapper.createArrayNode();
+
+        for (Attribute attribute : attributes) {
+
+
+            ObjectNode node = objectMapper.createObjectNode();
+            node.put("attribute", attribute.getDhis2Uuid());
+            node.put("value", attribute.getValue());
+            nodeList.add(node);
+        }
+
+        root.putArray("attributes").addAll(nodeList);
+
 
         try {
             String result = objectMapper.writeValueAsString(root);
             return result;
         } catch (Exception e) {
-
+            /*TODO: handle exception*/
         }
         return null;
 
@@ -134,7 +152,9 @@ public class Stage {
         String instance = "InstanceUUID";
         String date = "date";
         String stageUUID = "stageUUID";
-        Stage stage = new Stage(program,orgUnit,date,stageUUID,instance);
+        List<Attribute> list = new ArrayList<>();
+        list.add(new Attribute("name","UUID","value"));
+        Stage stage = new Stage(program,orgUnit,date,stageUUID,instance,list);
 
         System.out.println(stage.toJson());
     }

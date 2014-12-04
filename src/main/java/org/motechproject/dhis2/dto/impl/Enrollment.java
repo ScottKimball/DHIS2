@@ -1,18 +1,18 @@
-package org.motechproject.dhis2.dto;
+package org.motechproject.dhis2.dto.impl;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
+import org.motechproject.dhis2.dto.Attribute;
+import org.motechproject.dhis2.dto.Dto;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by scott on 9/10/14.
  */
 
-public class Enrollment {
+public class Enrollment implements Dto {
 
     private String program;
     private String trackedEntityInstance;
@@ -86,7 +86,7 @@ public class Enrollment {
             String result = objectMapper.writeValueAsString(root);
             return result;
         } catch (Exception e) {
-
+            /*TODO: handle exception*/
         }
         return null;
     }

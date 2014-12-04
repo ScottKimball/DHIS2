@@ -6,7 +6,7 @@ package org.motechproject.dhis2.dto;
  */
 
 
-public class Attribute {
+public class Attribute  {
 
     private String name;
     private String dhis2Uuid;

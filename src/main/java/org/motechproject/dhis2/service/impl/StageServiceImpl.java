@@ -1,6 +1,6 @@
 package org.motechproject.dhis2.service.impl;
 
-import org.motechproject.dhis2.dto.Stage;
+import org.motechproject.dhis2.dto.impl.Stage;
 import org.motechproject.dhis2.http.HttpService;
 import org.motechproject.dhis2.http.Request;
 import org.motechproject.dhis2.service.StageService;
@@ -25,6 +25,7 @@ public class StageServiceImpl implements StageService {
         this.httpService = httpService;
     }
 
+    /*TODO: transition from string checking to JsonPath*/
     @Override
     public void send(Stage stage) {
 

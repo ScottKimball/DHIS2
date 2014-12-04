@@ -1,6 +1,6 @@
 package org.motechproject.dhis2.service;
 
-import org.motechproject.dhis2.dto.Enrollment;
+import org.motechproject.dhis2.dto.impl.Enrollment;
 
 
 /**

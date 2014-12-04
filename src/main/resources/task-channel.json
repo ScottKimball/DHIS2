@@ -9,8 +9,8 @@
 
 
                             {
-                              "displayName" : "TB Enroll In Program",
-                              "subject" : "tb_enroll_in_program",
+                              "displayName" : "Enroll In Program",
+                              "subject" : "enroll_in_program",
                               "actionParameters" : [
 
 
@@ -29,7 +29,7 @@
 
 
                                   {
-                                 "key" : "registrationDate",
+                                 "key" : "date",
                                   "displayName" : "Registration Date",
                                   "required" : "false"
                                 },
@@ -49,9 +49,15 @@
                             },
 
                             {
-                                "displayName" : "TB Follow Up (Stage update)",
-                                "subject" : "tb_follow_up",
+                                "displayName" : "Program Stage Update",
+                                "subject" : "update_program_stage",
                                 "actionParameters" : [
+
+                                    {
+                                        "key" : "stage",
+                                        "displayName" : "Program Stage",
+                                        "required" : "true"
+                                    },
 
 
                                     {
@@ -73,6 +79,12 @@
                                         "key" : "date",
                                         "displayName" : "Follow Up Date",
                                         "required" : "false"
+                                    },
+
+                                    {
+                                        "key" : "Location",
+                                        "displayName" : "Patient Location",
+                                        "required" : "false"
                                     }
 
 
@@ -81,8 +93,8 @@
                             },
 
                             {
-                                "displayName" : "TB Register Entity",
-                                "subject" : "tb_register_entity",
+                                "displayName" : "Register Entity",
+                                "subject" : "register_entity",
                                 "actionParameters" : [
 
                                     {

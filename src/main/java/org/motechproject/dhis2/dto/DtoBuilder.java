@@ -1,183 +1,91 @@
-package org.motechproject.dhis2.event;
+package org.motechproject.dhis2.dto;
 
 import com.jayway.jsonpath.JsonPath;
 import org.motechproject.dhis2.domain.*;
-import org.motechproject.dhis2.dto.Attribute;
-import org.motechproject.dhis2.dto.Dto;
-import org.motechproject.dhis2.dto.DtoBuilder;
-import org.motechproject.dhis2.dto.DtoType;
 import org.motechproject.dhis2.dto.impl.Enrollment;
 import org.motechproject.dhis2.dto.impl.Stage;
 import org.motechproject.dhis2.dto.impl.TrackedEntityInstance;
+import org.motechproject.dhis2.event.EventParams;
 import org.motechproject.dhis2.http.HttpConstants;
 import org.motechproject.dhis2.http.HttpQuery;
 import org.motechproject.dhis2.http.Request;
 import org.motechproject.dhis2.repository.*;
-import org.motechproject.dhis2.service.EnrollmentService;
-import org.motechproject.dhis2.service.RegistrationService;
-import org.motechproject.dhis2.service.StageService;
-import org.motechproject.event.listener.EventRelay;
+import org.motechproject.event.MotechEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.motechproject.event.MotechEvent;
-import org.motechproject.event.listener.annotations.MotechListener;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
-import java.util.*;
-
-
-/**
- * Created by scott on 8/26/14.
+/**TODO: break apart and refactor methods.
+ * Created by scott on 12/2/14.
  */
 @Component
-public class EventHandler {
+@Scope(value = "singleton")
+public class DtoBuilder {
 
-    /*HardWired UUID values (Not needed currently but keeping them for reference right now)
-    private String trackedEntityUUID = "cyl5vuJ5ETQ"; // uuid for person tracked entity
-    private String programUUID = "ur1Edk5Oe2n";
-    private String orgUnitUUID = "g8upMTyEZGZ";
-    private String lastNameUUID = "hwlRTFIFSUq";
-    private String firstNameUUID = "dv3nChNSIxy";
-    private String genderUUID = "cejWyOfXge6";
-    private String nationalIdentifierUUID = "AuPLng5hLbE";
-    private String stage_uuid = "vxQUcroMY0r";
-    */
 
-    private Logger logger = LoggerFactory.getLogger(EventHandler.class);
-    private EventRelay eventRelay;
-    private EnrollmentService enrollmentService;
     private ProgramDataService programDataService;
-    private StageService stageService;
     private TrackedEntityDataService trackedEntityDataService;
     private OrgUnitDataService orgUnitDataService;
-    private RegistrationService registrationService;
     private AttributeDataService attributeDataService;
     private TrackedEntityInstanceDataService trackedEntityInstanceDataService;
     private StageDataService stageDataService;
     private HttpQuery httpQuery;
-    private DtoBuilder dtoBuilder;
+
+    private Logger logger = LoggerFactory.getLogger(DtoBuilder.class);
 
     @Autowired
-    public EventHandler( EventRelay eventRelay,
-                         EnrollmentService enrollmentService, ProgramDataService programDataService,
-                         StageService stageService,
-                         TrackedEntityDataService trackedEntityDataService,
-                         OrgUnitDataService orgUnitDataService,
-                         RegistrationService registrationService,
-                         AttributeDataService attributeDataService,
-                         TrackedEntityInstanceDataService trackedEntityInstanceDataService,
-                         StageDataService stageDataService,
-                         HttpQuery httpQuery,
-                         DtoBuilder dtoBuilder
-                        ){
-        this.eventRelay = eventRelay;
-        this.enrollmentService = enrollmentService;
+    public DtoBuilder(ProgramDataService programDataService, TrackedEntityDataService trackedEntityDataService,
+                      OrgUnitDataService orgUnitDataService, AttributeDataService attributeDataService,
+                      TrackedEntityInstanceDataService trackedEntityInstanceDataService,
+                      StageDataService stageDataService, HttpQuery httpQuery) {
         this.programDataService = programDataService;
-        this.stageService = stageService;
         this.trackedEntityDataService = trackedEntityDataService;
         this.orgUnitDataService = orgUnitDataService;
-        this.registrationService = registrationService;
         this.attributeDataService = attributeDataService;
         this.trackedEntityInstanceDataService = trackedEntityInstanceDataService;
         this.stageDataService = stageDataService;
         this.httpQuery = httpQuery;
-        this.dtoBuilder = dtoBuilder;
-
-
-
     }
 
 
-    /*This will be the generic entity registration event handler*/
-    @MotechListener(subjects = {EventSubjects.REGISTER_ENTITY})
-    public void handleRegistration(MotechEvent event) {
-        TrackedEntityInstance instance =(TrackedEntityInstance) dtoBuilder.createDto(event, DtoType.REGISTRATION);
-        registrationService.send(instance);
 
-    }
+    public Dto createDto (MotechEvent event,DtoType dtoType) {
 
-    /*This will be the generic program enrollment event handler */
-    @MotechListener(subjects = {EventSubjects.ENROLL_IN_PROGRAM})
-    public void handleEnrollment(MotechEvent event) {
-        Enrollment enrollment =(Enrollment) dtoBuilder.createDto(event,DtoType.ENROLLMENT);
-        enrollmentService.send(enrollment);
+        switch (dtoType) {
+            case ENROLLMENT:
+                return createEnrollment(event);
 
-    }
+            case REGISTRATION:
+                return createInstance(event);
 
-    /*This will be the generic program stage event handler */
-    @MotechListener(subjects = {EventSubjects.UPDATE_PROGRAM_STAGE})
-    public void handleStageUpdate(MotechEvent event) {
-        Stage stage = (Stage) dtoBuilder.createDto(event,DtoType.STAGE_UPDATE);
-        stageService.send(stage);
-
-    }
-
-    @MotechListener(subjects = {EventSubjects.TB_REGISTER_ENTITY})
-    public void handleTbEntityRegistration(MotechEvent event){
-
-        Map<String , Object> params = event.getParameters();
-        List<Attribute> attributeList = new ArrayList<Attribute>();
-        String externalUUID =(String) params.get(EventParams.EXTERNAL_ID);
-
-        /*Get tracked Entity UUID */
-        String entityType = (String) params.get(EventParams.ENTITY_TYPE);
-        TrackedEntityMapper trackedEntityMapper = trackedEntityDataService.findByExternalName(entityType);
-        String trackedEntity = trackedEntityMapper.getDhis2Uuid();
-
-        /*Get program UUID*/
-        String program = (String) params.get(EventParams.PROGRAM);
-        ProgramMapper programMapper = programDataService.findByDhis2Name(program);
-
-        /*Get program information from DHIS2 server*/
-        Request programRequest = new Request(HttpConstants.BASE_URL + HttpConstants.PROGRAM_PATH +
-                programMapper.getDhis2Uuid(),"");
-        Object jsonResponse = httpQuery.send(programRequest);
-
-        /*TODO: Find a solution that doesn't use Object as the type */
-        List<Object> programTrackedEntityAttributes = JsonPath.read
-                (jsonResponse, "$..programTrackedEntityAttributes[*].attribute");
-
-        /* Iterates down program attributes and adds them to attribute list. */
-        for (Object o : programTrackedEntityAttributes) {
-            String attributeName = JsonPath.read(o,"$.name");
-            String attributeId = JsonPath.read(o,"$.id");
-            String attributeValue = (String) params.get(attributeName);
-
-          /*  Might need to check if required attribute is present here */
-            if(attributeValue != null) {
-                attributeList.add(new Attribute(attributeName,attributeId,attributeValue));
-
-
-            /*TODO: Check if the attribute is mandatory. If so, throw exception, print error, and terminate.
-             * TODO: user could also have provided mapping. check to see if there is a mapping from DHIS2 name
-              * TODO: to  external name */
-            } else if (false) {}
+            case STAGE_UPDATE:
+                return createStage(event);
 
         }
 
-        OrgUnitMapper orgUnitMapper = orgUnitDataService.findByExternalName((String) params.get(EventParams.LOCATION));
+        return null;
 
-        String orgUnit = orgUnitMapper.getDhis2Uuid();
-        TrackedEntityInstance instance = new TrackedEntityInstance(externalUUID,trackedEntity,attributeList,orgUnit);
-
-        registrationService.send(instance);
     }
 
-
-    @MotechListener(subjects  = {EventSubjects.TB_ENROLL})
-    public void handleTbEnrollment(MotechEvent event) {
+    private Enrollment createEnrollment (MotechEvent event) {
 
         Map<String,Object> params =  event.getParameters();
         Map<String,String> additionalParams =(Map) params.get(EventParams.ADDITIONAL_ATTRIBUTES);
         List<Attribute> programAttributes = new ArrayList<Attribute>();
 
+
+
+        /*Get program UUID. Once dynamic actions are implemented, event should directly pass DHIS2 UUID*/
         String program = (String) params.get(EventParams.PROGRAM);
         ProgramMapper programMapper = programDataService.findByDhis2Name(program);
 
-        /*Get all program attributes from DHIS2. At some point, we should have a boolean flag for
-        * whether or not attributes are mapped locally.*/
         Request programRequest = new Request(HttpConstants.BASE_URL + HttpConstants.PROGRAM_PATH +
                 programMapper.getDhis2Uuid(),"");
         Object jsonResponse = httpQuery.send(programRequest);
@@ -213,7 +121,7 @@ public class EventHandler {
 
                 if (attributeNameList.size() == 0 ) {
                     logger.warn("No attribute found for attribute name \"" + key + "\"" + " .Attribute not included " +
-                                    "in the submission to the DHIS2 server");
+                            "in the submission to the DHIS2 server");
 
                 } else if (attributeNameList.size() > 1) {
                     logger.warn("Multiple attributes found for attribute name   \"" + key + "\"" + ". Names must be " +
@@ -244,12 +152,10 @@ public class EventHandler {
         date = date != null ? date : "";
         Enrollment enrollment = new Enrollment(programMapper.getDhis2Uuid(),instanceMapper.getDhis2Uuid(),
                 date,programAttributes);
-
-        enrollmentService.send(enrollment);
+        return enrollment;
     }
 
-    @MotechListener(subjects = {EventSubjects.TB_FOLLOW_UP})
-    public void handleTbFollowUp(MotechEvent event) {
+    private Stage createStage (MotechEvent event) {
 
         Map<String,Object> params = event.getParameters();
 
@@ -257,13 +163,16 @@ public class EventHandler {
         TrackedEntityInstanceMapper instanceMapper = trackedEntityInstanceDataService.
                 findByExternalName((String) params.get(EventParams.EXTERNAL_ID));
 
+        /*Get orgunit UUID. Once dynamic actions are implemented, event should directly pass DHIS2 UUID*/
         OrgUnitMapper orgUnitMapper = orgUnitDataService.findByExternalName((String) params.get(EventParams.LOCATION));
 
+        /*Get program UUID. Once dynamic actions are implemented, event should directly pass DHIS2 UUID*/
         String program = (String)params.get(EventParams.PROGRAM);
         ProgramMapper programMapper = programDataService.findByDhis2Name(program);
 
         String followUpDate = (String) params.get(EventParams.DATE);
 
+        /*Get stage UUID. Once dynamic actions are implemented, event should directly pass DHIS2 UUID*/
         String stageName = (String) params.get(EventParams.STAGE);
         StageMapper stageMapper = stageDataService.findByExternalName(stageName);
         String stageUuid = null;
@@ -282,7 +191,7 @@ public class EventHandler {
             if (stages.size() == 0) {
                 logger.error("No stage found with name \"" + stageName + "\"");
                 /*TODO: exception*/
-                return;
+                return null;
 
 
             /*Multiple stages with that name*/
@@ -290,7 +199,7 @@ public class EventHandler {
                 logger.error("Multiple stages found with name \"" + stageName + "\"" + "Stage names must be unique" +
                         "for a given program");
                 /*TODO: exception*/
-                return;
+                return null;
 
                 /*One matching stage*/
             } else {
@@ -328,8 +237,57 @@ public class EventHandler {
 
         Stage stage = new Stage(programMapper.getDhis2Uuid(),orgUnitMapper.getDhis2Uuid(),followUpDate,
                 stageUuid,instanceMapper.getDhis2Uuid(),attributeList);
+        return stage;
+    }
 
-        stageService.send(stage);
+    private TrackedEntityInstance createInstance (MotechEvent event) {
+
+        Map<String , Object> params = event.getParameters();
+        List<Attribute> attributeList = new ArrayList<Attribute>();
+        String externalUUID =(String) params.get(EventParams.EXTERNAL_ID);
+
+        /*Get tracked Entity UUID. Once dynamic actions are implemented, event should directly pass DHIS2 UUID */
+        String entityType = (String) params.get(EventParams.ENTITY_TYPE);
+        TrackedEntityMapper trackedEntityMapper = trackedEntityDataService.findByExternalName(entityType);
+        String trackedEntity = trackedEntityMapper.getDhis2Uuid();
+
+        /*Get program UUID. Once dynamic actions are implemented, event should directly pass DHIS2 UUID*/
+        String program = (String) params.get(EventParams.PROGRAM);
+        ProgramMapper programMapper = programDataService.findByDhis2Name(program);
+
+        /*Get program information from DHIS2 server*/
+        Request programRequest = new Request(HttpConstants.BASE_URL + HttpConstants.PROGRAM_PATH +
+                programMapper.getDhis2Uuid(),"");
+        Object jsonResponse = httpQuery.send(programRequest);
+
+        /*TODO: Find a solution that doesn't use Object as the type */
+        List<Object> programTrackedEntityAttributes = JsonPath.read
+                (jsonResponse, "$..programTrackedEntityAttributes[*].attribute");
+
+        /* Iterates down program attributes and adds them to attribute list. */
+        for (Object o : programTrackedEntityAttributes) {
+            String attributeName = JsonPath.read(o,"$.name");
+            String attributeId = JsonPath.read(o,"$.id");
+            String attributeValue = (String) params.get(attributeName);
+
+          /*  Might need to check if required attribute is present here */
+            if(attributeValue != null) {
+                attributeList.add(new Attribute(attributeName,attributeId,attributeValue));
+
+
+            /*TODO: Check if the attribute is mandatory. If so, throw exception, print error, and terminate.
+             * TODO: user could also have provided mapping. check to see if there is a mapping from DHIS2 name
+              * TODO: to  external name */
+            } else if (false) {}
+
         }
+
+        OrgUnitMapper orgUnitMapper = orgUnitDataService.findByExternalName((String) params.get(EventParams.LOCATION));
+
+        String orgUnit = orgUnitMapper.getDhis2Uuid();
+        TrackedEntityInstance instance = new TrackedEntityInstance(externalUUID,trackedEntity,attributeList,orgUnit);
+
+        return instance;
+    }
 
 }

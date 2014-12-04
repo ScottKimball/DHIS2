@@ -1,8 +1,10 @@
-package org.motechproject.dhis2.dto;
+package org.motechproject.dhis2.dto.impl;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
+import org.motechproject.dhis2.dto.Attribute;
+import org.motechproject.dhis2.dto.Dto;
 
 import java.util.List;
 
@@ -10,7 +12,7 @@ import java.util.List;
  * Created by scott on 9/10/14.
  */
 
-public class TrackedEntityInstance {
+public class TrackedEntityInstance implements Dto {
 
     private String externalId;
     private String trackedEntityType;
@@ -97,7 +99,7 @@ public class TrackedEntityInstance {
             String result = objectMapper.writeValueAsString(root);
             return result;
         } catch (Exception e) {
-
+            /*TODO: handle exception*/
         }
 
         return null;

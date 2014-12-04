@@ -1,7 +1,8 @@
 package org.motechproject.dhis2.service.impl;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.motechproject.dhis2.dto.TrackedEntityInstance;
+import org.motechproject.dhis2.dto.Dto;
+import org.motechproject.dhis2.dto.impl.TrackedEntityInstance;
 import org.motechproject.dhis2.http.HttpService;
 import org.motechproject.dhis2.http.Request;
 import org.motechproject.dhis2.http.Response;
@@ -35,6 +36,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         this.trackedEntityInstanceDataService = trackedEntityInstanceDataService;
     }
 
+    /*TODO: transition from ObjectMapper to JsonPath*/
     @Override
     public void send(TrackedEntityInstance trackedEntityInstance) {
 
@@ -55,7 +57,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         logger.debug(response.toString());
 
         TrackedEntityInstanceMapper trackedEntityInstanceMapper = trackedEntityInstanceDataService.
-                findByExternalName(trackedEntityInstance.getExternalId());
+                findByExternalName(trackedEntityInstance.getExternalId() );
 
         if (trackedEntityInstanceMapper != null) {
             logger.debug("Entity updated.\nUUID: " + trackedEntityInstanceMapper.getDhis2Uuid() );
