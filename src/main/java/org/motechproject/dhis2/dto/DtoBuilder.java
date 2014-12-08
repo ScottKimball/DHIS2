@@ -78,7 +78,6 @@ public class DtoBuilder {
 
         Map<String,Object> params =  event.getParameters();
 
-
         /*Get program UUID. Once dynamic actions are implemented, event should directly pass DHIS2 UUID*/
         String program = (String) params.get(EventParams.PROGRAM);
         ProgramMapper programMapper = programDataService.findByDhis2Name(program);
@@ -157,14 +156,6 @@ public class DtoBuilder {
                 return null;
 
 
-            /*Multiple stages with that name*/
-            } else if (stages.size() > 1) {
-                logger.error("Multiple stages found with name \"" + stageName + "\"" + "Stage names must be unique" +
-                        "for a given program");
-                /*TODO: exception*/
-                return null;
-
-                /*One matching stage*/
             } else {
 
 
@@ -182,17 +173,9 @@ public class DtoBuilder {
                     if (attributeValue != null) {
                         attributeList.add(new Attribute(attributeName, attributeId, attributeValue));
 
-
-            /*TODO: Check if the attribute is mandatory. If so, throw exception, print error, and terminate.
-             * TODO: user could also have provided mapping. check to see if there is a mapping from DHIS2 name
-              * TODO: to  external name */
-                    } else if (false) {
                     }
-
-
                 }
             }
-
 
         } else {
             stageUuid = stageMapper.getDhis2Uuid();
