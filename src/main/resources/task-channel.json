@@ -36,10 +36,10 @@
 
 
                                   {
-                                      "key" : "additionalAttributes",
-                                      "displayName" : "Additional Attributes",
-                                      "required" : "false",
-                                      "type" : "MAP"
+                                      "key" : "National identifier",
+                                      "displayName" : "National Identifier",
+                                      "required" : "false"
+
                                   }
 
 

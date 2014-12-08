@@ -50,21 +50,19 @@ public class EventHandler {
     private EnrollmentService enrollmentService;
     private StageService stageService;
     private RegistrationService registrationService;
-    private HttpQuery httpQuery;
     private DtoBuilder dtoBuilder;
 
     @Autowired
     public EventHandler(EventRelay eventRelay, EnrollmentService enrollmentService, StageService stageService,
-                        RegistrationService registrationService, HttpQuery httpQuery, DtoBuilder dtoBuilder) {
+                        RegistrationService registrationService, DtoBuilder dtoBuilder) {
         this.eventRelay = eventRelay;
         this.enrollmentService = enrollmentService;
         this.stageService = stageService;
         this.registrationService = registrationService;
-        this.httpQuery = httpQuery;
         this.dtoBuilder = dtoBuilder;
     }
 
-    /*This will be the generic entity registration event handler*/
+
     @MotechListener(subjects = {EventSubjects.REGISTER_ENTITY})
     public void handleRegistration(MotechEvent event) {
         TrackedEntityInstance instance =(TrackedEntityInstance) dtoBuilder.createDto(event, DtoType.REGISTRATION);
@@ -72,7 +70,7 @@ public class EventHandler {
 
     }
 
-    /*This will be the generic program enrollment event handler */
+
     @MotechListener(subjects = {EventSubjects.ENROLL_IN_PROGRAM})
     public void handleEnrollment(MotechEvent event) {
         Enrollment enrollment =(Enrollment) dtoBuilder.createDto(event,DtoType.ENROLLMENT);
@@ -80,7 +78,7 @@ public class EventHandler {
 
     }
 
-    /*This will be the generic program stage event handler */
+
     @MotechListener(subjects = {EventSubjects.UPDATE_PROGRAM_STAGE})
     public void handleStageUpdate(MotechEvent event) {
         Stage stage = (Stage) dtoBuilder.createDto(event,DtoType.STAGE_UPDATE);
@@ -88,6 +86,6 @@ public class EventHandler {
 
     }
 
-   
+
 
 }
