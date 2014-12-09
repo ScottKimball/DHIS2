@@ -15,6 +15,12 @@ public class Request {
         this.body = body;
     }
 
+    public Request(String url) {
+        this.url = baseUrl + url.replace(' ', '+');
+        this.body = "";
+
+    }
+
     public String getUrl() {
         return url;
     }

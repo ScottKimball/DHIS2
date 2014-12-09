@@ -136,52 +136,29 @@ public class DtoBuilder {
         /*Get stage UUID. Once dynamic actions are implemented, event should directly pass DHIS2 UUID*/
         String stageName = (String) params.get(EventParams.STAGE);
         StageMapper stageMapper = stageDataService.findByExternalName(stageName);
-        String stageUuid = null;
-        List<Attribute> attributeList = new ArrayList<>();
-
-        /*No local mapping to stage. Must check DHIS2 for identical name*/
-        if (stageMapper == null) {
-            Request programRequest = new Request(HttpConstants.PROGRAM_PATH + "/" +
-                    programMapper.getDhis2Uuid(),"");
-
-            Object jsonResponse = httpQuery.send(programRequest);
-            List<Object> stages = JsonPath.read
-                    (jsonResponse, "$..programStages.[?(@.name==" + stageName + ")]");
-
-            /*No stages with that name. Must terminate*/
-            if (stages.size() == 0) {
-                logger.error("No stage found with name \"" + stageName + "\"");
-                /*TODO: exception*/
-                return null;
+        String stageUuid = stageMapper.getDhis2Uuid();
 
 
-            } else {
+        Request stageRequest = new Request(HttpConstants.STAGES_PATH + "/" + stageUuid);
+        Object stageResponse = httpQuery.send(stageRequest);
+
+        List<Object> dataElements = JsonPath.read(stageResponse,"$..programStageDataElements[*]");
+        List<DataElement> stageDataElements = new ArrayList<>();
+
+        for (Object o : dataElements) {
+            String name = JsonPath.read(o, "$.dataElement.name");
+            String id = JsonPath.read(o, "$.dataElement.id");
+            String value = (String) params.get(name);
+
+            if (value != null)
+                stageDataElements.add(new DataElement(name,id,value));
 
 
-                /*TODO: Find a solution that doesn't use Object as the type */
-                List<Object> programTrackedEntityAttributes = JsonPath.read
-                        (jsonResponse, "$..programTrackedEntityAttributes[*].attribute");
 
-                 /* Iterates down program attributes and adds them to attribute list. */
-                for (Object o : programTrackedEntityAttributes) {
-                    String attributeName = JsonPath.read(o, "$.name");
-                    String attributeId = JsonPath.read(o, "$.id");
-                    String attributeValue = (String) params.get(attributeName);
-
-                     /*  Might need to check if required attribute is present here */
-                    if (attributeValue != null) {
-                        attributeList.add(new Attribute(attributeName, attributeId, attributeValue));
-
-                    }
-                }
-            }
-
-        } else {
-            stageUuid = stageMapper.getDhis2Uuid();
         }
 
         Stage stage = new Stage(programUuid,orgUnitUuid,followUpDate,
-                stageUuid,instanceMapper.getDhis2Uuid(),attributeList);
+                stageUuid,instanceMapper.getDhis2Uuid(),stageDataElements);
         return stage;
     }
 
