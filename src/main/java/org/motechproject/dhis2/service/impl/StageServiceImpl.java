@@ -1,6 +1,7 @@
 package org.motechproject.dhis2.service.impl;
 
 import org.motechproject.dhis2.dto.impl.Stage;
+import org.motechproject.dhis2.http.HttpConstants;
 import org.motechproject.dhis2.http.HttpService;
 import org.motechproject.dhis2.http.Request;
 import org.motechproject.dhis2.service.StageService;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class StageServiceImpl implements StageService {
-    private static final String URL = "http://admin:district@localhost:8080/api/events";
+
 
     private Logger logger = LoggerFactory.getLogger(StageServiceImpl.class);
 
@@ -30,7 +31,7 @@ public class StageServiceImpl implements StageService {
     public void send(Stage stage) {
 
         String body = stage.toJson();
-        Request request = new Request(URL, body);
+        Request request = new Request(HttpConstants.EVENTS_PATH, body);
         String entityString =  httpService.send(request);
 
         if (entityString.contains("SUCCESS"))

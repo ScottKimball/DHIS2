@@ -18,7 +18,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +32,6 @@ public class DtoBuilder {
     private ProgramDataService programDataService;
     private TrackedEntityDataService trackedEntityDataService;
     private OrgUnitDataService orgUnitDataService;
-    private AttributeDataService attributeDataService;
     private TrackedEntityInstanceDataService trackedEntityInstanceDataService;
     private StageDataService stageDataService;
     private HttpQuery httpQuery;
@@ -42,13 +40,12 @@ public class DtoBuilder {
 
     @Autowired
     public DtoBuilder(ProgramDataService programDataService, TrackedEntityDataService trackedEntityDataService,
-                      OrgUnitDataService orgUnitDataService, AttributeDataService attributeDataService,
+                      OrgUnitDataService orgUnitDataService,
                       TrackedEntityInstanceDataService trackedEntityInstanceDataService,
                       StageDataService stageDataService, HttpQuery httpQuery) {
         this.programDataService = programDataService;
         this.trackedEntityDataService = trackedEntityDataService;
         this.orgUnitDataService = orgUnitDataService;
-        this.attributeDataService = attributeDataService;
         this.trackedEntityInstanceDataService = trackedEntityInstanceDataService;
         this.stageDataService = stageDataService;
         this.httpQuery = httpQuery;
@@ -82,7 +79,7 @@ public class DtoBuilder {
         String program = (String) params.get(EventParams.PROGRAM);
         ProgramMapper programMapper = programDataService.findByDhis2Name(program);
 
-        Request programRequest = new Request(HttpConstants.BASE_URL + HttpConstants.PROGRAM_PATH +
+        Request programRequest = new Request(HttpConstants.PROGRAM_PATH + "/" +
                 programMapper.getDhis2Uuid(),"");
         Object jsonResponse = httpQuery.send(programRequest);
 
@@ -125,12 +122,14 @@ public class DtoBuilder {
         TrackedEntityInstanceMapper instanceMapper = trackedEntityInstanceDataService.
                 findByExternalName((String) params.get(EventParams.EXTERNAL_ID));
 
-        /*Get orgunit UUID. Once dynamic actions are implemented, event should directly pass DHIS2 UUID*/
-        OrgUnitMapper orgUnitMapper = orgUnitDataService.findByExternalName((String) params.get(EventParams.LOCATION));
+        /*Get Org Unit UUID*/
+        String orgUnit = (String) params.get(EventParams.LOCATION);
+        String orgUnitUuid = getOrgUnit(orgUnit);
 
         /*Get program UUID. Once dynamic actions are implemented, event should directly pass DHIS2 UUID*/
         String program = (String)params.get(EventParams.PROGRAM);
         ProgramMapper programMapper = programDataService.findByDhis2Name(program);
+        String programUuid = programMapper.getDhis2Uuid();
 
         String followUpDate = (String) params.get(EventParams.DATE);
 
@@ -142,7 +141,7 @@ public class DtoBuilder {
 
         /*No local mapping to stage. Must check DHIS2 for identical name*/
         if (stageMapper == null) {
-            Request programRequest = new Request(HttpConstants.BASE_URL + HttpConstants.PROGRAM_PATH +
+            Request programRequest = new Request(HttpConstants.PROGRAM_PATH + "/" +
                     programMapper.getDhis2Uuid(),"");
 
             Object jsonResponse = httpQuery.send(programRequest);
@@ -163,13 +162,13 @@ public class DtoBuilder {
                 List<Object> programTrackedEntityAttributes = JsonPath.read
                         (jsonResponse, "$..programTrackedEntityAttributes[*].attribute");
 
-        /* Iterates down program attributes and adds them to attribute list. */
+                 /* Iterates down program attributes and adds them to attribute list. */
                 for (Object o : programTrackedEntityAttributes) {
                     String attributeName = JsonPath.read(o, "$.name");
                     String attributeId = JsonPath.read(o, "$.id");
                     String attributeValue = (String) params.get(attributeName);
 
-          /*  Might need to check if required attribute is present here */
+                     /*  Might need to check if required attribute is present here */
                     if (attributeValue != null) {
                         attributeList.add(new Attribute(attributeName, attributeId, attributeValue));
 
@@ -181,7 +180,7 @@ public class DtoBuilder {
             stageUuid = stageMapper.getDhis2Uuid();
         }
 
-        Stage stage = new Stage(programMapper.getDhis2Uuid(),orgUnitMapper.getDhis2Uuid(),followUpDate,
+        Stage stage = new Stage(programUuid,orgUnitUuid,followUpDate,
                 stageUuid,instanceMapper.getDhis2Uuid(),attributeList);
         return stage;
     }
@@ -201,8 +200,13 @@ public class DtoBuilder {
         String program = (String) params.get(EventParams.PROGRAM);
         ProgramMapper programMapper = programDataService.findByDhis2Name(program);
 
+        /*Get org Unit*/
+        String orgUnit = (String) params.get(EventParams.LOCATION);
+        String orgUnitUuid = getOrgUnit(orgUnit);
+
         /*Get program information from DHIS2 server*/
-        Request attributesRequest = new Request(HttpConstants.BASE_URL + HttpConstants.TRACKED_ENTITIES_PATH ,"");
+        Request attributesRequest = new Request( HttpConstants.TRACKED_ENTITY_ATTRIBUTES_PATH +
+                HttpConstants.NO_PAGING_NO_LINKS,"");
         Object jsonResponse = httpQuery.send(attributesRequest);
 
         /*TODO: Find a solution that doesn't use Object as the type */
@@ -222,14 +226,41 @@ public class DtoBuilder {
             }
         }
 
-        /*Gets orgunit UUID by external name.*/
-        OrgUnitMapper orgUnitMapper = orgUnitDataService.findByExternalName((String) params.get(EventParams.LOCATION));
-        String orgUnit = orgUnitMapper.getDhis2Uuid();
-
-
-        TrackedEntityInstance instance = new TrackedEntityInstance(externalUUID,trackedEntity,attributeList,orgUnit);
+        TrackedEntityInstance instance = new TrackedEntityInstance(externalUUID,
+                trackedEntity,attributeList,orgUnitUuid);
 
         return instance;
+    }
+
+    /*First checks for local mapping. If there is no local mapping, calls dhis2 and checks to see if orgUnit exists
+     * Returns UUID for orgunit if it exists.  */
+    private String getOrgUnit (String orgUnit) {
+
+        OrgUnitMapper orgUnitMapper = orgUnitDataService.findByExternalName(orgUnit);
+
+        /*No local mapping*/
+        if (orgUnitMapper == null) {
+
+            Request orgUnitRequest = new Request(HttpConstants.ORG_UNITS_PATH +
+                    HttpConstants.QUERY + orgUnit + HttpConstants.NO_PAGING_NO_LINKS, "");
+
+            Object jsonResponse =  httpQuery.send(orgUnitRequest);
+
+            List<Object> orgUnits = JsonPath.read
+                    (jsonResponse, "$..organisationUnits[*]");
+
+            /*This should not happen. There should be one and only one match*/
+            if (orgUnits.size() != 1) {
+                /*TODO*/
+                return null;
+            }
+
+
+            return JsonPath.read(orgUnits.get(0),"$.id");
+
+        }
+
+        return orgUnitMapper.getDhis2Uuid();
     }
 
 }

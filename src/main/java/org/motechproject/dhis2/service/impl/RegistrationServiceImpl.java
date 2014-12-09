@@ -3,6 +3,7 @@ package org.motechproject.dhis2.service.impl;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.motechproject.dhis2.dto.Dto;
 import org.motechproject.dhis2.dto.impl.TrackedEntityInstance;
+import org.motechproject.dhis2.http.HttpConstants;
 import org.motechproject.dhis2.http.HttpService;
 import org.motechproject.dhis2.http.Request;
 import org.motechproject.dhis2.http.Response;
@@ -21,8 +22,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class RegistrationServiceImpl implements RegistrationService {
 
-    private static final String URL = "http://admin:district@localhost:8080"; // dhis2 base url
-    private static final String TRACKED_ENTITY_PATH = "/api/trackedEntityInstances";
     private Logger logger = LoggerFactory.getLogger(RegistrationServiceImpl.class);
 
     private HttpService httpService;
@@ -43,7 +42,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         Response response;
         String body = trackedEntityInstance.toJson();
 
-        Request request = new Request(URL + TRACKED_ENTITY_PATH, body);
+        Request request = new Request(HttpConstants.TRACKED_ENTITY_INSTANCES_PATH, body);
         String entityString = httpService.send(request);
 
         try {

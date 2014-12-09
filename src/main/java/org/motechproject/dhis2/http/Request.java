@@ -5,27 +5,30 @@ package org.motechproject.dhis2.http;
  */
 public class Request {
 
-    private String Url;
-    private String jsonBody;
+    private String baseUrl = HttpConstants.BASE_URL;
+    private String url;
+    private String body;
 
-    public Request(String url, String jsonBody) {
-        Url = url;
-        this.jsonBody = jsonBody;
+    public Request(String url, String body) {
+
+        this.url = baseUrl + url.replace(' ', '+');
+        this.body = body;
     }
 
     public String getUrl() {
-        return Url;
+        return url;
     }
 
     public void setUrl(String url) {
-        Url = url;
+        this.url = url;
     }
 
-    public String getJsonBody() {
-        return jsonBody;
+    public String getBody() {
+        return body;
     }
 
-    public void setJsonBody(String jsonBody) {
-        this.jsonBody = jsonBody;
+    public void setBody(String body) {
+        this.body = body;
     }
+
 }

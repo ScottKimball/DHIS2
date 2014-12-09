@@ -9,10 +9,8 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import org.apache.http.util.EntityUtils;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -36,7 +34,7 @@ public class HttpService {
         httpPost.addHeader("accept", "application/json");
 
         try {
-            StringEntity params = new StringEntity(request.getJsonBody());
+            StringEntity params = new StringEntity(request.getBody());
             httpPost.setEntity(params);
             HttpResponse httpResponse = httpClient.execute(httpPost);
             HttpEntity entity = httpResponse.getEntity();

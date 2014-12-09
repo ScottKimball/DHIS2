@@ -2,6 +2,7 @@ package org.motechproject.dhis2.service.impl;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.motechproject.dhis2.dto.impl.Enrollment;
+import org.motechproject.dhis2.http.HttpConstants;
 import org.motechproject.dhis2.http.HttpService;
 import org.motechproject.dhis2.http.Request;
 import org.motechproject.dhis2.http.Response;
@@ -19,9 +20,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class EnrollmentServiceImpl implements EnrollmentService {
 
-    private static final String URL = "http://admin:district@localhost:8080"; // dhis2 base url
-    private static final String TRACKED_ENTITY_PATH = "/api/trackedEntityInstances";
-    private static final String ENROLLMENT_PATH = "/api/enrollments";
 
     private Logger logger = LoggerFactory.getLogger(EnrollmentServiceImpl.class);
 
@@ -42,7 +40,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         Response response;
         String body = enrollment.toJson();
 
-        Request request = new Request(URL + ENROLLMENT_PATH, body);
+        Request request = new Request(HttpConstants.ENROLLMENTS_PATH, body);
         String entityString = httpService.send(request);
 
         try {
