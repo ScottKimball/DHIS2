@@ -80,7 +80,7 @@ public class DtoBuilder {
         ProgramMapper programMapper = programDataService.findByDhis2Name(program);
 
         Request programRequest = new Request(HttpConstants.PROGRAM_PATH + "/" +
-                programMapper.getDhis2Uuid(),"");
+                programMapper.getDhis2Uuid());
         Object jsonResponse = httpQuery.send(programRequest);
 
         List<Attribute> attributeList = new ArrayList<>();
@@ -152,9 +152,6 @@ public class DtoBuilder {
 
             if (value != null)
                 stageDataElements.add(new DataElement(name,id,value));
-
-
-
         }
 
         Stage stage = new Stage(programUuid,orgUnitUuid,followUpDate,
@@ -173,17 +170,13 @@ public class DtoBuilder {
         TrackedEntityMapper trackedEntityMapper = trackedEntityDataService.findByExternalName(entityType);
         String trackedEntity = trackedEntityMapper.getDhis2Uuid();
 
-        /*Get program UUID. Once dynamic actions are implemented, event should directly pass DHIS2 UUID*/
-        String program = (String) params.get(EventParams.PROGRAM);
-        ProgramMapper programMapper = programDataService.findByDhis2Name(program);
-
         /*Get org Unit*/
         String orgUnit = (String) params.get(EventParams.LOCATION);
         String orgUnitUuid = getOrgUnit(orgUnit);
 
         /*Get program information from DHIS2 server*/
         Request attributesRequest = new Request( HttpConstants.TRACKED_ENTITY_ATTRIBUTES_PATH +
-                HttpConstants.NO_PAGING_NO_LINKS,"");
+                HttpConstants.NO_PAGING_NO_LINKS);
         Object jsonResponse = httpQuery.send(attributesRequest);
 
         /*TODO: Find a solution that doesn't use Object as the type */
@@ -219,7 +212,7 @@ public class DtoBuilder {
         if (orgUnitMapper == null) {
 
             Request orgUnitRequest = new Request(HttpConstants.ORG_UNITS_PATH +
-                    HttpConstants.QUERY + orgUnit + HttpConstants.NO_PAGING_NO_LINKS, "");
+                    HttpConstants.QUERY + orgUnit + HttpConstants.NO_PAGING_NO_LINKS);
 
             Object jsonResponse =  httpQuery.send(orgUnitRequest);
 
@@ -232,11 +225,8 @@ public class DtoBuilder {
                 return null;
             }
 
-
             return JsonPath.read(orgUnits.get(0),"$.id");
-
         }
-
         return orgUnitMapper.getDhis2Uuid();
     }
 
