@@ -97,11 +97,6 @@
                                 "subject" : "register_entity",
                                 "actionParameters" : [
 
-                                    {
-                                        "key" : "program",
-                                        "displayName" : "DHIS2 Program",
-                                        "required" : "true"
-                                    },
 
 
                                     {
@@ -113,12 +108,12 @@
                                     {
                                         "key" : "entityType",
                                         "displayName" : "Tracked Entity Type",
-                                        "required" : "false"
+                                        "required" : "true"
                                     },
 
                                     {
                                         "key" : "Last name",
-                                        "displayName" : "PatientLastName",
+                                        "displayName" : "Patient Last Name",
                                         "required" : "false"
                                     },
                                     {

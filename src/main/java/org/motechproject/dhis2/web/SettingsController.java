@@ -28,7 +28,7 @@ public class SettingsController {
     }
 
 
-    @RequestMapping(value = "/sync" , produces = "application/json" ,method = RequestMethod.GET)
+    @RequestMapping(value = "/sync" ,method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public void sync() {
        boolean success = syncService.sync();

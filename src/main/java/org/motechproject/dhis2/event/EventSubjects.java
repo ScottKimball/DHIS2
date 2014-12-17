@@ -8,11 +8,6 @@ public final class EventSubjects {
 
     private EventSubjects() {}
 
-    public static final String TB_ENROLL ="tb_enroll_in_program";
-    public static final String TB_FOLLOW_UP = "tb_follow_up";
-    public static final String TB_REGISTER_ENTITY = "tb_register_entity";
-
-
     public static final String REGISTER_ENTITY = "register_entity";
     public static final String ENROLL_IN_PROGRAM = "enroll_in_program";
     public static final String UPDATE_PROGRAM_STAGE ="update_program_stage";

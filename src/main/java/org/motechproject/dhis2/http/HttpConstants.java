@@ -14,6 +14,6 @@ public class HttpConstants {
     public static final String ENROLLMENTS_PATH = "/enrollments";
     public static final String STAGES_PATH = "/programStages";
 
-    public static final String NO_PAGING_NO_LINKS = "&paging=false&links=false";
+    public static final String NO_PAGING_NO_LINKS = "paging=false&links=false";
     public static final String QUERY = "?query=";
 }

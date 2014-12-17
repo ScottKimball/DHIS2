@@ -175,7 +175,7 @@ public class DtoBuilder {
         String orgUnitUuid = getOrgUnit(orgUnit);
 
         /*Get program information from DHIS2 server*/
-        Request attributesRequest = new Request( HttpConstants.TRACKED_ENTITY_ATTRIBUTES_PATH +
+        Request attributesRequest = new Request( HttpConstants.TRACKED_ENTITY_ATTRIBUTES_PATH + "?" +
                 HttpConstants.NO_PAGING_NO_LINKS);
         Object jsonResponse = httpQuery.send(attributesRequest);
 
@@ -212,7 +212,7 @@ public class DtoBuilder {
         if (orgUnitMapper == null) {
 
             Request orgUnitRequest = new Request(HttpConstants.ORG_UNITS_PATH +
-                    HttpConstants.QUERY + orgUnit + HttpConstants.NO_PAGING_NO_LINKS);
+                    HttpConstants.QUERY + orgUnit + "&" + HttpConstants.NO_PAGING_NO_LINKS);
 
             Object jsonResponse =  httpQuery.send(orgUnitRequest);
 
