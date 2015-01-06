@@ -6,13 +6,13 @@ package org.motechproject.dhis2.dto;
  */
 
 
-public class Attribute  {
+public class AttributeDto {
 
     private String name;
     private String dhis2Uuid;
     private String value;
 
-    public Attribute(String name, String dhis2Uuid, String value) {
+    public AttributeDto(String name, String dhis2Uuid, String value) {
         this.dhis2Uuid = dhis2Uuid;
         this.value = value;
         this.name =name;

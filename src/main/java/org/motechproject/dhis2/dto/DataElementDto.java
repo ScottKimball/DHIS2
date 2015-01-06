@@ -7,9 +7,9 @@ package org.motechproject.dhis2.dto;
  * data elements and attributes. As far as this module is concerned
  * they are functionally equivalent.
  */
-public class DataElement extends Attribute {
+public class DataElementDto extends AttributeDto {
 
-    public DataElement (String name, String dhis2Uuid, String value) {
+    public DataElementDto(String name, String dhis2Uuid, String value) {
         super(name,dhis2Uuid,value);
     }
 }

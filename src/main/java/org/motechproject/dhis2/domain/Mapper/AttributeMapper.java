@@ -1,4 +1,4 @@
-package org.motechproject.dhis2.domain;
+package org.motechproject.dhis2.domain.Mapper;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
@@ -8,7 +8,7 @@ import org.motechproject.mds.annotations.Field;
  */
 
 @Entity
-public class TrackedEntityMapper {
+public class AttributeMapper {
 
     @Field
     private String externalName;
@@ -19,12 +19,8 @@ public class TrackedEntityMapper {
     @Field
     private String dhis2Uuid;
 
-    public TrackedEntityMapper(String externalName, String dhis2Uuid) {
-        this.externalName = externalName;
-        this.dhis2Uuid = dhis2Uuid;
-    }
 
-    public TrackedEntityMapper(String externalName, String dhis2Name, String dhis2Uuid) {
+    public AttributeMapper(String externalName, String dhis2Name, String dhis2Uuid) {
         this.externalName = externalName;
         this.dhis2Name = dhis2Name;
         this.dhis2Uuid = dhis2Uuid;

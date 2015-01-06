@@ -1,6 +1,6 @@
 package org.motechproject.dhis2.service.impl;
 
-import org.motechproject.dhis2.dto.impl.Stage;
+import org.motechproject.dhis2.dto.impl.StageDto;
 import org.motechproject.dhis2.http.HttpConstants;
 import org.motechproject.dhis2.http.HttpService;
 import org.motechproject.dhis2.http.Request;
@@ -28,9 +28,9 @@ public class StageServiceImpl implements StageService {
 
     /*TODO: transition from string checking to JsonPath*/
     @Override
-    public void send(Stage stage) {
+    public void send(StageDto stageDto) {
 
-        String body = stage.toJson();
+        String body = stageDto.toJson();
         Request request = new Request(HttpConstants.EVENTS_PATH, body);
         String entityString =  httpService.send(request);
 

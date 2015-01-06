@@ -1,14 +1,13 @@
 package org.motechproject.dhis2.service.impl;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.motechproject.dhis2.dto.Dto;
-import org.motechproject.dhis2.dto.impl.TrackedEntityInstance;
+import org.motechproject.dhis2.dto.impl.TrackedEntityInstanceDto;
 import org.motechproject.dhis2.http.HttpConstants;
 import org.motechproject.dhis2.http.HttpService;
 import org.motechproject.dhis2.http.Request;
 import org.motechproject.dhis2.http.Response;
-import org.motechproject.dhis2.domain.TrackedEntityInstanceMapper;
-import org.motechproject.dhis2.repository.TrackedEntityInstanceDataService;
+import org.motechproject.dhis2.domain.Mapper.TrackedEntityInstanceMapper;
+import org.motechproject.dhis2.repository.Mapper.TrackedEntityInstanceDataService;
 import org.motechproject.dhis2.service.RegistrationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,10 +36,10 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     /*TODO: transition from ObjectMapper to JsonPath*/
     @Override
-    public void send(TrackedEntityInstance trackedEntityInstance) {
+    public void send(TrackedEntityInstanceDto trackedEntityInstanceDto) {
 
         Response response;
-        String body = trackedEntityInstance.toJson();
+        String body = trackedEntityInstanceDto.toJson();
 
         Request request = new Request(HttpConstants.TRACKED_ENTITY_INSTANCES_PATH, body);
         String entityString = httpService.send(request);
@@ -56,14 +55,14 @@ public class RegistrationServiceImpl implements RegistrationService {
         logger.debug(response.toString());
 
         TrackedEntityInstanceMapper trackedEntityInstanceMapper = trackedEntityInstanceDataService.
-                findByExternalName(trackedEntityInstance.getExternalId() );
+                findByExternalName(trackedEntityInstanceDto.getExternalId() );
 
         if (trackedEntityInstanceMapper != null) {
             logger.debug("Entity updated.\nUUID: " + trackedEntityInstanceMapper.getDhis2Uuid() );
 
         } else {
             trackedEntityInstanceMapper =
-                    new TrackedEntityInstanceMapper(trackedEntityInstance.getExternalId(),response.getReference());
+                    new TrackedEntityInstanceMapper(trackedEntityInstanceDto.getExternalId(),response.getReference());
 
             trackedEntityInstanceDataService.create(trackedEntityInstanceMapper);
             logger.debug("Entity saved.\nUUID: " + trackedEntityInstanceMapper.getDhis2Uuid() );

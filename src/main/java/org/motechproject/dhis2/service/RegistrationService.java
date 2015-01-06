@@ -1,13 +1,12 @@
 package org.motechproject.dhis2.service;
 
-import org.motechproject.dhis2.dto.Dto;
-import org.motechproject.dhis2.dto.impl.TrackedEntityInstance;
+import org.motechproject.dhis2.dto.impl.TrackedEntityInstanceDto;
 
 /**
  * Created by scott on 10/16/14.
  */
 public interface RegistrationService {
 
-    public void send (TrackedEntityInstance trackedEntityInstance);
+    public void send (TrackedEntityInstanceDto trackedEntityInstanceDto);
 
 }

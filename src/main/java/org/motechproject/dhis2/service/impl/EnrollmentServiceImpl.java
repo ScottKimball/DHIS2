@@ -1,12 +1,12 @@
 package org.motechproject.dhis2.service.impl;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.motechproject.dhis2.dto.impl.Enrollment;
+import org.motechproject.dhis2.dto.impl.EnrollmentDto;
 import org.motechproject.dhis2.http.HttpConstants;
 import org.motechproject.dhis2.http.HttpService;
 import org.motechproject.dhis2.http.Request;
 import org.motechproject.dhis2.http.Response;
-import org.motechproject.dhis2.repository.TrackedEntityInstanceDataService;
+import org.motechproject.dhis2.repository.Mapper.TrackedEntityInstanceDataService;
 import org.motechproject.dhis2.service.EnrollmentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,10 +35,10 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
     /*TODO: transition from ObjectMapper to JsonPath*/
     @Override
-    public void send(Enrollment enrollment) {
+    public void send(EnrollmentDto enrollmentDto) {
 
         Response response;
-        String body = enrollment.toJson();
+        String body = enrollmentDto.toJson();
 
         Request request = new Request(HttpConstants.ENROLLMENTS_PATH, body);
         String entityString = httpService.send(request);

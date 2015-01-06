@@ -1,5 +1,6 @@
 package org.motechproject.dhis2.service.impl;
 
+import org.motechproject.dhis2.http.HttpQuery;
 import org.motechproject.dhis2.service.SyncService;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class SyncServiceImpl implements SyncService {
 
+
+    private HttpQuery httpQuery;
 
 
     @Override

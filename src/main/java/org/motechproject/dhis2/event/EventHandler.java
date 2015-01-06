@@ -1,18 +1,10 @@
 package org.motechproject.dhis2.event;
 
-import com.jayway.jsonpath.JsonPath;
-import org.motechproject.dhis2.domain.*;
-import org.motechproject.dhis2.dto.Attribute;
-import org.motechproject.dhis2.dto.Dto;
 import org.motechproject.dhis2.dto.DtoBuilder;
 import org.motechproject.dhis2.dto.DtoType;
-import org.motechproject.dhis2.dto.impl.Enrollment;
-import org.motechproject.dhis2.dto.impl.Stage;
-import org.motechproject.dhis2.dto.impl.TrackedEntityInstance;
-import org.motechproject.dhis2.http.HttpConstants;
-import org.motechproject.dhis2.http.HttpQuery;
-import org.motechproject.dhis2.http.Request;
-import org.motechproject.dhis2.repository.*;
+import org.motechproject.dhis2.dto.impl.EnrollmentDto;
+import org.motechproject.dhis2.dto.impl.StageDto;
+import org.motechproject.dhis2.dto.impl.TrackedEntityInstanceDto;
 import org.motechproject.dhis2.service.EnrollmentService;
 import org.motechproject.dhis2.service.RegistrationService;
 import org.motechproject.dhis2.service.StageService;
@@ -23,9 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.springframework.stereotype.Component;
-
-
-import java.util.*;
 
 
 /**
@@ -65,7 +54,7 @@ public class EventHandler {
 
     @MotechListener(subjects = {EventSubjects.REGISTER_ENTITY})
     public void handleRegistration(MotechEvent event) {
-        TrackedEntityInstance instance =(TrackedEntityInstance) dtoBuilder.createDto(event, DtoType.REGISTRATION);
+        TrackedEntityInstanceDto instance =(TrackedEntityInstanceDto) dtoBuilder.createDto(event, DtoType.REGISTRATION);
         registrationService.send(instance);
 
     }
@@ -73,16 +62,16 @@ public class EventHandler {
 
     @MotechListener(subjects = {EventSubjects.ENROLL_IN_PROGRAM})
     public void handleEnrollment(MotechEvent event) {
-        Enrollment enrollment =(Enrollment) dtoBuilder.createDto(event,DtoType.ENROLLMENT);
-        enrollmentService.send(enrollment);
+        EnrollmentDto enrollmentDto =(EnrollmentDto) dtoBuilder.createDto(event,DtoType.ENROLLMENT);
+        enrollmentService.send(enrollmentDto);
 
     }
 
 
     @MotechListener(subjects = {EventSubjects.UPDATE_PROGRAM_STAGE})
     public void handleStageUpdate(MotechEvent event) {
-        Stage stage = (Stage) dtoBuilder.createDto(event,DtoType.STAGE_UPDATE);
-        stageService.send(stage);
+        StageDto stageDto = (StageDto) dtoBuilder.createDto(event,DtoType.STAGE_UPDATE);
+        stageService.send(stageDto);
 
     }
 

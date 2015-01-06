@@ -3,8 +3,8 @@ package org.motechproject.dhis2.dto.impl;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
-import org.motechproject.dhis2.dto.Attribute;
-import org.motechproject.dhis2.dto.DataElement;
+import org.motechproject.dhis2.dto.AttributeDto;
+import org.motechproject.dhis2.dto.DataElementDto;
 import org.motechproject.dhis2.dto.Dto;
 
 import java.util.ArrayList;
@@ -14,25 +14,25 @@ import java.util.List;
  * Created by scott on 9/10/14.
  */
 
-public class Stage implements Dto {
+public class StageDto implements Dto {
 
     private String externalName;
     private String dhis2Name;
     private String dhis2Uuid;
     private String program;
-    private List<DataElement> dataElements;
+    private List<DataElementDto> dataElementDtos;
     private String date;
     private String trackedEntityInstance;
     private String orgUnit;
 
 
-    public Stage(String program, String orgUnit, String date, String dhis2Uuid, String trackedEntityInstance, List<DataElement> dataElements) {
+    public StageDto(String program, String orgUnit, String date, String dhis2Uuid, String trackedEntityInstance, List<DataElementDto> dataElementDtos) {
         this.program = program;
         this.orgUnit = orgUnit;
         this.date = date;
         this.dhis2Uuid = dhis2Uuid;
         this.trackedEntityInstance = trackedEntityInstance;
-        this.dataElements = dataElements;
+        this.dataElementDtos = dataElementDtos;
     }
 
     public String getDate() {
@@ -83,12 +83,12 @@ public class Stage implements Dto {
         this.program = program;
     }
 
-    public List<DataElement> getDataElements() {
-        return dataElements;
+    public List<DataElementDto> getDataElementDtos() {
+        return dataElementDtos;
     }
 
-    public void setDataElements(List<DataElement> dataElements) {
-        this.dataElements = dataElements;
+    public void setDataElementDtos(List<DataElementDto> dataElementDtos) {
+        this.dataElementDtos = dataElementDtos;
     }
 
     public String getOrgUnit() {
@@ -124,12 +124,12 @@ public class Stage implements Dto {
 
         ArrayNode nodeList = objectMapper.createArrayNode();
 
-        for (Attribute attribute : dataElements) {
+        for (AttributeDto attributeDto : dataElementDtos) {
 
 
             ObjectNode node = objectMapper.createObjectNode();
-            node.put("dataElement", attribute.getDhis2Uuid());
-            node.put("value", attribute.getValue());
+            node.put("dataElement", attributeDto.getDhis2Uuid());
+            node.put("value", attributeDto.getValue());
             nodeList.add(node);
         }
 
@@ -153,10 +153,10 @@ public class Stage implements Dto {
         String instance = "InstanceUUID";
         String date = "date";
         String stageUUID = "stageUUID";
-        List<DataElement> list = new ArrayList<>();
-        list.add(new DataElement("name","UUID","value"));
-        Stage stage = new Stage(program,orgUnit,date,stageUUID,instance,list);
+        List<DataElementDto> list = new ArrayList<>();
+        list.add(new DataElementDto("name","UUID","value"));
+        StageDto stageDto = new StageDto(program,orgUnit,date,stageUUID,instance,list);
 
-        System.out.println(stage.toJson());
+        System.out.println(stageDto.toJson());
     }
 }

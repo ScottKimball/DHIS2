@@ -1,6 +1,6 @@
 package org.motechproject.dhis2.service;
 
-import org.motechproject.dhis2.dto.impl.Enrollment;
+import org.motechproject.dhis2.dto.impl.EnrollmentDto;
 
 
 /**
@@ -8,6 +8,6 @@ import org.motechproject.dhis2.dto.impl.Enrollment;
  */
 public interface EnrollmentService {
 
-    public void send (Enrollment enrollment);
+    public void send (EnrollmentDto enrollmentDto);
 
 }

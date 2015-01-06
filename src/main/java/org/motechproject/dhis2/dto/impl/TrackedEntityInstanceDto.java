@@ -3,7 +3,7 @@ package org.motechproject.dhis2.dto.impl;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
-import org.motechproject.dhis2.dto.Attribute;
+import org.motechproject.dhis2.dto.AttributeDto;
 import org.motechproject.dhis2.dto.Dto;
 
 import java.util.List;
@@ -12,26 +12,26 @@ import java.util.List;
  * Created by scott on 9/10/14.
  */
 
-public class TrackedEntityInstance implements Dto {
+public class TrackedEntityInstanceDto implements Dto {
 
     private String externalId;
     private String trackedEntityType;
     private String dhis2Uuid;
-    private List<Attribute> attributes;
+    private List<AttributeDto> attributeDtos;
     private String orgUnit;
 
-    public TrackedEntityInstance() {};
+    public TrackedEntityInstanceDto() {};
 
 
 
-    public TrackedEntityInstance(String externalId, String trackedEntityType, List<Attribute> attributes, String orgUnit) {
+    public TrackedEntityInstanceDto(String externalId, String trackedEntityType, List<AttributeDto> attributeDtos, String orgUnit) {
         this.externalId = externalId;
         this.trackedEntityType = trackedEntityType;
-        this.attributes = attributes;
+        this.attributeDtos = attributeDtos;
         this.orgUnit = orgUnit;
     }
 
-    public TrackedEntityInstance(String externalId) {
+    public TrackedEntityInstanceDto(String externalId) {
         this.externalId = externalId;
     }
 
@@ -67,12 +67,12 @@ public class TrackedEntityInstance implements Dto {
         this.dhis2Uuid = dhis2Uuid;
     }
 
-    public List<Attribute> getAttributes() {
-        return attributes;
+    public List<AttributeDto> getAttributeDtos() {
+        return attributeDtos;
     }
 
-    public void setAttributes(List<Attribute> attributes) {
-        this.attributes = attributes;
+    public void setAttributeDtos(List<AttributeDto> attributeDtos) {
+        this.attributeDtos = attributeDtos;
     }
 
     public String toJson() {
@@ -84,12 +84,12 @@ public class TrackedEntityInstance implements Dto {
 
         ArrayNode nodeList = objectMapper.createArrayNode();
 
-        for (Attribute attribute : attributes) {
+        for (AttributeDto attributeDto : attributeDtos) {
 
 
             ObjectNode node = objectMapper.createObjectNode();
-            node.put("attribute", attribute.getDhis2Uuid());
-            node.put("value", attribute.getValue());
+            node.put("attribute", attributeDto.getDhis2Uuid());
+            node.put("value", attributeDto.getValue());
             nodeList.add(node);
         }
 
