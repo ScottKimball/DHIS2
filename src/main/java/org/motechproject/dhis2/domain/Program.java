@@ -11,38 +11,12 @@ import java.util.List;
  */
 
 @Entity
-public class Program {
+public class Program extends BasicEntity {
 
-    @Field
-    private String name;
-
-    @Field
-    private String id;
-
-    @Field
     private TrackedEntity trackedEntity;
-
-    @Field
     private List<Stage> stages;
-
-    @Field
     private List<TrackedEntityAttribute> attributes;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public TrackedEntity getTrackedEntity() {
         return trackedEntity;

@@ -6,7 +6,7 @@ import org.motechproject.dhis2.http.HttpConstants;
 import org.motechproject.dhis2.http.HttpService;
 import org.motechproject.dhis2.http.Request;
 import org.motechproject.dhis2.http.Response;
-import org.motechproject.dhis2.repository.Mapper.TrackedEntityInstanceDataService;
+import org.motechproject.dhis2.repository.TrackedEntityInstanceDataService;
 import org.motechproject.dhis2.service.EnrollmentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

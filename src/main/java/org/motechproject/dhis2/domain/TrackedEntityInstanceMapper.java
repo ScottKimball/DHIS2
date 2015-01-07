@@ -1,4 +1,4 @@
-package org.motechproject.dhis2.domain.Mapper;
+package org.motechproject.dhis2.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;

@@ -1,4 +1,4 @@
-package org.motechproject.dhis2.domain.Mapper;
+package org.motechproject.dhis2.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
@@ -6,8 +6,9 @@ import org.motechproject.mds.annotations.Field;
 /**
  * Created by scott on 10/22/14.
  */
+
 @Entity
-public class StageMapper {
+public class AttributeMapper {
 
     @Field
     private String externalName;
@@ -18,12 +19,12 @@ public class StageMapper {
     @Field
     private String dhis2Uuid;
 
-    public StageMapper(String externalName, String dhis2Name, String dhis2Uuid) {
+
+    public AttributeMapper(String externalName, String dhis2Name, String dhis2Uuid) {
         this.externalName = externalName;
         this.dhis2Name = dhis2Name;
         this.dhis2Uuid = dhis2Uuid;
     }
-
 
     public String getDhis2Name() {
         return dhis2Name;

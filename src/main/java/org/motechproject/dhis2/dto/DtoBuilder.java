@@ -1,7 +1,7 @@
 package org.motechproject.dhis2.dto;
 
 import com.jayway.jsonpath.JsonPath;
-import org.motechproject.dhis2.domain.Mapper.*;
+import org.motechproject.dhis2.domain.*;
 import org.motechproject.dhis2.dto.impl.EnrollmentDto;
 import org.motechproject.dhis2.dto.impl.StageDto;
 import org.motechproject.dhis2.dto.impl.TrackedEntityInstanceDto;
@@ -9,7 +9,7 @@ import org.motechproject.dhis2.event.EventParams;
 import org.motechproject.dhis2.http.HttpConstants;
 import org.motechproject.dhis2.http.HttpQuery;
 import org.motechproject.dhis2.http.Request;
-import org.motechproject.dhis2.repository.Mapper.*;
+import org.motechproject.dhis2.repository.*;
 import org.motechproject.event.MotechEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

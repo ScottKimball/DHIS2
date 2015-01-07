@@ -1,4 +1,4 @@
-package org.motechproject.dhis2.domain.Mapper;
+package org.motechproject.dhis2.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
@@ -8,7 +8,7 @@ import org.motechproject.mds.annotations.Field;
  */
 
 @Entity
-public class OrgUnitMapper {
+public class ProgramMapper {
 
     @Field
     private String externalName;
@@ -19,7 +19,7 @@ public class OrgUnitMapper {
     @Field
     private String dhis2Uuid;
 
-    public OrgUnitMapper(String externalName, String dhis2Name, String dhis2Uuid) {
+    public ProgramMapper(String externalName, String dhis2Name, String dhis2Uuid) {
         this.externalName = externalName;
         this.dhis2Name = dhis2Name;
         this.dhis2Uuid = dhis2Uuid;

@@ -9,33 +9,9 @@ import java.util.List;
  * Created by scott on 1/6/15.
  */
 @Entity
-public class Stage {
+public class Stage extends BasicEntity {
 
-    @Field
-    private String name;
-
-    @Field
-    private String id;
-
-    @Field
     private List<DataElement> dataElements;
-
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public List<DataElement> getDataElements() {
         return dataElements;

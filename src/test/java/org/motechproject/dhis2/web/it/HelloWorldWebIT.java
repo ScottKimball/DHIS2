@@ -2,6 +2,7 @@ package org.motechproject.dhis2.web.it;
 
 import java.io.IOException;
 
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.junit.PaxExam;
@@ -17,12 +18,14 @@ import org.motechproject.testing.osgi.TestContext;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 
+
 /**
- * Verify that HelloWorldService HTTP service is present and functional.
- */
+ * Verify that HelloWorldService HTTP service is present and functional.*/
+
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
 public class HelloWorldWebIT extends BasePaxIT {
+
     private static final String ADMIN_USERNAME = "motech";
     private static final String ADMIN_PASSWORD = "motech";
 
@@ -52,4 +55,6 @@ public class HelloWorldWebIT extends BasePaxIT {
         httpGet.addHeader("Authorization",
                 "Basic " + new String(Base64.encodeBase64((userName + ":" + password).getBytes())));
     }
+
+
 }

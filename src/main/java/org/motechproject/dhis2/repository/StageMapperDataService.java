@@ -1,6 +1,6 @@
-package org.motechproject.dhis2.repository.Mapper;
+package org.motechproject.dhis2.repository;
 
-import org.motechproject.dhis2.domain.Mapper.StageMapper;
+import org.motechproject.dhis2.domain.StageMapper;
 import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;
