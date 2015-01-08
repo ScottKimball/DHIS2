@@ -13,7 +13,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.commons.httpclient.HttpStatus;
 import org.motechproject.testing.osgi.BasePaxIT;
-import org.motechproject.testing.osgi.TestContext;
+import org.motechproject.testing.utils.TestContext;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;

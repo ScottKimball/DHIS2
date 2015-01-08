@@ -1,6 +1,7 @@
 package org.motechproject.dhis2.service.impl;
 
 import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.PathNotFoundException;
 import org.motechproject.dhis2.domain.*;
 import org.motechproject.dhis2.http.HttpConstants;
 import org.motechproject.dhis2.http.HttpQuery;
@@ -9,6 +10,8 @@ import org.motechproject.dhis2.repository.ProgramDataService;
 import org.motechproject.dhis2.repository.TrackedEntityAttributeDataService;
 import org.motechproject.dhis2.repository.TrackedEntityDataService;
 import org.motechproject.dhis2.service.SyncService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,28 +38,43 @@ public class SyncServiceImpl implements SyncService {
     @Autowired
     private ProgramDataService programDataService;
 
+    @Autowired
+    private OrgU
+
+
+    private Logger logger = LoggerFactory.getLogger(SyncServiceImpl.class);
+
 
     @Override
     public boolean sync() {
+
+        if (!testConnection())
+            return false;
 
         attributeDataService.deleteAll();
         trackedEntityDataService.deleteAll();
         programDataService.deleteAll();
 
-        addAttributes();
-        addTrackedEntities();
-        addPrograms();
+        try {
+            addAttributes();
+            addTrackedEntities();
+            addPrograms();
 
-        /*TODO: Org Units*/
+            /*TODO: Org Units*/
         /*TODO: Tracked entity instances*/
 
+            return true;
 
 
-        return false;
+        } catch (PathNotFoundException e) {
+            logger.debug(e.toString());
+            return false;
+        }
+
+
     }
 
-    private void addAttributes() {
-
+    private void addAttributes () throws PathNotFoundException  {
 
         Request attributeRequest = new Request(HttpConstants.TRACKED_ENTITY_ATTRIBUTES_PATH + "?" +
                 HttpConstants.NO_PAGING_NO_LINKS);
@@ -72,7 +90,7 @@ public class SyncServiceImpl implements SyncService {
 
     }
 
-    private void addTrackedEntities() {
+    private void addTrackedEntities() throws PathNotFoundException {
 
         Request trackedEntityRequest = new Request(HttpConstants.TRACKED_ENTITY_PATH + "?" +
                 HttpConstants.NO_PAGING_NO_LINKS);
@@ -88,7 +106,7 @@ public class SyncServiceImpl implements SyncService {
         }
     }
 
-    private void addPrograms () {
+    private void addPrograms () throws PathNotFoundException {
 
 
         Request programsRequest = new Request(HttpConstants.PROGRAM_PATH + "?" + HttpConstants.NO_PAGING_NO_LINKS);
@@ -103,7 +121,7 @@ public class SyncServiceImpl implements SyncService {
 
     }
 
-    private Program buildProgram (String id) {
+    private Program buildProgram (String id) throws PathNotFoundException{
 
         Request programRequest = new Request(HttpConstants.PROGRAM_PATH + "/" + id);
         Object programInfo = httpQuery.send(programRequest);
@@ -148,7 +166,7 @@ public class SyncServiceImpl implements SyncService {
         return program;
     }
 
-    private Stage buildStage(String id) {
+    private Stage buildStage(String id) throws PathNotFoundException {
 
         Request stageRequest = new Request(HttpConstants.STAGES_PATH + "/" + id);
         Object stageInfo = httpQuery.send(stageRequest);
@@ -159,8 +177,8 @@ public class SyncServiceImpl implements SyncService {
         List<DataElement> programStageDataElements = new ArrayList<>();
 
         for (Object o : dataElements) {
-            String elementName = JsonPath.read(o, "$.name");
-            String elementId = JsonPath.read(o,"$.id");
+            String elementName = JsonPath.read(o, "$.dataElement.name");
+            String elementId = JsonPath.read(o,"$.dataElement.id");
             programStageDataElements.add(new DataElement(name,id));
 
         }
@@ -173,6 +191,11 @@ public class SyncServiceImpl implements SyncService {
 
         return stage;
 
+    }
+
+    private boolean testConnection() {
+        /*TODO: */
+        return true;
     }
 
 
