@@ -20,4 +20,20 @@ public class Stage extends BasicEntity {
     public void setDataElements(List<DataElement> dataElements) {
         this.dataElements = dataElements;
     }
+
+    public String getuuid() {
+        return super.getUuid();
+    }
+
+    public void setUuid(String uuid) {
+        super.setUuid(uuid);
+    }
+
+    public String getName () {
+        return super.getName();
+    }
+
+    public void setName (String name) {
+        super.setName(name);
+    }
 }

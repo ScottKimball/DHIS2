@@ -9,5 +9,7 @@ import org.motechproject.mds.annotations.Entity;
 @Entity
 public class TrackedEntityAttribute extends BasicEntity {
 
-
+    public TrackedEntityAttribute(String name, String id) {
+        super(name, id);
+    }
 }

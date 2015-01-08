@@ -8,4 +8,9 @@ import org.motechproject.mds.annotations.Entity;
 
 @Entity
 public class DataElement extends BasicEntity {
+
+
+    public DataElement(String name, String id) {
+        super(name, id);
+    }
 }
