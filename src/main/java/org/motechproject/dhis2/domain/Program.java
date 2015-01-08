@@ -19,7 +19,6 @@ public class Program extends BasicEntity {
     @Cascade(delete = true)
     private List<Stage> stages;
 
-    @Cascade(delete = true)
     private List<TrackedEntityAttribute> attributes;
 
 

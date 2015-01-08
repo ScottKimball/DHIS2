@@ -6,6 +6,7 @@ import org.motechproject.dhis2.domain.*;
 import org.motechproject.dhis2.http.HttpConstants;
 import org.motechproject.dhis2.http.HttpQuery;
 import org.motechproject.dhis2.http.Request;
+import org.motechproject.dhis2.repository.OrgUnitDataService;
 import org.motechproject.dhis2.repository.ProgramDataService;
 import org.motechproject.dhis2.repository.TrackedEntityAttributeDataService;
 import org.motechproject.dhis2.repository.TrackedEntityDataService;
@@ -39,7 +40,7 @@ public class SyncServiceImpl implements SyncService {
     private ProgramDataService programDataService;
 
     @Autowired
-    private OrgU
+    private OrgUnitDataService orgUnitDataService;
 
 
     private Logger logger = LoggerFactory.getLogger(SyncServiceImpl.class);
@@ -51,22 +52,24 @@ public class SyncServiceImpl implements SyncService {
         if (!testConnection())
             return false;
 
+        programDataService.deleteAll();
         attributeDataService.deleteAll();
         trackedEntityDataService.deleteAll();
-        programDataService.deleteAll();
+        orgUnitDataService.deleteAll();
 
         try {
             addAttributes();
             addTrackedEntities();
             addPrograms();
+            addOrgUnits();
 
-            /*TODO: Org Units*/
         /*TODO: Tracked entity instances*/
 
             return true;
 
 
         } catch (PathNotFoundException e) {
+            logger.debug("Problem with DHIS2 application Schema.");
             logger.debug(e.toString());
             return false;
         }
@@ -150,8 +153,8 @@ public class SyncServiceImpl implements SyncService {
         List<TrackedEntityAttribute> programTrackedEntityAttributes = new ArrayList<>();
 
         for (Object o: attributes) {
-            String attributeName = JsonPath.read(o, "$.name");
-            String attributeId = JsonPath.read(o,"$.id");
+            String attributeName = JsonPath.read(o, "$.attribute.name");
+            String attributeId = JsonPath.read(o,"$.attribute.id");
             programTrackedEntityAttributes.add(new TrackedEntityAttribute(attributeName,attributeId));
         }
 
@@ -196,6 +199,29 @@ public class SyncServiceImpl implements SyncService {
     private boolean testConnection() {
         /*TODO: */
         return true;
+    }
+
+    private void addOrgUnits() {
+
+        Request orgUnitRequest = new Request(HttpConstants.ORG_UNITS_PATH + "?" +
+                HttpConstants.NO_PAGING_NO_LINKS);
+
+        List<Object> orgUnits = JsonPath.read(httpQuery.send(orgUnitRequest), "$.organisationUnits");
+
+        for (Object o : orgUnits) {
+            String name = JsonPath.read(o, "$.dataElement.name");
+            String id = JsonPath.read(o,"$.dataElement.id");
+
+            orgUnitDataService.create(new OrgUnit(name,id));
+
+
+        }
+
+
+
+
+
+
     }
 
 

@@ -12,6 +12,7 @@
     <osgi:reference id="trackedEntityMapperDataService" interface="org.motechproject.dhis2.repository.TrackedEntityMapperDataService" />
     <osgi:reference id="attributeMapperDataService" interface="org.motechproject.dhis2.repository.AttributeMapperDataService" />
     <osgi:reference id="orgUnitMapperDataService" interface="org.motechproject.dhis2.repository.OrgUnitMapperDataService" />
+    <osgi:reference id="orgUnitDataService" interface="org.motechproject.dhis2.repository.OrgUnitDataService" />
 
     <osgi:reference id="programDataService" interface="org.motechproject.dhis2.repository.ProgramDataService" />
     <osgi:reference id="stageDataService" interface="org.motechproject.dhis2.repository.StageDataService" />
