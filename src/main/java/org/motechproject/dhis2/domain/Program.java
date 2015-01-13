@@ -14,6 +14,7 @@ import java.util.List;
 @Entity
 public class Program extends BasicEntity {
 
+    @Cascade(delete = true)
     private TrackedEntity trackedEntity;
 
     @Cascade(delete = true)
@@ -21,6 +22,26 @@ public class Program extends BasicEntity {
 
     private List<TrackedEntityAttribute> attributes;
 
+    boolean singleEvent;
+
+    boolean registration;
+
+
+    public boolean isSingleEvent() {
+        return singleEvent;
+    }
+
+    public void setSingleEvent(boolean singleEvent) {
+        this.singleEvent = singleEvent;
+    }
+
+    public boolean hasRegistration() {
+        return registration;
+    }
+
+    public void setRegistration(boolean registration) {
+        this.registration = registration;
+    }
 
     public TrackedEntity getTrackedEntity() {
         return trackedEntity;
