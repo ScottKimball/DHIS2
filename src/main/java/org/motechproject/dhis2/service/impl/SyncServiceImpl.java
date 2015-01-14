@@ -6,10 +6,7 @@ import org.motechproject.dhis2.domain.*;
 import org.motechproject.dhis2.http.HttpConstants;
 import org.motechproject.dhis2.http.HttpQuery;
 import org.motechproject.dhis2.http.Request;
-import org.motechproject.dhis2.repository.OrgUnitDataService;
-import org.motechproject.dhis2.repository.ProgramDataService;
-import org.motechproject.dhis2.repository.TrackedEntityAttributeDataService;
-import org.motechproject.dhis2.repository.TrackedEntityDataService;
+import org.motechproject.dhis2.repository.*;
 import org.motechproject.dhis2.service.SyncService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -43,6 +41,8 @@ public class SyncServiceImpl implements SyncService {
     @Autowired
     private OrgUnitDataService orgUnitDataService;
 
+    @Autowired
+    private DataElementDataService dataElementDataService;
 
 
 
@@ -54,7 +54,6 @@ public class SyncServiceImpl implements SyncService {
     private static final String TRACKED_ENTITIES = "$.trackedEntities";
     private static final String TRACKED_ENTITY_ATTRIBUTES = "$.trackedEntityAttributes";
     private static final String PROGRAMS =  "$.programs";
-    private static final String TRACKED_ENTITY_NAME = "$.trackedEntity.name";
     private static final String TRACKED_ENTITY_ID = "$.trackedEntity.id";
     private static final String SINGLE_EVENT = "$.singleEvent";
     private static final String REGISTRATION = "$.registration";
@@ -62,6 +61,7 @@ public class SyncServiceImpl implements SyncService {
     private static final String PROGRAM_TRACKED_ENTITY_ATTRIBUTES = "$.programTrackedEntityAttributes[*].attribute";
     private static final String PROGRAM_STAGE_DATA_ELEMENTS = "$.programStageDataElements[*].dataElement";
     private static final String ORG_UNITS = "$.organisationUnits";
+    private static final String DATA_ELEMENTS = "$.dataElements";
 
 
     @Override
@@ -79,14 +79,14 @@ public class SyncServiceImpl implements SyncService {
         attributeDataService.deleteAll();
         trackedEntityDataService.deleteAll();
         orgUnitDataService.deleteAll();
+        dataElementDataService.deleteAll();
 
         try {
+            addDataElements();
             addAttributes();
             addTrackedEntities();
             addPrograms();
             addOrgUnits();
-
-        /*TODO: Tracked entity instances*/
 
             long endTime = System.nanoTime();
 
@@ -112,6 +112,27 @@ public class SyncServiceImpl implements SyncService {
 
 
     }
+
+    public void updateChannel() {
+        /*TODO: update the Tasks channel*/
+    }
+
+    private void addDataElements() {
+
+        Request dataElementRequest = new Request(HttpConstants.DATA_ELEMENTS_PATH + "?" +
+                HttpConstants.NO_PAGING_NO_LINKS);
+
+        List<Object> dataElements = JsonPath.read(httpQuery.send(dataElementRequest),DATA_ELEMENTS);
+
+        for (Object o : dataElements) {
+            String name = JsonPath.read(o, NAME);
+            String id = JsonPath.read(o, ID);
+            dataElementDataService.create(new DataElement(name,id));
+        }
+
+    }
+
+
 
     private void addAttributes () throws PathNotFoundException  {
 
@@ -155,7 +176,8 @@ public class SyncServiceImpl implements SyncService {
 
         for (Object o : programs) {
             String id = JsonPath.read(o, ID);
-            programDataService.create(buildProgram(id));
+            Program program = buildProgram(id);
+            programDataService.create(program);
 
         }
 
@@ -167,13 +189,13 @@ public class SyncServiceImpl implements SyncService {
         Request programRequest = new Request(HttpConstants.PROGRAM_PATH + "/" + id);
         Object programInfo = httpQuery.send(programRequest);
 
-
         String name = JsonPath.read(programInfo,NAME);
 
          /*Get associated tracked entity*/
-        TrackedEntity trackedEntity = new TrackedEntity(
-                (String) JsonPath.read(programInfo,TRACKED_ENTITY_NAME ),
-                (String) JsonPath.read(programInfo, TRACKED_ENTITY_ID));
+
+        String trackedEntityId = JsonPath.read(programInfo, TRACKED_ENTITY_ID);
+        TrackedEntity trackedEntity = trackedEntityDataService.findByUuid(trackedEntityId);
+
 
         boolean singleEvent =  JsonPath.parse(programInfo).read(SINGLE_EVENT);
         boolean registration = JsonPath.parse(programInfo).read(REGISTRATION);
@@ -188,10 +210,6 @@ public class SyncServiceImpl implements SyncService {
             programStages.add(buildStage(stageId));
         }
 
-
-
-
-        /*Build program attributes list*/
         List<TrackedEntityAttribute> programTrackedEntityAttributes = new ArrayList<>();
 
         /*If program has a tracked entity*/
@@ -201,17 +219,18 @@ public class SyncServiceImpl implements SyncService {
                 List<Object>  attributes = JsonPath.read(programInfo,PROGRAM_TRACKED_ENTITY_ATTRIBUTES);
 
 
+
+        /*Build program attributes list*/
                 for (Object o: attributes) {
-                    String attributeName = JsonPath.read(o, NAME);
                     String attributeId = JsonPath.read(o, ID);
-                    programTrackedEntityAttributes.add(new TrackedEntityAttribute(attributeName,attributeId));
+
+                    TrackedEntityAttribute attribute = attributeDataService.findByUuid(attributeId);
+                    programTrackedEntityAttributes.add(attribute);
                 }
 
             } catch (PathNotFoundException e) {
                 logger.debug("No path for programTrackedEntityAttributes for program : " + name);
             }
-
-
 
         }
 
@@ -240,18 +259,14 @@ public class SyncServiceImpl implements SyncService {
         try {
             List<Object>  dataElements = JsonPath.read(stageInfo,PROGRAM_STAGE_DATA_ELEMENTS);
             for (Object o : dataElements) {
-                String elementName = JsonPath.read(o, NAME);
                 String elementId = JsonPath.read(o, ID);
-                programStageDataElements.add(new DataElement(name,id));
+                DataElement dataElement = dataElementDataService.findByUuid(elementId);
+                programStageDataElements.add(dataElement);
 
             }
         } catch (PathNotFoundException e) {
             logger.debug("No path for programStageDataElements for stage : " + name);
         }
-
-
-
-
 
 
         Stage stage = new Stage();

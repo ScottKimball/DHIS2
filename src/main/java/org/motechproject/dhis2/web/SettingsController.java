@@ -35,6 +35,9 @@ public class SettingsController {
 
        boolean success = syncService.sync();
 
-        // "\"success\":" + success;
+        if (success) {
+            syncService.updateChannel();
+        }
+
     }
 }

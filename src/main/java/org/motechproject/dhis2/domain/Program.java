@@ -14,7 +14,7 @@ import java.util.List;
 @Entity
 public class Program extends BasicEntity {
 
-    @Cascade(delete = true)
+
     private TrackedEntity trackedEntity;
 
     @Cascade(delete = true)
