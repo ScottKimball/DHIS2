@@ -5,5 +5,5 @@ package org.motechproject.dhis2.dto;
  */
 public interface Dto {
 
-    public String toJson();
+    String toJson();
 }

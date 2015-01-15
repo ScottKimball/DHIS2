@@ -11,5 +11,5 @@ import org.motechproject.mds.service.MotechDataService;
 public interface StageDataService extends MotechDataService<Stage> {
 
     @Lookup
-    public Stage findByUuid(@LookupField(name = "uuid") String uuid);
+    Stage findByUuid(@LookupField(name = "uuid") String uuid);
 }

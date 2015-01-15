@@ -8,12 +8,12 @@ import org.motechproject.mds.service.MotechDataService;
 /**
  * Created by scott on 9/22/14.
  */
-public interface AttributeMapperDataService extends MotechDataService <AttributeMapper> {
+public interface AttributeMapperDataService extends MotechDataService<AttributeMapper> {
 
     @Lookup
-    public AttributeMapper findByExternalName (@LookupField(name = "externalName") String name);
+    AttributeMapper findByExternalName(@LookupField(name = "externalName") String name);
 
     @Lookup
-    public AttributeMapper findByDhis2Name (@LookupField(name = "dhis2Name") String dhis2Name);
+    AttributeMapper findByDhis2Name(@LookupField(name = "dhis2Name") String dhis2Name);
 
 }

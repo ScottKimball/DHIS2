@@ -1,7 +1,6 @@
 package org.motechproject.dhis2.domain;
 
 import org.motechproject.mds.annotations.Entity;
-import org.motechproject.mds.annotations.Field;
 
 import java.util.List;
 
@@ -12,7 +11,6 @@ import java.util.List;
 public class Stage extends BasicEntity {
 
     private List<DataElement> dataElements;
-
 
 
     public List<DataElement> getDataElements() {
@@ -31,11 +29,11 @@ public class Stage extends BasicEntity {
         super.setUuid(uuid);
     }
 
-    public String getName () {
+    public String getName() {
         return super.getName();
     }
 
-    public void setName (String name) {
+    public void setName(String name) {
         super.setName(name);
     }
 }

@@ -11,10 +11,10 @@ import org.motechproject.mds.service.MotechDataService;
 public interface StageMapperDataService extends MotechDataService<StageMapper> {
 
     @Lookup
-    public StageMapper findByExternalName(@LookupField(name = "externalName") String externalName);
+    StageMapper findByExternalName(@LookupField(name = "externalName") String externalName);
 
     @Lookup
-    public StageMapper findByDhis2Name(@LookupField(name = "dhis2Name") String dhis2Name);
+    StageMapper findByDhis2Name(@LookupField(name = "dhis2Name") String dhis2Name);
 
 
 }

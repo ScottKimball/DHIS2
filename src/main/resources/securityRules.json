@@ -1,16 +1,16 @@
 [
-    {
-        "pattern": "/**/dhis2/**",
-        "supportedSchemes": [
-            "NO_SECURITY"
-        ],
-        "protocol": "HTTP",
-        "priority": 2,
-        "rest": true,
-        "origin": "SYSTEM_MODULE_DHIS2",
-        "version": "0.22",
-        "methodsRequired": [
-            "ANY"
-        ]
-    }
+  {
+    "pattern": "/**/dhis2/**",
+    "supportedSchemes": [
+      "NO_SECURITY"
+    ],
+    "protocol": "HTTP",
+    "priority": 2,
+    "rest": true,
+    "origin": "SYSTEM_MODULE_DHIS2",
+    "version": "0.22",
+    "methodsRequired": [
+      "ANY"
+    ]
+  }
 ]

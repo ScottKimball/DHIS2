@@ -3,11 +3,10 @@ package org.motechproject.dhis2.dto.impl;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
-import org.motechproject.dhis2.dto.AttributeDto;
-import org.motechproject.dhis2.dto.DataElementDto;
 import org.motechproject.dhis2.dto.Dto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,6 +23,8 @@ public class StageDto implements Dto {
     private String date;
     private String trackedEntityInstance;
     private String orgUnit;
+
+    private Logger logger = LoggerFactory.getLogger(StageDto.class);
 
 
     public StageDto(String program, String orgUnit, String date, String dhis2Uuid, String trackedEntityInstance, List<DataElementDto> dataElementDtos) {
@@ -100,27 +101,17 @@ public class StageDto implements Dto {
     }
 
 
-
     public String toJson() {
 
-  /*
-  {
-  "program": "ur1Edk5Oe2n",
-  "orgUnit": "g8upMTyEZGZ",
-  "eventDate": "2015-10-06",
-  "programStage" : "ZkbAXlQUYJG",
-  "trackedEntityInstance" : "cNLNq7qonVh",
-  "status" : "COMPLETED"
-}
-   */
+
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode root = objectMapper.createObjectNode();
         root.put("program", getProgram());
         root.put("orgUnit", getOrgUnit());
-        root.put("eventDate",getDate());
-        root.put("programStage",getDhis2Uuid());
-        root.put("trackedEntityInstance",getTrackedEntityInstance());
-        root.put("status","COMPLETED");
+        root.put("eventDate", getDate());
+        root.put("programStage", getDhis2Uuid());
+        root.put("trackedEntityInstance", getTrackedEntityInstance());
+        root.put("status", "COMPLETED");
 
         ArrayNode nodeList = objectMapper.createArrayNode();
 
@@ -137,26 +128,13 @@ public class StageDto implements Dto {
 
 
         try {
-            String result = objectMapper.writeValueAsString(root);
-            return result;
+            return objectMapper.writeValueAsString(root);
         } catch (Exception e) {
-            /*TODO: handle exception*/
+            logger.debug(e.toString());
         }
         return null;
 
     }
 
-    public static void main(String[] args) {
 
-        String program = "ProgramUUID";
-        String orgUnit = "OrgUnitUUID";
-        String instance = "InstanceUUID";
-        String date = "date";
-        String stageUUID = "stageUUID";
-        List<DataElementDto> list = new ArrayList<>();
-        list.add(new DataElementDto("name","UUID","value"));
-        StageDto stageDto = new StageDto(program,orgUnit,date,stageUUID,instance,list);
-
-        System.out.println(stageDto.toJson());
-    }
 }

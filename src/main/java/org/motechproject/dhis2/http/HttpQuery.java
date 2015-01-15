@@ -4,7 +4,6 @@ import com.jayway.jsonpath.Configuration;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
@@ -21,7 +20,7 @@ public class HttpQuery {
     private Logger logger = LoggerFactory.getLogger(HttpQuery.class);
 
 
-    public Object send (Request request) {
+    public Object send(Request request) {
 
         DefaultHttpClient httpClient = new DefaultHttpClient();
         HttpGet httpGet = new HttpGet(request.getUrl());
@@ -39,7 +38,7 @@ public class HttpQuery {
 
         } catch (Exception e) {
 
-            logger.debug("Exception: " +  e.toString());
+            logger.debug("Exception: " + e.toString());
         }
         return null;
 

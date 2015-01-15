@@ -1,142 +1,102 @@
 {
-    "displayName": "DHIS2",
-    "moduleName": "${project.artifactId}",
-    "moduleVersion": "${parsedVersion.osgiVersion}",
-    "triggerTaskEvents" : [
-
-                            ],
-    "actionTaskEvents": [
-
-
-                            {
-                              "displayName" : "Enroll In Program",
-                              "subject" : "enroll_in_program",
-                              "actionParameters" : [
-
-
-                                  {
-                                      "key" : "externalId",
-                                      "displayName" : "External ID",
-                                      "required" : "true"
-                                  },
-
-
-                                  {
-                                      "key" : "program",
-                                      "displayName" : "DHIS2 Program",
-                                      "required" : "true"
-                                  },
-
-
-                                  {
-                                 "key" : "date",
-                                  "displayName" : "Registration Date",
-                                  "required" : "false"
-                                },
-
-
-                                  {
-                                      "key" : "National identifier",
-                                      "displayName" : "National Identifier",
-                                      "required" : "false"
-
-                                  }
-
-
-
-
-                              ]
-                            },
-
-                            {
-                                "displayName" : "Program Stage Update",
-                                "subject" : "update_program_stage",
-                                "actionParameters" : [
-
-                                    {
-                                        "key" : "stage",
-                                        "displayName" : "Program Stage",
-                                        "required" : "true"
-                                    },
-
-
-                                    {
-                                        "key" : "externalId",
-                                        "displayName" : "External ID",
-                                        "required" : "true"
-                                    },
-
-
-                                    {
-                                        "key" : "program",
-                                        "displayName" : "DHIS2 Program",
-                                        "required" : "true"
-                                    },
-
-
-
-                                    {
-                                        "key" : "date",
-                                        "displayName" : "Follow Up Date",
-                                        "required" : "false"
-                                    },
-
-                                    {
-                                        "key" : "Location",
-                                        "displayName" : "Patient Location",
-                                        "required" : "false"
-                                    }
-
-
-
-                                ]
-                            },
-
-                            {
-                                "displayName" : "Register Entity",
-                                "subject" : "register_entity",
-                                "actionParameters" : [
-
-
-
-                                    {
-                                        "key" : "externalId",
-                                        "displayName" : "External ID",
-                                        "required" : "true"
-                                    },
-
-                                    {
-                                        "key" : "entityType",
-                                        "displayName" : "Tracked Entity Type",
-                                        "required" : "true"
-                                    },
-
-                                    {
-                                        "key" : "Last name",
-                                        "displayName" : "Patient Last Name",
-                                        "required" : "false"
-                                    },
-                                    {
-                                        "key" : "First name",
-                                        "displayName" : "Patient First Name",
-                                        "required" : "false"
-                                    },
-                                    {
-                                        "key" : "Gender",
-                                        "displayName" : "Gender",
-                                        "required" : "false"
-                                    },
-                                    {
-                                        "key" : "Location",
-                                        "displayName" : "Patient Location",
-                                        "required" : "false"
-                                    }
-
-                                ]
-                            }
-
-
-
-                          ]
-
+  "displayName": "DHIS2",
+  "moduleName": "${project.artifactId}",
+  "moduleVersion": "${parsedVersion.osgiVersion}",
+  "triggerTaskEvents": [
+  ],
+  "actionTaskEvents": [
+    {
+      "displayName": "Enroll In Program",
+      "subject": "enroll_in_program",
+      "actionParameters": [
+        {
+          "key": "externalId",
+          "displayName": "External ID",
+          "required": "true"
+        },
+        {
+          "key": "program",
+          "displayName": "DHIS2 Program",
+          "required": "true"
+        },
+        {
+          "key": "date",
+          "displayName": "Registration Date",
+          "required": "false"
+        },
+        {
+          "key": "National identifier",
+          "displayName": "National Identifier",
+          "required": "false"
+        }
+      ]
+    },
+    {
+      "displayName": "Program Stage Update",
+      "subject": "update_program_stage",
+      "actionParameters": [
+        {
+          "key": "stage",
+          "displayName": "Program Stage",
+          "required": "true"
+        },
+        {
+          "key": "externalId",
+          "displayName": "External ID",
+          "required": "true"
+        },
+        {
+          "key": "program",
+          "displayName": "DHIS2 Program",
+          "required": "true"
+        },
+        {
+          "key": "date",
+          "displayName": "Follow Up Date",
+          "required": "false"
+        },
+        {
+          "key": "Location",
+          "displayName": "Patient Location",
+          "required": "false"
+        }
+      ]
+    },
+    {
+      "displayName": "Register Entity",
+      "subject": "register_entity",
+      "actionParameters": [
+        {
+          "key": "externalId",
+          "displayName": "External ID",
+          "required": "true"
+        },
+        {
+          "key": "entityType",
+          "displayName": "Tracked Entity Type",
+          "required": "true"
+        },
+        {
+          "key": "Last name",
+          "displayName": "Patient Last Name",
+          "required": "false"
+        },
+        {
+          "key": "First name",
+          "displayName": "Patient First Name",
+          "required": "false"
+        },
+        {
+          "key": "Gender",
+          "displayName": "Gender",
+          "required": "false"
+        },
+        {
+          "key": "Location",
+          "displayName": "Patient Location",
+          "required": "false"
+        }
+      ]
+    }
+  ]
 }

@@ -11,5 +11,5 @@ import org.motechproject.mds.service.MotechDataService;
 public interface TrackedEntityAttributeDataService extends MotechDataService<TrackedEntityAttribute> {
 
     @Lookup
-    public TrackedEntityAttribute findByUuid(@LookupField(name = "uuid") String id);
+    TrackedEntityAttribute findByUuid(@LookupField(name = "uuid") String id);
 }

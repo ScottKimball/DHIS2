@@ -26,19 +26,20 @@ public class StageServiceImpl implements StageService {
         this.httpService = httpService;
     }
 
-    /*TODO: transition from string checking to JsonPath*/
+    /*TODO transition from string checking to JsonPath*/
     @Override
     public void send(StageDto stageDto) {
 
         String body = stageDto.toJson();
         Request request = new Request(HttpConstants.EVENTS_PATH, body);
-        String entityString =  httpService.send(request);
+        String entityString = httpService.send(request);
 
-        if (entityString.contains("SUCCESS"))
+        if (entityString.contains("SUCCESS")) {
             logger.debug("Successful update to DHIS2: " + entityString);
+        } else {
 
-        else
             logger.debug("Failure to update to DHIS2: " + entityString);
+        }
 
 
 

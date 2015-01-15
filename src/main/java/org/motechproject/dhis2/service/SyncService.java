@@ -5,8 +5,9 @@ package org.motechproject.dhis2.service;
  */
 public interface SyncService {
 
-    public boolean sync();
-    public void updateChannel();
+    boolean sync();
+
+    void updateChannel();
 
 
 }

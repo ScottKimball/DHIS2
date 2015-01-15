@@ -1,12 +1,12 @@
 package org.motechproject.dhis2.service.impl;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.motechproject.dhis2.domain.TrackedEntityInstanceMapper;
 import org.motechproject.dhis2.dto.impl.TrackedEntityInstanceDto;
 import org.motechproject.dhis2.http.HttpConstants;
 import org.motechproject.dhis2.http.HttpService;
 import org.motechproject.dhis2.http.Request;
 import org.motechproject.dhis2.http.Response;
-import org.motechproject.dhis2.domain.TrackedEntityInstanceMapper;
 import org.motechproject.dhis2.repository.TrackedEntityInstanceDataService;
 import org.motechproject.dhis2.service.RegistrationService;
 import org.slf4j.Logger;
@@ -34,7 +34,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         this.trackedEntityInstanceDataService = trackedEntityInstanceDataService;
     }
 
-    /*TODO: transition from ObjectMapper to JsonPath*/
+    /*TODO transition from ObjectMapper to JsonPath*/
     @Override
     public void send(TrackedEntityInstanceDto trackedEntityInstanceDto) {
 
@@ -55,17 +55,17 @@ public class RegistrationServiceImpl implements RegistrationService {
         logger.debug(response.toString());
 
         TrackedEntityInstanceMapper trackedEntityInstanceMapper = trackedEntityInstanceDataService.
-                findByExternalName(trackedEntityInstanceDto.getExternalId() );
+                findByExternalName(trackedEntityInstanceDto.getExternalId());
 
         if (trackedEntityInstanceMapper != null) {
-            logger.debug("Entity updated.\nUUID: " + trackedEntityInstanceMapper.getDhis2Uuid() );
+            logger.debug("Entity updated.\nUUID: " + trackedEntityInstanceMapper.getDhis2Uuid());
 
         } else {
             trackedEntityInstanceMapper =
-                    new TrackedEntityInstanceMapper(trackedEntityInstanceDto.getExternalId(),response.getReference());
+                    new TrackedEntityInstanceMapper(trackedEntityInstanceDto.getExternalId(), response.getReference());
 
             trackedEntityInstanceDataService.create(trackedEntityInstanceMapper);
-            logger.debug("Entity saved.\nUUID: " + trackedEntityInstanceMapper.getDhis2Uuid() );
+            logger.debug("Entity saved.\nUUID: " + trackedEntityInstanceMapper.getDhis2Uuid());
 
         }
 

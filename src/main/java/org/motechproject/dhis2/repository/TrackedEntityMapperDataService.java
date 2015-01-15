@@ -11,5 +11,5 @@ import org.motechproject.mds.service.MotechDataService;
 public interface TrackedEntityMapperDataService extends MotechDataService<TrackedEntityMapper> {
 
     @Lookup
-    public TrackedEntityMapper findByExternalName(@LookupField(name = "externalName") String externalName);
+    TrackedEntityMapper findByExternalName(@LookupField(name = "externalName") String externalName);
 }

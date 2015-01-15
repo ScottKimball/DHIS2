@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.motechproject</groupId>
@@ -8,10 +9,19 @@
     <packaging>bundle</packaging>
     <name>DHIS2</name>
 
+    <parent>
+        <artifactId>modules</artifactId>
+        <groupId>org.motechproject</groupId>
+        <version>0.26-SNAPSHOT</version>
+        <relativePath>../</relativePath>
+    </parent>
+
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <motech.version>0.26-SNAPSHOT</motech.version>
         <spring.version>3.1.0.RELEASE</spring.version>
+        <modules.root.dir>${basedir}/..</modules.root.dir>
     </properties>
 
     <dependencies>
@@ -46,7 +56,6 @@
             <artifactId>org.apache.felix.eventadmin</artifactId>
             <version>1.3.2</version>
         </dependency>
-
 
 
         <!-- SLF4J -->
@@ -138,6 +147,13 @@
         </dependency>
 
         <dependency>
+            <groupId>${motech.groupId}</groupId>
+            <artifactId>motech-tasks</artifactId>
+            <version>${motech.version}</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-admin</artifactId>
             <version>${motech.version}</version>
@@ -150,6 +166,11 @@
             <version>1.1.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.3.4</version>
+        </dependency>
 
 
     </dependencies>
@@ -175,37 +196,37 @@
         <plugins>
 
             <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <version>2.8</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.8</version>
 
 
-            <executions>
-                <execution>
-                    <id>copy-osgi-dependencies</id>
-                    <goals>
-                        <goal>copy-dependencies</goal>
-                    </goals>
-                    <configuration>
-                        <excludeTransitive>false</excludeTransitive>
-                        <includeScope>runtime</includeScope>
-                        <overWriteIfNewer>true</overWriteIfNewer>
-                        <excludeArtifactIds>org.apache.felix.framework</excludeArtifactIds>
-                        <outputDirectory>${user.home}/.motech/bundles</outputDirectory>
+                <executions>
+                    <execution>
+                        <id>copy-osgi-dependencies</id>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <excludeTransitive>false</excludeTransitive>
+                            <includeScope>runtime</includeScope>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                            <excludeArtifactIds>org.apache.felix.framework</excludeArtifactIds>
+                            <outputDirectory>${user.home}/.motech/bundles</outputDirectory>
 
-                    </configuration>
-                </execution>
-                <execution>
-                    <id>list-dependencies</id>
-                    <phase>generate-sources</phase>
-                    <goals>
-                        <goal>resolve</goal>
-                    </goals>
-                    <configuration>
-                        <outputFile>target/dependencies.list</outputFile>
-                    </configuration>
-                </execution>
-            </executions>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>list-dependencies</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>resolve</goal>
+                        </goals>
+                        <configuration>
+                            <outputFile>target/dependencies.list</outputFile>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -218,8 +239,6 @@
             </plugin>
 
 
-
-
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
@@ -229,7 +248,7 @@
                     <instructions>
                         <Blueprint-Enabled>true</Blueprint-Enabled>
                         <Resource-Path>dhis2/resources</Resource-Path>
-                     <!--   <Context-File>META-INF/motech/applicationContext.xml</Context-File> -->
+                        <!--   <Context-File>META-INF/motech/applicationContext.xml</Context-File> -->
                         <Context-Path>dhis2</Context-Path>
                         <Export-Package>org.motechproject.dhis2.service;version=${project.version},
                             org.motechproject.dhis2.repository;version=${project.version},
@@ -237,7 +256,10 @@
                         </Export-Package>
                         <Import-Package>
                             org.motechproject.osgi.web,
-                            *</Import-Package>
+                            org.motechproject.event.listener,
+                            org.motechproject.event.listener.annotations,
+                            *
+                        </Import-Package>
                     </instructions>
 
                 </configuration>

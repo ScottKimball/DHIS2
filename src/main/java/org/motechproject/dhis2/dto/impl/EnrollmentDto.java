@@ -3,8 +3,9 @@ package org.motechproject.dhis2.dto.impl;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
-import org.motechproject.dhis2.dto.AttributeDto;
 import org.motechproject.dhis2.dto.Dto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -19,6 +20,8 @@ public class EnrollmentDto implements Dto {
     private String date;
     private List<AttributeDto> attributeDtos;
 
+    private Logger logger = LoggerFactory.getLogger(EnrollmentDto.class);
+
 
     public EnrollmentDto(String program, String trackedEntityInstance, String date, List<AttributeDto> attributeDtos) {
         this.program = program;
@@ -26,8 +29,6 @@ public class EnrollmentDto implements Dto {
         this.date = date;
         this.attributeDtos = attributeDtos;
     }
-
-
 
 
     public String getProgram() {
@@ -62,13 +63,13 @@ public class EnrollmentDto implements Dto {
         this.attributeDtos = attributeDtos;
     }
 
-    public String toJson () {
+    public String toJson() {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
         ObjectNode root = objectMapper.createObjectNode();
-        root.put("program",program);
-        root.put("trackedEntityInstance",trackedEntityInstance);
+        root.put("program", program);
+        root.put("trackedEntityInstance", trackedEntityInstance);
 
         ArrayNode nodeList = objectMapper.createArrayNode();
 
@@ -83,15 +84,14 @@ public class EnrollmentDto implements Dto {
         root.putArray("attributes").addAll(nodeList);
 
         try {
-            String result = objectMapper.writeValueAsString(root);
-            return result;
+            return objectMapper.writeValueAsString(root);
         } catch (Exception e) {
-            /*TODO: handle exception*/
+            logger.debug(e.toString());
         }
         return null;
     }
 
-    public static void main (String [] args) {
+    public static void main(String[] args) {
 
 
     }

@@ -8,6 +8,6 @@ import org.motechproject.dhis2.dto.impl.EnrollmentDto;
  */
 public interface EnrollmentService {
 
-    public void send (EnrollmentDto enrollmentDto);
+    void send(EnrollmentDto enrollmentDto);
 
 }

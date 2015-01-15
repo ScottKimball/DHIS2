@@ -7,5 +7,5 @@ import org.motechproject.dhis2.dto.impl.StageDto;
  */
 public interface StageService {
 
-    public void send(StageDto stageDto);
+    void send(StageDto stageDto);
 }

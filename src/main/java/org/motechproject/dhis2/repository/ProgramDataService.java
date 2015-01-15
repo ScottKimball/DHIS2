@@ -11,5 +11,5 @@ import org.motechproject.mds.service.MotechDataService;
 public interface ProgramDataService extends MotechDataService<Program> {
 
     @Lookup
-    public Program findByUuid(@LookupField(name = "uuid") String uuid);
+    Program findByUuid(@LookupField(name = "uuid") String uuid);
 }

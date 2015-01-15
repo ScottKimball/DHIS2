@@ -11,6 +11,6 @@ import org.motechproject.mds.service.MotechDataService;
 public interface OrgUnitMapperDataService extends MotechDataService<OrgUnitMapper> {
 
     @Lookup
-    public OrgUnitMapper findByExternalName (@LookupField(name = "externalName") String externalName);
+    OrgUnitMapper findByExternalName(@LookupField(name = "externalName") String externalName);
 
 }

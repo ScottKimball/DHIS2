@@ -2,9 +2,7 @@ package org.motechproject.dhis2.domain;
 
 import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
-import org.motechproject.mds.annotations.Field;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,9 +20,9 @@ public class Program extends BasicEntity {
 
     private List<TrackedEntityAttribute> attributes;
 
-    boolean singleEvent;
+    private boolean singleEvent;
 
-    boolean registration;
+    private boolean registration;
 
 
     public boolean isSingleEvent() {
@@ -75,11 +73,11 @@ public class Program extends BasicEntity {
         super.setUuid(uuid);
     }
 
-    public String getName () {
+    public String getName() {
         return super.getName();
     }
 
-    public void setName (String name) {
+    public void setName(String name) {
         super.setName(name);
     }
 

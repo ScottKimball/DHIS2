@@ -7,6 +7,6 @@ import org.motechproject.dhis2.dto.impl.TrackedEntityInstanceDto;
  */
 public interface RegistrationService {
 
-    public void send (TrackedEntityInstanceDto trackedEntityInstanceDto);
+    void send(TrackedEntityInstanceDto trackedEntityInstanceDto);
 
 }

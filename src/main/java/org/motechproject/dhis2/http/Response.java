@@ -1,15 +1,9 @@
 package org.motechproject.dhis2.http;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.springframework.context.annotation.Import;
-
-import java.io.StringWriter;
-
 /**
  * Created by scott on 9/25/14.
  * Model for DHIS2 Json Response:
  * {"status":"SUCCESS","importCount":{"imported":1,"updated":0,"ignored":0,"deleted":0},"reference":"GmHEBGJtymq"}
- *
  */
 public class Response {
 
@@ -18,15 +12,14 @@ public class Response {
     private ImportCount importCount;
 
 
-
-    private static class ImportCount {
+    private static final class ImportCount {
         private int imported;
         private int updated;
         private int deleted;
         private int ignored;
 
 
-        private ImportCount(int imported, int updated, int deleted , int ignored) {
+        private ImportCount(int imported, int updated, int deleted, int ignored) {
             this.imported = imported;
             this.updated = updated;
             this.deleted = deleted;
@@ -39,7 +32,8 @@ public class Response {
             this.ignored = ignored;
         }
 
-        private ImportCount() {}
+        private ImportCount() {
+        }
 
         public int getImported() {
             return imported;
@@ -76,7 +70,7 @@ public class Response {
 
         public String toString() {
             return "ImportCount: imported: " + imported + ", updated: " + updated + ", deleted: " + deleted
-                    + ", ignored: " +ignored;
+                    + ", ignored: " + ignored;
         }
     }
 
@@ -91,9 +85,6 @@ public class Response {
         this.reference = reference;
     }
 
-
-
-    public Response() {}
 
     public String getStatus() {
         return status;
@@ -119,34 +110,11 @@ public class Response {
         this.importCount = importCount;
     }
 
-    public String toString () {
+    public String toString() {
         return "status: " + status + ", reference:" + reference + ", importCount:" + importCount.toString();
     }
 
 
-    public static void main (String [] args) {
-
-        Response response = new Response("status", "reference" , new ImportCount(1,2,3,4));
-
-        ObjectMapper  objectMapper = new ObjectMapper();
-        StringWriter stringWriter = new StringWriter();
-
-        String successString = "{\"status\":\"SUCCESS\",\"importCount\":{\"imported\":1," +
-                "\"updated\":0,\"ignored\":0,\"deleted\":0},\"reference\":\"GmHEBGJtymq\"}";
-
-
-        try {
-            objectMapper.writeValue(stringWriter, response);
-            System.out.println("From JSON: " +
-                    objectMapper.readValue(successString,Response.class).toString());
-
-        } catch (Exception e) {
-            System.out.println(e.toString());
-
-        }
-        System.out.println("To JSON: " + stringWriter);
-
-    }
 }
 
 

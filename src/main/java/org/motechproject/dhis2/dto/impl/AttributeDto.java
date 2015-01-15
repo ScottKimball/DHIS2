@@ -1,4 +1,4 @@
-package org.motechproject.dhis2.dto;
+package org.motechproject.dhis2.dto.impl;
 
 
 /**
@@ -15,7 +15,7 @@ public class AttributeDto {
     public AttributeDto(String name, String dhis2Uuid, String value) {
         this.dhis2Uuid = dhis2Uuid;
         this.value = value;
-        this.name =name;
+        this.name = name;
     }
 
     public String getDhis2Uuid() {

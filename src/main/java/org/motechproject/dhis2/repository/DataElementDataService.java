@@ -11,5 +11,5 @@ import org.motechproject.mds.service.MotechDataService;
 public interface DataElementDataService extends MotechDataService<DataElement> {
 
     @Lookup
-    public DataElement findByUuid(@LookupField(name = "uuid") String uuid);
+    DataElement findByUuid(@LookupField(name = "uuid") String uuid);
 }

@@ -5,7 +5,8 @@ package org.motechproject.dhis2.event;
  */
 public final class EventParams {
 
-    private EventParams() {}
+    private EventParams() {
+    }
 
     public static final String DATE = "date";
     public static final String LOCATION = "Location";

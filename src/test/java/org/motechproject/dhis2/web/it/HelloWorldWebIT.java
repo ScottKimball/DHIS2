@@ -1,26 +1,26 @@
 package org.motechproject.dhis2.web.it;
 
-import java.io.IOException;
-
-
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.testing.osgi.BasePaxIT;
+import org.motechproject.testing.utils.TestContext;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.commons.httpclient.HttpStatus;
-import org.motechproject.testing.osgi.BasePaxIT;
-import org.motechproject.testing.utils.TestContext;
 
-import static org.junit.Assert.assertNotNull;
+import java.io.IOException;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 
 /**
- * Verify that HelloWorldService HTTP service is present and functional.*/
+ * Verify that HelloWorldService HTTP service is present and functional.
+ */
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
