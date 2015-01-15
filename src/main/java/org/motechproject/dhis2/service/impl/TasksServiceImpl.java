@@ -1,9 +1,12 @@
-package org.motechproject.dhis2.service;
+package org.motechproject.dhis2.service.impl;
 
+import org.motechproject.dhis2.service.Dhis2SchemaService;
+import org.motechproject.dhis2.service.TasksService;
 import org.motechproject.dhis2.tasks.ChannelRequestBuilder;
 import org.motechproject.tasks.service.ChannelService;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,7 +21,8 @@ public class TasksServiceImpl implements TasksService {
     private ChannelService channelService;
     private ChannelRequestBuilder channelRequestBuilder;
 
-    public TasksServiceImpl(BundleContext bundleContext, Dhis2SchemaService schemaService ) {
+    @Autowired
+    public TasksServiceImpl(BundleContext bundleContext, Dhis2SchemaService schemaService) {
         this.bundleContext = bundleContext;
         this.schemaService = schemaService;
     }
@@ -26,25 +30,25 @@ public class TasksServiceImpl implements TasksService {
     @Override
     public void updateChannel() {
         ServiceReference serviceReference = bundleContext.getServiceReference("org.motechproject.tasks.service.ChannelService");
-        if (serviceReference != null) {
-            channelService = (ChannelService) serviceReference;
-        }
-        channelRequestBuilder = new ChannelRequestBuilder(schemaService);
-        channelService.registerChannel(channelRequestBuilder.build());
 
-    }
-
-    public void buildChannel() {
-        ServiceReference serviceReference = bundleContext.getServiceReference("org.motechproject.tasks.service.ChannelService");
         if (serviceReference != null) {
+
             Object service = bundleContext.getService(serviceReference);
             if (service != null) {
 
+                channelService = (ChannelService) service;
 
+                channelRequestBuilder = new ChannelRequestBuilder(schemaService);
+                channelService.registerChannel(channelRequestBuilder.build());
             }
 
+
         }
+
+
     }
+
+
 
 
 }
