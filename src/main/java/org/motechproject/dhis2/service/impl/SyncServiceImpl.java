@@ -124,9 +124,6 @@ public class SyncServiceImpl implements SyncService {
 
     }
 
-    public void updateChannel() {
-        /*TODO update the Tasks channel*/
-    }
 
     private void addDataElements() {
 

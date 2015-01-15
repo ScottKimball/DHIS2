@@ -7,7 +7,7 @@ public interface SyncService {
 
     boolean sync();
 
-    void updateChannel();
+
 
 
 }

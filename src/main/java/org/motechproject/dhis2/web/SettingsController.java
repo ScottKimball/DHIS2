@@ -1,6 +1,7 @@
 package org.motechproject.dhis2.web;
 
 import org.motechproject.dhis2.service.SyncService;
+import org.motechproject.dhis2.service.TasksService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -18,10 +19,12 @@ public class SettingsController {
 
 
     private SyncService syncService;
+    private TasksService tasksService;
 
     @Autowired
-    public SettingsController(SyncService syncService) {
+    public SettingsController(SyncService syncService, TasksService tasksService) {
         this.syncService = syncService;
+        this.tasksService = tasksService;
     }
 
 
@@ -33,7 +36,8 @@ public class SettingsController {
         boolean success = syncService.sync();
 
         if (success) {
-            syncService.updateChannel();
+            tasksService.updateChannel();
+
         }
 
     }
