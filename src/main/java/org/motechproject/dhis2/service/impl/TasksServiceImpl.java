@@ -38,7 +38,7 @@ public class TasksServiceImpl implements TasksService {
 
                 channelService = (ChannelService) service;
 
-                channelRequestBuilder = new ChannelRequestBuilder(schemaService);
+                channelRequestBuilder = new ChannelRequestBuilder(schemaService, bundleContext);
                 channelService.registerChannel(channelRequestBuilder.build());
             }
 

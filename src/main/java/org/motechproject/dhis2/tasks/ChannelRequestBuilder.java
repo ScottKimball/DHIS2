@@ -6,6 +6,8 @@ import org.motechproject.dhis2.domain.TrackedEntityAttribute;
 import org.motechproject.dhis2.service.Dhis2SchemaService;
 import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.ChannelRequest;
+import org.motechproject.tasks.contract.TriggerEventRequest;
+import org.osgi.framework.BundleContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,15 +17,15 @@ import java.util.List;
  */
 public class ChannelRequestBuilder {
 
-    private static final String DISPLAY_NAME = "displayName";
-    private static final String MODULE_NAME = "moduleName";
-    private static final String MODULE_VERSION = "moduleVersion";
-    private static final String DESCRIPTION = "description";
+    private static final String DISPLAY_NAME = "DHIS2";
+
 
     private Dhis2SchemaService dhis2SchemaService;
+    private BundleContext bundleContext;
 
-    public ChannelRequestBuilder(Dhis2SchemaService dhis2SchemaService) {
+    public ChannelRequestBuilder(Dhis2SchemaService dhis2SchemaService , BundleContext bundleContext) {
         this.dhis2SchemaService = dhis2SchemaService;
+        this.bundleContext = bundleContext;
     }
 
     public ChannelRequest build() {
@@ -44,8 +46,9 @@ public class ChannelRequestBuilder {
         actions.addAll(registrationTriggerBuilder.build(attributes));
 
 
-        ChannelRequest request = new ChannelRequest(DISPLAY_NAME, MODULE_NAME, MODULE_VERSION, DESCRIPTION, null, actions);
 
-        return request;
+        return new ChannelRequest(DISPLAY_NAME, bundleContext.getBundle().getSymbolicName(),
+                bundleContext.getBundle().getVersion().toString(), null, new ArrayList<TriggerEventRequest>(), actions);
+
     }
 }
