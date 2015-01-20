@@ -286,7 +286,7 @@ public class SyncServiceImpl implements SyncService {
     }
 
     private boolean testConnection() {
-        /*TODO */
+        /*TODO Write testConnection method*/
         return true;
     }
 

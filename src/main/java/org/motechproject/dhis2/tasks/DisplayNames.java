@@ -3,7 +3,7 @@ package org.motechproject.dhis2.tasks;
 /**
  * Created by scott on 1/15/15.
  */
-public class DisplayNames {
+public final class DisplayNames {
 
     private DisplayNames() {
     }

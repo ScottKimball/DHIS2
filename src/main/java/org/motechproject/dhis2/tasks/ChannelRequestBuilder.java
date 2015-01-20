@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by scott on 1/15/15.
  */
-public class ChannelRequestBuilder {
+public class ChannelRequestBuilder  {
 
     private static final String DISPLAY_NAME = "DHIS2";
 

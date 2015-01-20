@@ -8,7 +8,6 @@ import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.ActionParameterRequest;
 import org.motechproject.tasks.contract.ActionParameterRequestBuilder;
-import org.motechproject.tasks.domain.ActionParameterBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +35,7 @@ public class ProgramTriggerBuilder {
             ActionEventRequestBuilder builder = new ActionEventRequestBuilder();
             builder.setDisplayName(DisplayNames.PROGRAM_ENROLLMENT + "[" + program.getName() + "]");
             builder.setSubject(EventSubjects.ENROLL_IN_PROGRAM);
+            builder.setName(program.getName());
 
             /*Add External ID field*/
             ActionParameterRequestBuilder actionParameterBuilder = new ActionParameterRequestBuilder();
@@ -43,6 +43,8 @@ public class ProgramTriggerBuilder {
             actionParameterBuilder.setKey(EventParams.EXTERNAL_ID);
             actionParameterBuilder.setType(UNICODE);
             actionParameterBuilder.setRequired(true);
+            actionParameterBuilder.setOrder(Integer.valueOf(1));
+
 
             actionParameters.add(actionParameterBuilder.createActionParameterRequest());
 
@@ -52,6 +54,9 @@ public class ProgramTriggerBuilder {
             actionParameterBuilder.setDisplayName(DisplayNames.TRACKED_ENTITY_TYPE);
             actionParameterBuilder.setKey(EventParams.ENTITY_TYPE);
             actionParameterBuilder.setValue(program.getTrackedEntity().getName());
+            actionParameterBuilder.setType(UNICODE);
+            actionParameterBuilder.setOrder(Integer.valueOf(2));
+            actionParameterBuilder.setHidden(true);
 
             actionParameters.add(actionParameterBuilder.createActionParameterRequest());
 
@@ -59,6 +64,7 @@ public class ProgramTriggerBuilder {
             actionParameters.addAll(buildRequestForProgram(program));
 
             builder.setActionParameters(actionParameters);
+
 
             actionEventRequests.add(builder.createActionEventRequest());
 
@@ -73,18 +79,26 @@ public class ProgramTriggerBuilder {
 
     private List<ActionParameterRequest> buildRequestForProgram(Program program) {
 
+        List<ActionParameterRequest> parameterRequests = new ArrayList<>();
+        ActionParameterRequestBuilder actionParameterBuilder;
+
         for (TrackedEntityAttribute attribute : program.getAttributes()) {
 
-            ActionParameterRequestBuilder actionParameterBuilder = new ActionParameterRequestBuilder();
+            actionParameterBuilder = new ActionParameterRequestBuilder();
             actionParameterBuilder.setDisplayName(attribute.getName());
 
                 /*TODO Might want to change to use UUID as key rather than name*/
             actionParameterBuilder.setKey(attribute.getName());
             actionParameterBuilder.setType(UNICODE);
+            actionParameterBuilder.setOrder(Integer.valueOf(2));
+            parameterRequests.add(actionParameterBuilder.createActionParameterRequest());
 
         }
 
+        return parameterRequests;
+
     }
+
 
 
 }

@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by scott on 1/15/15.
  */
-public class StageTriggerBuilder {
+public class StageTriggerBuilder  {
 
     public List<ActionEventRequest> build(List<Stage> stages) {
 
