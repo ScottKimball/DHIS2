@@ -1,12 +1,10 @@
 package org.motechproject.dhis2.service.impl;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.motechproject.dhis2.dto.impl.EnrollmentDto;
 import org.motechproject.dhis2.http.HttpConstants;
 import org.motechproject.dhis2.http.HttpService;
 import org.motechproject.dhis2.http.Request;
-import org.motechproject.dhis2.http.Response;
 import org.motechproject.dhis2.service.EnrollmentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +23,6 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     private static final String SUCCESS = "SUCCESS";
 
     private HttpService httpService;
-    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     public EnrollmentServiceImpl(HttpService httpService) {
@@ -33,31 +30,15 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
     }
 
-    /*TODO transition from ObjectMapper to JsonPath*/
     @Override
     public void send(EnrollmentDto enrollmentDto) {
 
-        Response response;
         String body = enrollmentDto.toJson();
 
         Request request = new Request(HttpConstants.ENROLLMENTS_PATH, body);
-        String entityString = httpService.send(request);
+        Object entityString = httpService.send(request);
 
-        try {
-            response = objectMapper.readValue(entityString, Response.class);
-
-        } catch (Exception e) {
-            logger.debug(e.toString());
-            return;
-        }
-
-        if (!response.getStatus().equals(SUCCESS)) {
-            logger.debug("Unsuccessful post to DHIS2: " + response);
-            return;
-        }
-
-        logger.debug("Successful enrollment: " + response);
-
+        logger.debug(entityString.toString() + SUCCESS);
 
     }
 

@@ -1,12 +1,12 @@
 package org.motechproject.dhis2.service.impl;
 
-import org.codehaus.jackson.map.ObjectMapper;
+
+import com.jayway.jsonpath.JsonPath;
 import org.motechproject.dhis2.domain.TrackedEntityInstanceMapper;
 import org.motechproject.dhis2.dto.impl.TrackedEntityInstanceDto;
 import org.motechproject.dhis2.http.HttpConstants;
 import org.motechproject.dhis2.http.HttpService;
 import org.motechproject.dhis2.http.Request;
-import org.motechproject.dhis2.http.Response;
 import org.motechproject.dhis2.repository.TrackedEntityInstanceDataService;
 import org.motechproject.dhis2.service.RegistrationService;
 import org.slf4j.Logger;
@@ -25,7 +25,10 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private HttpService httpService;
     private TrackedEntityInstanceDataService trackedEntityInstanceDataService;
-    private ObjectMapper objectMapper = new ObjectMapper();
+
+    private static final String STATUS = "$.status";
+    private static final String REFERENCE = "$.reference";
+    private static final String SUCCESS = "SUCCESS";
 
     @Autowired
     public RegistrationServiceImpl(HttpService httpService,
@@ -38,36 +41,38 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public void send(TrackedEntityInstanceDto trackedEntityInstanceDto) {
 
-        Response response;
+
         String body = trackedEntityInstanceDto.toJson();
 
         Request request = new Request(HttpConstants.TRACKED_ENTITY_INSTANCES_PATH, body);
-        String entityString = httpService.send(request);
+        Object response = httpService.send(request);
+        String status = JsonPath.read(response, STATUS);
+        if (status.equalsIgnoreCase(SUCCESS)) {
 
-        try {
-            response = objectMapper.readValue(entityString, Response.class);
+            logger.debug(response.toString());
 
-        } catch (Exception e) {
-            logger.debug(e.toString());
-            return;
-        }
+            String reference = JsonPath.read(response, REFERENCE);
 
-        logger.debug(response.toString());
+            TrackedEntityInstanceMapper trackedEntityInstanceMapper = trackedEntityInstanceDataService.
+                    findByExternalName(trackedEntityInstanceDto.getExternalId());
 
-        TrackedEntityInstanceMapper trackedEntityInstanceMapper = trackedEntityInstanceDataService.
-                findByExternalName(trackedEntityInstanceDto.getExternalId());
+            if (trackedEntityInstanceMapper != null) {
+                logger.debug("Entity updated.\nUUID: " + trackedEntityInstanceMapper.getDhis2Uuid());
 
-        if (trackedEntityInstanceMapper != null) {
-            logger.debug("Entity updated.\nUUID: " + trackedEntityInstanceMapper.getDhis2Uuid());
+            } else {
+                trackedEntityInstanceMapper =
+                        new TrackedEntityInstanceMapper(trackedEntityInstanceDto.getExternalId(), reference);
 
+                trackedEntityInstanceDataService.create(trackedEntityInstanceMapper);
+                logger.debug("Entity saved.\nUUID: " + trackedEntityInstanceMapper.getDhis2Uuid());
+
+            }
         } else {
-            trackedEntityInstanceMapper =
-                    new TrackedEntityInstanceMapper(trackedEntityInstanceDto.getExternalId(), response.getReference());
 
-            trackedEntityInstanceDataService.create(trackedEntityInstanceMapper);
-            logger.debug("Entity saved.\nUUID: " + trackedEntityInstanceMapper.getDhis2Uuid());
-
+            logger.error("Problem with tracked Entity Instance Creation");
         }
+
+
 
     }
 }

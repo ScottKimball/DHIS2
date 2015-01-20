@@ -32,14 +32,11 @@ public class StageServiceImpl implements StageService {
 
         String body = stageDto.toJson();
         Request request = new Request(HttpConstants.EVENTS_PATH, body);
-        String entityString = httpService.send(request);
+        Object entityString = httpService.send(request);
 
-        if (entityString.contains("SUCCESS")) {
-            logger.debug("Successful update to DHIS2: " + entityString);
-        } else {
+        logger.debug(entityString.toString());
 
-            logger.debug("Failure to update to DHIS2: " + entityString);
-        }
+
 
 
 

@@ -22,6 +22,8 @@ import org.motechproject.dhis2.repository.ProgramMapperDataService;
 import org.motechproject.dhis2.repository.StageMapperDataService;
 import org.motechproject.dhis2.repository.TrackedEntityInstanceDataService;
 import org.motechproject.event.MotechEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -45,6 +47,8 @@ public class DtoBuilder {
     private StageMapperDataService stageMapperDataService;
     private HttpQuery httpQuery;
     private OrgUnitDataService orgUnitDataService;
+
+    private Logger logger = LoggerFactory.getLogger(DtoBuilder.class);
 
 
     @Autowired
@@ -182,7 +186,15 @@ public class DtoBuilder {
 
         /*Get org Unit*/
         String orgUnit = (String) params.remove(EventParams.LOCATION);
-        String orgUnitUuid = orgUnitDataService.findByName(orgUnit).getUuid();
+        String orgUnitUuid = null;
+        try {
+            orgUnitUuid = orgUnitDataService.findByName(orgUnit).getUuid();
+
+        } catch (NullPointerException e) {
+            logger.error("Org Unit Name not found");
+            logger.error(e.toString());
+            return null;
+        }
 
         /*Iterate over remaining parameters*/
         Iterator it = params.entrySet().iterator();

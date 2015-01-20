@@ -1,5 +1,6 @@
 package org.motechproject.dhis2.http;
 
+import com.jayway.jsonpath.Configuration;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -9,6 +10,7 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
 
 /**
  * Created by scott on 9/17/14.
@@ -22,12 +24,13 @@ public class HttpService {
 
 
     /*  Constructs an HTTP POST request and returns the response  */
-    public String send(Request request) {
+    public Object send(Request request) {
 
         DefaultHttpClient httpClient = new DefaultHttpClient();
         HttpPost httpPost = new HttpPost(request.getUrl());
         httpPost.addHeader("content-type", "application/json");
         httpPost.addHeader("accept", "application/json");
+
 
         try {
             StringEntity params = new StringEntity(request.getBody());
@@ -37,12 +40,14 @@ public class HttpService {
             String entityString = EntityUtils.toString(entity, "UTF-8");
 
 
-            return entityString;
+            return Configuration.defaultConfiguration().jsonProvider().parse(entityString);
 
         } catch (Exception e) {
 
             logger.debug("Exception: " + e.toString());
         }
+
         return null;
+
     }
 }
