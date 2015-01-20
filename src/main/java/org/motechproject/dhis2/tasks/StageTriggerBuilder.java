@@ -20,13 +20,15 @@ import java.util.TreeSet;
 public class StageTriggerBuilder  {
 
     private static final String UNICODE = "UNICODE";
-    private int counter = 0;
+    private int counter;
 
     public List<ActionEventRequest> build(List<Stage> stages) {
 
         List<ActionEventRequest> actionEventRequests = new ArrayList<>();
 
         for (Stage stage : stages) {
+
+            counter = 0;
 
             SortedSet<ActionParameterRequest> actionParameters = new TreeSet<>();
             ActionEventRequestBuilder builder = new ActionEventRequestBuilder();
@@ -47,7 +49,8 @@ public class StageTriggerBuilder  {
                     .setKey(EventParams.PROGRAM)
                     .setValue(stage.getProgram())
                     .setHidden(true)
-                    .setOrder(Integer.valueOf(counter++));
+                    .setOrder(Integer.valueOf(counter++))
+                    .setDisplayName(stage.getProgram());
 
             actionParameters.add(actionParameterBuilder.createActionParameterRequest());
 

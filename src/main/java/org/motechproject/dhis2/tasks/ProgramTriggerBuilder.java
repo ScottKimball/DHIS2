@@ -21,7 +21,7 @@ import java.util.TreeSet;
 public class ProgramTriggerBuilder {
 
     private static final String UNICODE = "UNICODE";
-    private int counter = 0;
+    private int counter;
 
 
 
@@ -30,6 +30,7 @@ public class ProgramTriggerBuilder {
         List<ActionEventRequest> actionEventRequests = new ArrayList<>();
 
         for (Program program : programs) {
+            counter = 0;
 
             SortedSet<ActionParameterRequest> actionParameters = new TreeSet<>();
 
