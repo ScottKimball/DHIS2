@@ -43,7 +43,7 @@ public class ProgramTriggerBuilder {
                     .setKey(EventParams.EXTERNAL_ID)
                     .setType(UNICODE)
                     .setRequired(true)
-                    .setOrder(Integer.valueOf(counter++));
+                    .setOrder(counter++);
 
 
             actionParameters.add(actionParameterBuilder.createActionParameterRequest());
@@ -51,7 +51,7 @@ public class ProgramTriggerBuilder {
             actionParameterBuilder = new ActionParameterRequestBuilder()
                     .setDisplayName(DisplayNames.DATE)
                     .setKey(EventParams.DATE)
-                    .setOrder(Integer.valueOf(counter++))
+                    .setOrder(counter++)
                     .setType(UNICODE);
 
 
@@ -62,7 +62,7 @@ public class ProgramTriggerBuilder {
                     .setKey(EventParams.ENTITY_TYPE)
                     .setValue(program.getTrackedEntity().getName())
                     .setType(UNICODE)
-                    .setOrder(Integer.valueOf(counter++))
+                    .setOrder(counter++)
                     .setHidden(true);
 
             actionParameters.add(actionParameterBuilder.createActionParameterRequest());
@@ -71,7 +71,7 @@ public class ProgramTriggerBuilder {
             actionParameters.addAll(buildRequestForProgram(program));
 
             builder.setActionParameters(actionParameters)
-                    .setDisplayName(DisplayNames.PROGRAM_ENROLLMENT + "[" + program.getName() + "]")
+                    .setDisplayName(DisplayNames.PROGRAM_ENROLLMENT + " [" + program.getName() + "]")
                     .setSubject(EventSubjects.ENROLL_IN_PROGRAM)
                     .setName(program.getName());
 
@@ -98,7 +98,7 @@ public class ProgramTriggerBuilder {
                     .setDisplayName(attribute.getName())
                     .setKey(attribute.getUuid())
                     .setType(UNICODE)
-                    .setOrder(Integer.valueOf(counter++));
+                    .setOrder(counter++);
 
             parameterRequests.add(actionParameterBuilder.createActionParameterRequest());
 

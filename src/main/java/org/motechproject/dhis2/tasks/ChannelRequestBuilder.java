@@ -2,6 +2,7 @@ package org.motechproject.dhis2.tasks;
 
 import org.motechproject.dhis2.domain.Program;
 import org.motechproject.dhis2.domain.Stage;
+import org.motechproject.dhis2.domain.TrackedEntity;
 import org.motechproject.dhis2.domain.TrackedEntityAttribute;
 import org.motechproject.dhis2.service.Dhis2SchemaService;
 import org.motechproject.tasks.contract.ActionEventRequest;
@@ -43,9 +44,8 @@ public class ChannelRequestBuilder  {
         actions.addAll(stageTriggerBuilder.build(stages));
 
         List<TrackedEntityAttribute> attributes = dhis2SchemaService.getTrackedEntityAttributes();
-        actions.addAll(registrationTriggerBuilder.build(attributes));
-
-
+        List<TrackedEntity> trackedEntities = dhis2SchemaService.getTrackedEntities();
+        actions.addAll(registrationTriggerBuilder.build(attributes, trackedEntities));
 
         return new ChannelRequest(DisplayNames.DHIS2_DISPLAY_NAME, bundleContext.getBundle().getSymbolicName(),
                 bundleContext.getBundle().getVersion().toString(), null, new ArrayList<TriggerEventRequest>(), actions);

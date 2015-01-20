@@ -40,7 +40,7 @@ public class StageTriggerBuilder  {
                     .setKey(EventParams.EXTERNAL_ID)
                     .setType(UNICODE)
                     .setRequired(true)
-                    .setOrder(Integer.valueOf(counter++));
+                    .setOrder(counter++);
 
             actionParameters.add(actionParameterBuilder.createActionParameterRequest());
 
@@ -49,7 +49,7 @@ public class StageTriggerBuilder  {
                     .setKey(EventParams.PROGRAM)
                     .setValue(stage.getProgram())
                     .setHidden(true)
-                    .setOrder(Integer.valueOf(counter++))
+                    .setOrder(counter++)
                     .setDisplayName(stage.getProgram());
 
             actionParameters.add(actionParameterBuilder.createActionParameterRequest());
@@ -57,7 +57,7 @@ public class StageTriggerBuilder  {
             /*Date*/
             actionParameterBuilder = new ActionParameterRequestBuilder()
                     .setDisplayName(DisplayNames.DATE)
-                    .setOrder(Integer.valueOf(counter++))
+                    .setOrder(counter++)
                     .setKey(EventParams.DATE)
                     .setType(UNICODE);
 
@@ -67,7 +67,7 @@ public class StageTriggerBuilder  {
             actionParameters.addAll(buildRequestForStage(stage));
 
             builder.setActionParameters(actionParameters)
-                    .setDisplayName(DisplayNames.STAGE_EVENT + "[" + stage.getName() + "]")
+                    .setDisplayName(DisplayNames.STAGE_EVENT + " [" + stage.getName() + "]")
                     .setName(stage.getName())
                     .setSubject(EventSubjects.UPDATE_PROGRAM_STAGE);
 
@@ -90,7 +90,7 @@ public class StageTriggerBuilder  {
                     .setDisplayName(element.getName())
                     .setKey(element.getUuid())
                     .setType(UNICODE)
-                    .setOrder(Integer.valueOf(counter++));
+                    .setOrder(counter++);
 
             parameterRequests.add(actionParameterBuilder.createActionParameterRequest());
 
