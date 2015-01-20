@@ -5,7 +5,6 @@ import org.motechproject.dhis2.domain.OrgUnitMapper;
 import org.motechproject.dhis2.domain.ProgramMapper;
 import org.motechproject.dhis2.domain.StageMapper;
 import org.motechproject.dhis2.domain.TrackedEntityInstanceMapper;
-import org.motechproject.dhis2.domain.TrackedEntityMapper;
 import org.motechproject.dhis2.dto.Dto;
 import org.motechproject.dhis2.dto.DtoType;
 import org.motechproject.dhis2.dto.impl.AttributeDto;
@@ -17,17 +16,18 @@ import org.motechproject.dhis2.event.EventParams;
 import org.motechproject.dhis2.http.HttpConstants;
 import org.motechproject.dhis2.http.HttpQuery;
 import org.motechproject.dhis2.http.Request;
+import org.motechproject.dhis2.repository.OrgUnitDataService;
 import org.motechproject.dhis2.repository.OrgUnitMapperDataService;
 import org.motechproject.dhis2.repository.ProgramMapperDataService;
 import org.motechproject.dhis2.repository.StageMapperDataService;
 import org.motechproject.dhis2.repository.TrackedEntityInstanceDataService;
-import org.motechproject.dhis2.repository.TrackedEntityMapperDataService;
 import org.motechproject.event.MotechEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -40,24 +40,25 @@ public class DtoBuilder {
 
 
     private ProgramMapperDataService programMapperDataService;
-    private TrackedEntityMapperDataService trackedEntityMapperDataService;
     private OrgUnitMapperDataService orgUnitMapperDataService;
     private TrackedEntityInstanceDataService trackedEntityInstanceDataService;
     private StageMapperDataService stageMapperDataService;
     private HttpQuery httpQuery;
+    private OrgUnitDataService orgUnitDataService;
 
 
     @Autowired
-    public DtoBuilder(ProgramMapperDataService programMapperDataService, TrackedEntityMapperDataService trackedEntityMapperDataService,
+    public DtoBuilder(ProgramMapperDataService programMapperDataService,
                       OrgUnitMapperDataService orgUnitMapperDataService,
                       TrackedEntityInstanceDataService trackedEntityInstanceDataService,
-                      StageMapperDataService stageMapperDataService, HttpQuery httpQuery) {
+                      StageMapperDataService stageMapperDataService, HttpQuery httpQuery,
+                      OrgUnitDataService orgUnitDataService) {
         this.programMapperDataService = programMapperDataService;
-        this.trackedEntityMapperDataService = trackedEntityMapperDataService;
         this.orgUnitMapperDataService = orgUnitMapperDataService;
         this.trackedEntityInstanceDataService = trackedEntityInstanceDataService;
         this.stageMapperDataService = stageMapperDataService;
         this.httpQuery = httpQuery;
+        this.orgUnitDataService = orgUnitDataService;
     }
 
 
@@ -175,42 +176,26 @@ public class DtoBuilder {
 
         Map<String, Object> params = event.getParameters();
         List<AttributeDto> attributeDtoList = new ArrayList<AttributeDto>();
-        String externalUUID = (String) params.get(EventParams.EXTERNAL_ID);
 
-        /*Get tracked Entity UUID. Once dynamic actions are implemented, event should directly pass DHIS2 UUID */
-        String entityType = (String) params.get(EventParams.ENTITY_TYPE);
-        TrackedEntityMapper trackedEntityMapper = trackedEntityMapperDataService.findByExternalName(entityType);
-        String trackedEntity = trackedEntityMapper.getDhis2Uuid();
+        String externalUUID = (String) params.remove(EventParams.EXTERNAL_ID);
+        String trackedEntity = (String) params.remove(EventParams.ENTITY_TYPE);
 
         /*Get org Unit*/
-        String orgUnit = (String) params.get(EventParams.LOCATION);
-        String orgUnitUuid = getOrgUnit(orgUnit);
+        String orgUnit = (String) params.remove(EventParams.LOCATION);
+        String orgUnitUuid = orgUnitDataService.findByName(orgUnit).getUuid();
 
-        /*Get program information from DHIS2 server*/
-        Request attributesRequest = new Request(HttpConstants.TRACKED_ENTITY_ATTRIBUTES_PATH + "?" +
-                HttpConstants.NO_PAGING_NO_LINKS);
-        Object jsonResponse = httpQuery.send(attributesRequest);
+        /*Iterate over remaining parameters*/
+        Iterator it = params.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry entry = (Map.Entry) it.next();
 
-        /*TODO Find a solution that doesn't use Object as the type */
-        List<Object> trackedEntityAttributes = JsonPath.read(jsonResponse, "$..trackedEntityAttributes[*]");
-
-        /* Iterates down program attributes and adds them to attribute list. */
-        for (Object o : trackedEntityAttributes) {
-            String attributeName = JsonPath.read(o, "$.name");
-            String attributeId = JsonPath.read(o, "$.id");
-            String attributeValue = (String) params.get(attributeName);
-
-          /*  Might need to check if required attribute is present here */
-            if (attributeValue != null) {
-                attributeDtoList.add(new AttributeDto(attributeName, attributeId, attributeValue));
-
+            if (entry.getValue() != null) {
+                attributeDtoList.add(new AttributeDto(null, (String) entry.getKey(), (String) entry.getValue()));
             }
+
         }
 
-        TrackedEntityInstanceDto instance = new TrackedEntityInstanceDto(externalUUID,
-                trackedEntity, attributeDtoList, orgUnitUuid);
-
-        return instance;
+        return new TrackedEntityInstanceDto(externalUUID, trackedEntity, attributeDtoList, orgUnitUuid);
     }
 
     /*First checks for local mapping. If there is no local mapping, calls dhis2 and checks to see if orgUnit exists

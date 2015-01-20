@@ -9,7 +9,7 @@ public final class EventParams {
     }
 
     public static final String DATE = "date";
-    public static final String LOCATION = "Location";
+    public static final String LOCATION = "location";
     public static final String PROGRAM = "program";
     public static final String EXTERNAL_ID = "externalId";
     public static final String ENTITY_TYPE = "entityType";

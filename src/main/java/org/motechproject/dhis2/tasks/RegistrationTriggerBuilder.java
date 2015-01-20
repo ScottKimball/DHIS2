@@ -21,6 +21,7 @@ import java.util.TreeSet;
 public class RegistrationTriggerBuilder {
 
     private static final String UNICODE = "UNICODE";
+    private static final int ATTRIBUTE_COUNT = 3;
     private int counter;
 
     public List<ActionEventRequest> build(List<TrackedEntityAttribute> attributes, List<TrackedEntity> trackedEntities) {
@@ -83,7 +84,7 @@ public class RegistrationTriggerBuilder {
 
     private SortedSet<ActionParameterRequest> buildAttributeActionParameters(List<TrackedEntityAttribute> attributes) {
 
-        int count = 3;
+        int count = ATTRIBUTE_COUNT;
         SortedSet<ActionParameterRequest> attributeActionParameters = new TreeSet<>();
         ActionParameterRequestBuilder parameterRequestBuilder;
 
