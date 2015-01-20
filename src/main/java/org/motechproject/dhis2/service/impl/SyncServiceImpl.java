@@ -73,6 +73,7 @@ public class SyncServiceImpl implements SyncService {
     private static final String DATA_ELEMENTS = "$.dataElements";
 
 
+
     @Override
     public boolean sync() {
 
@@ -214,7 +215,7 @@ public class SyncServiceImpl implements SyncService {
 
         for (Object o : stages) {
             String stageId = JsonPath.read(o, ID);
-            programStages.add(buildStage(stageId));
+            programStages.add(buildStage(stageId , id));
         }
 
         List<TrackedEntityAttribute> programTrackedEntityAttributes = new ArrayList<>();
@@ -254,12 +255,14 @@ public class SyncServiceImpl implements SyncService {
         return program;
     }
 
-    private Stage buildStage(String id)  {
+    private Stage buildStage(String id, String programId)  {
 
         Request stageRequest = new Request(HttpConstants.STAGES_PATH + "/" + id);
         Object stageInfo = httpQuery.send(stageRequest);
 
         String name = JsonPath.read(stageInfo, NAME);
+
+
 
         List<DataElement> programStageDataElements = new ArrayList<>();
 
@@ -280,6 +283,7 @@ public class SyncServiceImpl implements SyncService {
         stage.setName(name);
         stage.setUuid(id);
         stage.setDataElements(programStageDataElements);
+        stage.setProgram(programId);
 
         return stage;
 

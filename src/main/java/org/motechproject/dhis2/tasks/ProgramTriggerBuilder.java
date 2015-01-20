@@ -21,6 +21,7 @@ import java.util.TreeSet;
 public class ProgramTriggerBuilder {
 
     private static final String UNICODE = "UNICODE";
+    private int counter = 0;
 
 
 
@@ -33,37 +34,45 @@ public class ProgramTriggerBuilder {
             SortedSet<ActionParameterRequest> actionParameters = new TreeSet<>();
 
             ActionEventRequestBuilder builder = new ActionEventRequestBuilder();
-            builder.setDisplayName(DisplayNames.PROGRAM_ENROLLMENT + "[" + program.getName() + "]");
-            builder.setSubject(EventSubjects.ENROLL_IN_PROGRAM);
-            builder.setName(program.getName());
+
 
             /*Add External ID field*/
-            ActionParameterRequestBuilder actionParameterBuilder = new ActionParameterRequestBuilder();
-            actionParameterBuilder.setDisplayName(DisplayNames.EXTERNAL_ID);
-            actionParameterBuilder.setKey(EventParams.EXTERNAL_ID);
-            actionParameterBuilder.setType(UNICODE);
-            actionParameterBuilder.setRequired(true);
-            actionParameterBuilder.setOrder(Integer.valueOf(1));
+            ActionParameterRequestBuilder actionParameterBuilder = new ActionParameterRequestBuilder()
+                    .setDisplayName(DisplayNames.EXTERNAL_ID)
+                    .setKey(EventParams.EXTERNAL_ID)
+                    .setType(UNICODE)
+                    .setRequired(true)
+                    .setOrder(Integer.valueOf(counter++));
 
 
             actionParameters.add(actionParameterBuilder.createActionParameterRequest());
 
+            actionParameterBuilder = new ActionParameterRequestBuilder()
+                    .setDisplayName(DisplayNames.DATE)
+                    .setKey(EventParams.DATE)
+                    .setOrder(Integer.valueOf(counter++))
+                    .setType(UNICODE);
+
+
 
             /*Add Tracked Entity Type field with value*/
-            actionParameterBuilder = new ActionParameterRequestBuilder();
-            actionParameterBuilder.setDisplayName(DisplayNames.TRACKED_ENTITY_TYPE);
-            actionParameterBuilder.setKey(EventParams.ENTITY_TYPE);
-            actionParameterBuilder.setValue(program.getTrackedEntity().getName());
-            actionParameterBuilder.setType(UNICODE);
-            actionParameterBuilder.setOrder(Integer.valueOf(2));
-            actionParameterBuilder.setHidden(true);
+            actionParameterBuilder = new ActionParameterRequestBuilder()
+                    .setDisplayName(DisplayNames.TRACKED_ENTITY_TYPE)
+                    .setKey(EventParams.ENTITY_TYPE)
+                    .setValue(program.getTrackedEntity().getName())
+                    .setType(UNICODE)
+                    .setOrder(Integer.valueOf(counter++))
+                    .setHidden(true);
 
             actionParameters.add(actionParameterBuilder.createActionParameterRequest());
 
             /*Adds all tracked entity attributes for program*/
             actionParameters.addAll(buildRequestForProgram(program));
 
-            builder.setActionParameters(actionParameters);
+            builder.setActionParameters(actionParameters)
+                    .setDisplayName(DisplayNames.PROGRAM_ENROLLMENT + "[" + program.getName() + "]")
+                    .setSubject(EventSubjects.ENROLL_IN_PROGRAM)
+                    .setName(program.getName());
 
 
             actionEventRequests.add(builder.createActionEventRequest());
@@ -84,13 +93,12 @@ public class ProgramTriggerBuilder {
 
         for (TrackedEntityAttribute attribute : program.getAttributes()) {
 
-            actionParameterBuilder = new ActionParameterRequestBuilder();
-            actionParameterBuilder.setDisplayName(attribute.getName());
+            actionParameterBuilder = new ActionParameterRequestBuilder()
+                    .setDisplayName(attribute.getName())
+                    .setKey(attribute.getUuid())
+                    .setType(UNICODE)
+                    .setOrder(Integer.valueOf(counter++));
 
-                /*TODO Might want to change to use UUID as key rather than name*/
-            actionParameterBuilder.setKey(attribute.getName());
-            actionParameterBuilder.setType(UNICODE);
-            actionParameterBuilder.setOrder(Integer.valueOf(2));
             parameterRequests.add(actionParameterBuilder.createActionParameterRequest());
 
         }

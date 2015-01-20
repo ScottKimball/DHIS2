@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class ChannelRequestBuilder  {
 
-    private static final String DISPLAY_NAME = "DHIS2";
+
 
 
     private Dhis2SchemaService dhis2SchemaService;
@@ -47,7 +47,7 @@ public class ChannelRequestBuilder  {
 
 
 
-        return new ChannelRequest(DISPLAY_NAME, bundleContext.getBundle().getSymbolicName(),
+        return new ChannelRequest(DisplayNames.DHIS2_DISPLAY_NAME, bundleContext.getBundle().getSymbolicName(),
                 bundleContext.getBundle().getVersion().toString(), null, new ArrayList<TriggerEventRequest>(), actions);
 
     }

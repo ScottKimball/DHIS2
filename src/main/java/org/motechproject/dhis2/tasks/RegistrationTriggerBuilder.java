@@ -3,6 +3,7 @@ package org.motechproject.dhis2.tasks;
 import org.motechproject.dhis2.domain.TrackedEntityAttribute;
 import org.motechproject.tasks.contract.ActionEventRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,6 +13,6 @@ public class RegistrationTriggerBuilder {
 
     public List<ActionEventRequest> build(List<TrackedEntityAttribute> attributes) {
 
-        return null;
+        return new ArrayList<ActionEventRequest>();
     }
 }

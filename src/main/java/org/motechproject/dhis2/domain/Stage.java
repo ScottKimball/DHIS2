@@ -12,6 +12,8 @@ public class Stage extends BasicEntity {
 
     private List<DataElement> dataElements;
 
+    private String program;
+
 
     public List<DataElement> getDataElements() {
         return dataElements;
@@ -35,5 +37,13 @@ public class Stage extends BasicEntity {
 
     public void setName(String name) {
         super.setName(name);
+    }
+
+    public String getProgram() {
+        return program;
+    }
+
+    public void setProgram(String program) {
+        this.program = program;
     }
 }
