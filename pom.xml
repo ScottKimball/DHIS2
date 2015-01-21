@@ -2,13 +2,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>org.motechproject</groupId>
-    <artifactId>DHIS2</artifactId>
-    <version>0.26-SNAPSHOT</version>
-    <packaging>bundle</packaging>
-    <name>DHIS2</name>
-
     <parent>
         <artifactId>modules</artifactId>
         <groupId>org.motechproject</groupId>
@@ -16,26 +9,53 @@
         <relativePath>../</relativePath>
     </parent>
 
+    <modelVersion>4.0.0</modelVersion>
+    <version>0.26-SNAPSHOT</version>
+    <description>DHIS2 Module</description>
+    <artifactId>DHIS2</artifactId>
+    <name>DHIS2</name>
+    <packaging>bundle</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <motech.version>0.26-SNAPSHOT</motech.version>
-        <spring.version>3.1.0.RELEASE</spring.version>
         <modules.root.dir>${basedir}/..</modules.root.dir>
     </properties>
 
     <dependencies>
-
-
         <dependency>
-            <groupId>org.motechproject</groupId>
+            <groupId>${motech.groupId}</groupId>
             <artifactId>motech-platform-osgi-extender-fragment</artifactId>
             <version>${motech.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>${motech.groupId}</groupId>
+            <artifactId>motech-tasks</artifactId>
+            <version>${motech.version}</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>${motech.groupId}</groupId>
+            <artifactId>motech-admin</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.3.4</version>
+        </dependency>
+
         <!-- OSGi IT -->
         <dependency>
-            <groupId>org.motechproject</groupId>
+            <groupId>${motech.groupId}</groupId>
             <artifactId>motech-pax-it</artifactId>
             <version>${motech.version}</version>
             <scope>test</scope>
@@ -123,20 +143,20 @@
 
         <!-- HTTP IT -->
         <dependency>
-            <groupId>org.motechproject</groupId>
+            <groupId>${motech.groupId}</groupId>
             <artifactId>motech-testing-utils</artifactId>
             <version>${motech.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.motechproject</groupId>
+            <groupId>${motech.groupId}</groupId>
             <artifactId>motech-platform-server-config</artifactId>
             <version>${motech.version}</version>
             <scope>test</scope>
         </dependency>
         <!-- Repository -->
         <dependency>
-            <groupId>org.motechproject</groupId>
+            <groupId>${motech.groupId}</groupId>
             <artifactId>motech-platform-dataservices</artifactId>
             <version>${motech.version}</version>
         </dependency>
@@ -145,62 +165,14 @@
             <artifactId>commons-codec</artifactId>
             <version>1.7</version>
         </dependency>
-
-        <dependency>
-            <groupId>${motech.groupId}</groupId>
-            <artifactId>motech-tasks</artifactId>
-            <version>${motech.version}</version>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.motechproject</groupId>
-            <artifactId>motech-admin</artifactId>
-            <version>${motech.version}</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>com.jayway.jsonpath</groupId>
-            <artifactId>json-path</artifactId>
-            <version>1.1.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.3.4</version>
-        </dependency>
-
-
     </dependencies>
 
-    <repositories>
-        <repository>
-            <id>motech-repo</id>
-            <name>MOTECH Maven Repository</name>
-            <url>http://nexus.motechproject.org/content/repositories/public</url>
-        </repository>
-        <repository>
-            <id>central</id>
-            <name>Maven Repository Switchboard</name>
-            <layout>default</layout>
-            <url>http://repo1.maven.org/maven2</url>
-        </repository>
-
-    </repositories>
-
     <build>
-
-
         <plugins>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>2.8</version>
-
-
                 <executions>
                     <execution>
                         <id>copy-osgi-dependencies</id>
@@ -213,7 +185,6 @@
                             <overWriteIfNewer>true</overWriteIfNewer>
                             <excludeArtifactIds>org.apache.felix.framework</excludeArtifactIds>
                             <outputDirectory>${user.home}/.motech/bundles</outputDirectory>
-
                         </configuration>
                     </execution>
                     <execution>
@@ -238,7 +209,6 @@
                 </configuration>
             </plugin>
 
-
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
@@ -255,13 +225,13 @@
                             org.motechproject.dhis2.domain;version=${project.version},
                         </Export-Package>
                         <Import-Package>
+                            org.motechproject.config.service,
                             org.motechproject.osgi.web,
                             org.motechproject.event.listener,
                             org.motechproject.event.listener.annotations,
                             *
                         </Import-Package>
                     </instructions>
-
                 </configuration>
             </plugin>
 
@@ -276,7 +246,6 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-
                             <outputDirectory>${user.home}/.motech/bundles</outputDirectory>
                             <resources>
                                 <resource>
@@ -361,10 +330,8 @@
                                     <outputFile>target/dependencies.list</outputFile>
                                 </configuration>
                             </execution>
-
                         </executions>
                     </plugin>
-
                 </plugins>
             </build>
         </profile>
