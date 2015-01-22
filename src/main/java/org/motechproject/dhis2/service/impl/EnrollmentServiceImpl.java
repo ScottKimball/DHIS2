@@ -20,7 +20,6 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
 
     private Logger logger = LoggerFactory.getLogger(EnrollmentServiceImpl.class);
-    private static final String SUCCESS = "SUCCESS";
 
     private HttpService httpService;
 
@@ -38,7 +37,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         Request request = new Request(HttpConstants.ENROLLMENTS_PATH, body);
         Object entityString = httpService.send(request);
 
-        logger.debug(entityString.toString() + SUCCESS);
+        logger.debug(entityString.toString());
 
     }
 

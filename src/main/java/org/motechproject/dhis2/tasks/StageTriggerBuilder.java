@@ -56,7 +56,7 @@ public class StageTriggerBuilder  {
 
             /*Date*/
             actionParameterBuilder = new ActionParameterRequestBuilder()
-                    .setDisplayName(DisplayNames.DATE)
+                    .setDisplayName(DisplayNames.ENROLLMENT_DATE)
                     .setOrder(counter++)
                     .setKey(EventParams.DATE)
                     .setType(UNICODE);

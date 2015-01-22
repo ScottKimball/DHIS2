@@ -91,39 +91,27 @@ public class DtoBuilder {
 
         Map<String, Object> params = event.getParameters();
 
-        /*Get program UUID. Once dynamic actions are implemented, event should directly pass DHIS2 UUID*/
-        String program = (String) params.get(EventParams.PROGRAM);
-        ProgramMapper programMapper = programMapperDataService.findByDhis2Name(program);
+        String program = (String) params.remove(EventParams.PROGRAM);
 
-        Request programRequest = new Request(HttpConstants.PROGRAM_PATH + "/" +
-                programMapper.getDhis2Uuid());
-        Object jsonResponse = httpQuery.send(programRequest);
+        String externalId = (String) params.remove(EventParams.EXTERNAL_ID);
+        TrackedEntityInstanceMapper instanceMapper = trackedEntityInstanceDataService.findByExternalName(externalId);
+
+        String date = (String) params.remove(EventParams.DATE);
 
         List<AttributeDto> attributeDtoList = new ArrayList<>();
 
-        List<Object> trackedEntityAttributes = JsonPath.read(jsonResponse, "$..programTrackedEntityAttributes[*].attribute");
 
-        /* Iterates down program attributes and adds them to attribute list. */
-        for (Object o : trackedEntityAttributes) {
-            String attributeName = JsonPath.read(o, "$.name");
-            String attributeId = JsonPath.read(o, "$.id");
-            String attributeValue = (String) params.get(attributeName);
+        Iterator it = params.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry entry = (Map.Entry) it.next();
 
-          /*  Might need to check if required attribute is present here */
-            if (attributeValue != null) {
-                attributeDtoList.add(new AttributeDto(attributeName, attributeId, attributeValue));
-
+            if (entry.getValue() != null) {
+                attributeDtoList.add(new AttributeDto(null, (String) entry.getKey(), (String) entry.getValue()));
             }
+
         }
 
-         /*Get trackedEntityInstance UUID from MDS*/
-        String externalId = (String) params.get(EventParams.EXTERNAL_ID);
-        TrackedEntityInstanceMapper instanceMapper = trackedEntityInstanceDataService.findByExternalName(externalId);
-
-        String date = (String) params.get(EventParams.DATE);
-        date = date != null ? date : "";
-
-        EnrollmentDto enrollmentDto = new EnrollmentDto(programMapper.getDhis2Uuid(), instanceMapper.getDhis2Uuid(),
+        EnrollmentDto enrollmentDto = new EnrollmentDto(program, instanceMapper.getDhis2Uuid(),
                 date, attributeDtoList);
 
         return enrollmentDto;
@@ -236,5 +224,6 @@ public class DtoBuilder {
         }
         return orgUnitMapper.getDhis2Uuid();
     }
+
 
 }

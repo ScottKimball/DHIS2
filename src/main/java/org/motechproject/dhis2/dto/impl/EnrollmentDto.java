@@ -71,6 +71,10 @@ public class EnrollmentDto implements Dto {
         root.put("program", program);
         root.put("trackedEntityInstance", trackedEntityInstance);
 
+        if (date != null) {
+            root.put("dateOfEnrollment", date);
+        }
+
         ArrayNode nodeList = objectMapper.createArrayNode();
 
         for (AttributeDto attributeDto : attributeDtos) {
@@ -91,9 +95,6 @@ public class EnrollmentDto implements Dto {
         return null;
     }
 
-    public static void main(String[] args) {
 
-
-    }
 }
 
