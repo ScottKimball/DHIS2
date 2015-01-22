@@ -45,22 +45,20 @@ public class ProgramTriggerBuilder {
                     .setRequired(true)
                     .setOrder(counter++);
 
-
             actionParameters.add(actionParameterBuilder.createActionParameterRequest());
 
             actionParameterBuilder = new ActionParameterRequestBuilder()
-                    .setDisplayName(DisplayNames.DATE)
+                    .setDisplayName(DisplayNames.ENROLLMENT_DATE)
                     .setKey(EventParams.DATE)
                     .setOrder(counter++)
                     .setType(UNICODE);
 
+            actionParameters.add(actionParameterBuilder.createActionParameterRequest());
 
-
-            /*Add Tracked Entity Type field with value*/
             actionParameterBuilder = new ActionParameterRequestBuilder()
-                    .setDisplayName(DisplayNames.TRACKED_ENTITY_TYPE)
-                    .setKey(EventParams.ENTITY_TYPE)
-                    .setValue(program.getTrackedEntity().getName())
+                    .setDisplayName(DisplayNames.PROGRAM_NAME)
+                    .setKey(EventParams.PROGRAM)
+                    .setValue(program.getUuid())
                     .setType(UNICODE)
                     .setOrder(counter++)
                     .setHidden(true);
@@ -79,9 +77,6 @@ public class ProgramTriggerBuilder {
             actionEventRequests.add(builder.createActionEventRequest());
 
         }
-
-
-
 
         return actionEventRequests;
 
