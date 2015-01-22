@@ -7,19 +7,8 @@
     <import resource="classpath*:META-INF/motech/*.xml"/>
 
 
-    <osgi:reference id="programMapperDataService"
-                    interface="org.motechproject.dhis2.repository.ProgramMapperDataService"/>
-    <osgi:reference id="stageMapperDataService" interface="org.motechproject.dhis2.repository.StageMapperDataService"/>
     <osgi:reference id="trackedEntityInstanceMapperDataService"
                     interface="org.motechproject.dhis2.repository.TrackedEntityInstanceDataService"/>
-    <osgi:reference id="trackedEntityMapperDataService"
-                    interface="org.motechproject.dhis2.repository.TrackedEntityMapperDataService"/>
-    <osgi:reference id="attributeMapperDataService"
-                    interface="org.motechproject.dhis2.repository.AttributeMapperDataService"/>
-    <osgi:reference id="orgUnitMapperDataService"
-                    interface="org.motechproject.dhis2.repository.OrgUnitMapperDataService"/>
-
-
     <osgi:reference id="programDataService" interface="org.motechproject.dhis2.repository.ProgramDataService"/>
     <osgi:reference id="stageDataService" interface="org.motechproject.dhis2.repository.StageDataService"/>
     <osgi:reference id="trackedEntityDataService"

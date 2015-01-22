@@ -19,7 +19,7 @@ public class StageDto implements Dto {
     private String dhis2Name;
     private String dhis2Uuid;
     private String program;
-    private List<DataElementDto> dataElementDtos;
+    private List<AttributeDto> dataElementDtos;
     private String date;
     private String trackedEntityInstance;
     private String orgUnit;
@@ -27,7 +27,7 @@ public class StageDto implements Dto {
     private Logger logger = LoggerFactory.getLogger(StageDto.class);
 
 
-    public StageDto(String program, String orgUnit, String date, String dhis2Uuid, String trackedEntityInstance, List<DataElementDto> dataElementDtos) {
+    public StageDto(String program, String orgUnit, String date, String dhis2Uuid, String trackedEntityInstance, List<AttributeDto> dataElementDtos) {
         this.program = program;
         this.orgUnit = orgUnit;
         this.date = date;
@@ -84,11 +84,11 @@ public class StageDto implements Dto {
         this.program = program;
     }
 
-    public List<DataElementDto> getDataElementDtos() {
+    public List<AttributeDto> getDataElementDtos() {
         return dataElementDtos;
     }
 
-    public void setDataElementDtos(List<DataElementDto> dataElementDtos) {
+    public void setDataElementDtos(List<AttributeDto> dataElementDtos) {
         this.dataElementDtos = dataElementDtos;
     }
 
@@ -111,7 +111,6 @@ public class StageDto implements Dto {
         root.put("eventDate", getDate());
         root.put("programStage", getDhis2Uuid());
         root.put("trackedEntityInstance", getTrackedEntityInstance());
-        root.put("status", "COMPLETED");
 
         ArrayNode nodeList = objectMapper.createArrayNode();
 

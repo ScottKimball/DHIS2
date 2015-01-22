@@ -57,7 +57,7 @@ public class RegistrationTriggerBuilder {
             actionParameters.add(actionParameterBuilder.createActionParameterRequest());
 
             actionParameterBuilder = new ActionParameterRequestBuilder()
-                    .setDisplayName(DisplayNames.TRACKED_ENTITY_INSTANCE_ORGUNIT)
+                    .setDisplayName(DisplayNames.ORG_UNIT)
                     .setType(UNICODE)
                     .setKey(EventParams.LOCATION)
                     .setOrder(counter++)

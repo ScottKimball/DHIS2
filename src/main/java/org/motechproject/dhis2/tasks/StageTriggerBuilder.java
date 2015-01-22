@@ -54,15 +54,34 @@ public class StageTriggerBuilder  {
 
             actionParameters.add(actionParameterBuilder.createActionParameterRequest());
 
-            /*Date*/
             actionParameterBuilder = new ActionParameterRequestBuilder()
-                    .setDisplayName(DisplayNames.ENROLLMENT_DATE)
+                    .setKey(EventParams.STAGE)
+                    .setValue(stage.getUuid())
+                    .setHidden(true)
                     .setOrder(counter++)
-                    .setKey(EventParams.DATE)
-                    .setType(UNICODE);
+                    .setDisplayName(stage.getProgram());
 
             actionParameters.add(actionParameterBuilder.createActionParameterRequest());
 
+
+            /*Date*/
+            actionParameterBuilder = new ActionParameterRequestBuilder()
+                    .setDisplayName(DisplayNames.EVENT_DATE)
+                    .setOrder(counter++)
+                    .setKey(EventParams.DATE)
+                    .setType(UNICODE)
+                    .setRequired(true);
+
+            actionParameters.add(actionParameterBuilder.createActionParameterRequest());
+
+            actionParameterBuilder = new ActionParameterRequestBuilder()
+                    .setDisplayName(DisplayNames.ORG_UNIT)
+                    .setType(UNICODE)
+                    .setKey(EventParams.LOCATION)
+                    .setOrder(counter++)
+                    .setRequired(true);
+
+            actionParameters.add(actionParameterBuilder.createActionParameterRequest());
 
             actionParameters.addAll(buildRequestForStage(stage));
 

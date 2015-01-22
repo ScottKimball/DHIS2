@@ -15,6 +15,7 @@ public final class DisplayNames {
     public static final String ENROLLMENT_DATE = "Date of Enrollment";
     public static final String DHIS2_DISPLAY_NAME = "DHIS2";
     public static final String CREATE_TRACKED_ENTITY_INSTANCE = "Create Tracked Entity Instance";
-    public static final String TRACKED_ENTITY_INSTANCE_ORGUNIT = "Organisation Unit";
+    public static final String ORG_UNIT = "Organisation Unit";
     public static final String PROGRAM_NAME = "Program Name";
+    public static final String EVENT_DATE = "Event Date";
 }
