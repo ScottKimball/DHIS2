@@ -54,13 +54,11 @@
     <osgi:reference id="orgUnitDataService" interface="org.motechproject.dhis2.repository.OrgUnitDataService"/>
     <osgi:reference id="dataElementDataService" interface="org.motechproject.dhis2.repository.DataElementDataService"/>
 
-
-
     <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay"/>
 
     <osgi:reference id="eventListenerRegistry"
                     interface="org.motechproject.event.listener.EventListenerRegistryService"/>
 
-    <osgi:reference id="configServiceRef" interface="org.motechproject.config.service.ConfigurationService" />
+    <osgi:service ref="dhisSettingsService" interface="org.motechproject.dhis2.service.SettingsService" />
 
 </beans>
