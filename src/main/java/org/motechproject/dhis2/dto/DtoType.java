@@ -5,6 +5,6 @@ package org.motechproject.dhis2.dto;
  */
 public enum DtoType {
     ENROLLMENT,   // enroll entity in program
-    STAGE_UPDATE,   // update program stage
-    REGISTRATION,   // register new tracked entity instance
+    EVENT,   // update program stage
+    INSTANCE_CREATION,   // register new tracked entity instance
 }

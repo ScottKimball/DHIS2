@@ -47,10 +47,10 @@ public class DtoBuilder {
             case ENROLLMENT:
                 return createEnrollment(event);
 
-            case REGISTRATION:
+            case INSTANCE_CREATION:
                 return createInstance(event);
 
-            case STAGE_UPDATE:
+            case EVENT:
                 return createStage(event);
 
             default:

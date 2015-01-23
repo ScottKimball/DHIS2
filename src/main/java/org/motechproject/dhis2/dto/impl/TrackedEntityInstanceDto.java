@@ -4,9 +4,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
 import org.motechproject.dhis2.dto.Dto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -21,7 +20,6 @@ public class TrackedEntityInstanceDto implements Dto {
     private List<AttributeDto> attributeDtos;
     private String orgUnit;
 
-    private Logger logger = LoggerFactory.getLogger(TrackedEntityInstanceDto.class);
 
     public TrackedEntityInstanceDto() {
     }
@@ -78,7 +76,7 @@ public class TrackedEntityInstanceDto implements Dto {
         this.attributeDtos = attributeDtos;
     }
 
-    public String toJson() {
+    public String toJson()  throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
 
         ObjectNode root = objectMapper.createObjectNode();
@@ -98,13 +96,6 @@ public class TrackedEntityInstanceDto implements Dto {
 
         root.putArray("attributes").addAll(nodeList);
 
-        try {
-
-            return objectMapper.writeValueAsString(root);
-        } catch (Exception e) {
-            logger.debug(e.toString());
-        }
-
-        return null;
+        return objectMapper.writeValueAsString(root);
     }
 }

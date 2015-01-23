@@ -4,9 +4,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
 import org.motechproject.dhis2.dto.Dto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -23,8 +22,6 @@ public class StageDto implements Dto {
     private String date;
     private String trackedEntityInstance;
     private String orgUnit;
-
-    private Logger logger = LoggerFactory.getLogger(StageDto.class);
 
 
     public StageDto(String program, String orgUnit, String date, String dhis2Uuid, String trackedEntityInstance, List<AttributeDto> dataElementDtos) {
@@ -101,7 +98,7 @@ public class StageDto implements Dto {
     }
 
 
-    public String toJson() {
+    public String toJson() throws IOException {
 
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -126,14 +123,7 @@ public class StageDto implements Dto {
         root.putArray("dataValues").addAll(nodeList);
 
 
-        try {
-            return objectMapper.writeValueAsString(root);
-        } catch (Exception e) {
-            logger.debug(e.toString());
-        }
-        return null;
-
+        return objectMapper.writeValueAsString(root);
     }
-
 
 }
