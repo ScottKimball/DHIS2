@@ -38,8 +38,6 @@ public class EventHandlerIT extends BasePaxIT {
     @Test
     public void testHandleRegistration() throws Exception{
 
-
-
     }
 
 }

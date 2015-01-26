@@ -8,6 +8,7 @@ import org.motechproject.dhis2.dto.impl.EnrollmentDto;
 import org.motechproject.dhis2.dto.impl.StageDto;
 import org.motechproject.dhis2.dto.impl.TrackedEntityInstanceDto;
 import org.motechproject.dhis2.event.EventParams;
+import org.motechproject.dhis2.event.EventSubjects;
 import org.motechproject.dhis2.repository.OrgUnitDataService;
 import org.motechproject.dhis2.repository.TrackedEntityInstanceDataService;
 import org.motechproject.event.MotechEvent;
@@ -41,16 +42,16 @@ public class DtoBuilder {
         this.orgUnitDataService = orgUnitDataService;
     }
 
-    public Dto createDto(MotechEvent event, DtoType dtoType) {
+    public Dto createDto(MotechEvent event) {
 
-        switch (dtoType) {
-            case ENROLLMENT:
+        switch (event.getSubject()) {
+            case EventSubjects.ENROLL_IN_PROGRAM:
                 return createEnrollment(event);
 
-            case INSTANCE_CREATION:
+            case EventSubjects.REGISTER_ENTITY:
                 return createInstance(event);
 
-            case EVENT:
+            case EventSubjects.UPDATE_PROGRAM_STAGE:
                 return createStage(event);
 
             default:

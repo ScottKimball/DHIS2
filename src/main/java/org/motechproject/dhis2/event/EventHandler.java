@@ -40,7 +40,7 @@ public class EventHandler {
 
     @MotechListener(subjects = {EventSubjects.REGISTER_ENTITY })
     public void handleRegistration(MotechEvent event) {
-        TrackedEntityInstanceDto instance = (TrackedEntityInstanceDto) dtoBuilder.createDto(event, INSTANCE_CREATION);
+        TrackedEntityInstanceDto instance = (TrackedEntityInstanceDto) dtoBuilder.createDto(event);
         instanceCreationService.send(instance);
 
     }
@@ -48,7 +48,7 @@ public class EventHandler {
 
     @MotechListener(subjects = {EventSubjects.ENROLL_IN_PROGRAM })
     public void handleEnrollment(MotechEvent event) {
-        EnrollmentDto enrollmentDto = (EnrollmentDto) dtoBuilder.createDto(event, ENROLLMENT);
+        EnrollmentDto enrollmentDto = (EnrollmentDto) dtoBuilder.createDto(event);
         dataTransferService.send(enrollmentDto, ENROLLMENTS_PATH);
 
     }
@@ -56,7 +56,7 @@ public class EventHandler {
 
     @MotechListener(subjects = {EventSubjects.UPDATE_PROGRAM_STAGE })
     public void handleStageUpdate(MotechEvent event) {
-        StageDto stageDto = (StageDto) dtoBuilder.createDto(event, EVENT);
+        StageDto stageDto = (StageDto) dtoBuilder.createDto(event);
         dataTransferService.send(stageDto, EVENTS_PATH);
 
     }
