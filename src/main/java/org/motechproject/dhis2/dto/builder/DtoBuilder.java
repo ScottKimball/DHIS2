@@ -72,7 +72,7 @@ public class DtoBuilder {
         String date = (String) params.remove(EventParams.DATE);
 
         List<AttributeDto> attributeDtoList = new ArrayList<>();
-        addRemainderToDto(params, attributeDtoList);
+        addRemainingItemsToDto(params, attributeDtoList);
 
         return new EnrollmentDto(program, instanceMapper.getDhis2Uuid(), date, attributeDtoList);
     }
@@ -99,7 +99,7 @@ public class DtoBuilder {
 
         List<AttributeDto> stageDataElementDtos = new ArrayList<>();
 
-         addRemainderToDto(params, stageDataElementDtos);
+         addRemainingItemsToDto(params, stageDataElementDtos);
 
         return new StageDto(program, orgUnitUuid, date, stage, instanceMapper.getDhis2Uuid(), stageDataElementDtos);
     }
@@ -118,7 +118,7 @@ public class DtoBuilder {
 
 
         /*Iterate over remaining parameters*/
-        addRemainderToDto(params, attributeDtoList);
+        addRemainingItemsToDto(params, attributeDtoList);
 
         return new TrackedEntityInstanceDto(externalUUID, trackedEntity, attributeDtoList, orgUnitUuid);
     }
@@ -130,13 +130,12 @@ public class DtoBuilder {
             return orgUnitDataService.findByName(orgUnit).getUuid();
 
         } catch (NullPointerException e) {
-            logger.error("Org Unit Name not found");
-            logger.error(e.toString());
+            logger.error("Org Unit not found: " + orgUnit);
             return null;
         }
     }
 
-    private void addRemainderToDto(Map<String, Object> params, List<AttributeDto> list) {
+    private void addRemainingItemsToDto(Map<String, Object> params, List<AttributeDto> list) {
 
         Iterator it = params.entrySet().iterator();
         while (it.hasNext()) {

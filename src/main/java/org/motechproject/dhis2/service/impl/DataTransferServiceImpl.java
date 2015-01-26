@@ -54,7 +54,9 @@ public class DataTransferServiceImpl implements DataTransferService {
 
         } else {
             logger.error("Data transfer failed");
+            logger.error("dto information:" + body);
             logger.error(responseString);
+
         }
 
     }

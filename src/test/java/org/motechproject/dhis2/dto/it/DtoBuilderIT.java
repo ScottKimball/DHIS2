@@ -1,6 +1,6 @@
-package org.motechproject.dhis2.service.it;
+package org.motechproject.dhis2.dto.it;
 
-
+import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -10,24 +10,16 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
 
 /**
- * Verify that HelloWorldService present, functional.
+ * Created by scott on 1/22/15.
  */
+
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
-public class HelloWorldServiceIT extends BasePaxIT {
+public class DtoBuilderIT extends BasePaxIT {
 
-    /*
-    @Inject
-    private HelloWorldService helloService;
+    @Before
+    public void setup() {
 
-    @Test
-    public void testHelloWorldServicePresent() throws Exception {
-        assertNotNull(helloService);
-        assertNotNull(helloService.sayHello());
     }
-
-
-
-     */
 }
