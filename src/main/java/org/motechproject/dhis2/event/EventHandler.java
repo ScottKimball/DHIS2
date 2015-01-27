@@ -11,10 +11,6 @@ import org.motechproject.event.listener.annotations.MotechListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static org.motechproject.dhis2.dto.DtoType.ENROLLMENT;
-import static org.motechproject.dhis2.dto.DtoType.EVENT;
-import static org.motechproject.dhis2.dto.DtoType.INSTANCE_CREATION;
-
 import static org.motechproject.dhis2.http.HttpConstants.ENROLLMENTS_PATH;
 import static org.motechproject.dhis2.http.HttpConstants.EVENTS_PATH;
 

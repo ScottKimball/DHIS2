@@ -2,7 +2,6 @@ package org.motechproject.dhis2.dto.builder;
 
 import org.motechproject.dhis2.domain.TrackedEntityInstanceMapper;
 import org.motechproject.dhis2.dto.Dto;
-import org.motechproject.dhis2.dto.DtoType;
 import org.motechproject.dhis2.dto.impl.AttributeDto;
 import org.motechproject.dhis2.dto.impl.EnrollmentDto;
 import org.motechproject.dhis2.dto.impl.StageDto;
