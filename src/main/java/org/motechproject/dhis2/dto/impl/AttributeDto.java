@@ -41,4 +41,13 @@ public class AttributeDto {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof AttributeDto)) {
+            return false;
+        }
+        AttributeDto other = (AttributeDto) obj;
+        return this.getDhis2Uuid().equals(other.getDhis2Uuid()) && this.getValue().equals(other.getValue());
+    }
 }
