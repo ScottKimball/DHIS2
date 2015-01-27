@@ -1,4 +1,4 @@
-package org.motechproject.dhis2.event.it;
+package org.motechproject.dhis2.it;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
