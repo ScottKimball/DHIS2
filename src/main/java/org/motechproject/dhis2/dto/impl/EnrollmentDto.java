@@ -5,7 +5,6 @@ import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
 import org.motechproject.dhis2.dto.Dto;
 
-
 import java.io.IOException;
 import java.util.List;
 

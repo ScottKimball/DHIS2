@@ -9,7 +9,6 @@ import org.motechproject.tasks.contract.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.ActionParameterRequest;
 import org.motechproject.tasks.contract.ActionParameterRequestBuilder;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;

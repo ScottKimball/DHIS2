@@ -1,11 +1,7 @@
 package org.motechproject.dhis2.service.impl;
 
 
-import org.motechproject.dhis2.domain.DataElement;
-import org.motechproject.dhis2.domain.Program;
-import org.motechproject.dhis2.domain.Stage;
-import org.motechproject.dhis2.domain.TrackedEntity;
-import org.motechproject.dhis2.domain.TrackedEntityAttribute;
+import org.motechproject.dhis2.domain.*;
 import org.motechproject.dhis2.repository.DataElementDataService;
 import org.motechproject.dhis2.repository.ProgramDataService;
 import org.motechproject.dhis2.repository.TrackedEntityAttributeDataService;
