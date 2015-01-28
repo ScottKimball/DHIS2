@@ -5,20 +5,17 @@ package org.motechproject.dhis2.http;
  */
 public class Request {
 
-    private String baseUrl = HttpConstants.BASE_URL;
     private String url;
     private String body;
 
     public Request(String url, String body) {
-
-        this.url = baseUrl + url.replace(' ', '+');
+        this.url = url.replace(' ', '+');
         this.body = body;
     }
 
     public Request(String url) {
-        this.url = baseUrl + url.replace(' ', '+');
+        this.url = url.replace(' ', '+');
         this.body = "";
-
     }
 
     public String getUrl() {

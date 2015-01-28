@@ -3,7 +3,9 @@ package org.motechproject.dhis2.http;
 import com.jayway.jsonpath.Configuration;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
@@ -20,12 +22,15 @@ public class HttpQuery {
     private Logger logger = LoggerFactory.getLogger(HttpQuery.class);
 
 
-    public Object send(Request request) {
+    public Object send(Request request, String username, String password) {
 
         DefaultHttpClient httpClient = new DefaultHttpClient();
         HttpGet httpGet = new HttpGet(request.getUrl());
         httpGet.addHeader("accept", "application/json");
-
+        httpGet.addHeader(BasicScheme.authenticate(
+                new UsernamePasswordCredentials(username, password),
+                "UTF-8",
+                false));
         try {
 
 

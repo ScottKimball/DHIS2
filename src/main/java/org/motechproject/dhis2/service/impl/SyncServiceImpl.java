@@ -5,10 +5,10 @@ import com.jayway.jsonpath.PathNotFoundException;
 import org.motechproject.dhis2.domain.DataElement;
 import org.motechproject.dhis2.domain.OrgUnit;
 import org.motechproject.dhis2.domain.Program;
+import org.motechproject.dhis2.domain.Settings;
 import org.motechproject.dhis2.domain.Stage;
 import org.motechproject.dhis2.domain.TrackedEntity;
 import org.motechproject.dhis2.domain.TrackedEntityAttribute;
-import org.motechproject.dhis2.http.HttpConstants;
 import org.motechproject.dhis2.http.HttpQuery;
 import org.motechproject.dhis2.http.Request;
 import org.motechproject.dhis2.repository.DataElementDataService;
@@ -16,10 +16,12 @@ import org.motechproject.dhis2.repository.OrgUnitDataService;
 import org.motechproject.dhis2.repository.ProgramDataService;
 import org.motechproject.dhis2.repository.TrackedEntityAttributeDataService;
 import org.motechproject.dhis2.repository.TrackedEntityDataService;
+import org.motechproject.dhis2.service.SettingsService;
 import org.motechproject.dhis2.service.SyncService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -33,6 +35,9 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class SyncServiceImpl implements SyncService {
 
+    @Autowired
+    @Qualifier("dhisSettingsService")
+    private SettingsService settingsService;
 
     @Autowired
     private HttpQuery httpQuery;
@@ -70,7 +75,7 @@ public class SyncServiceImpl implements SyncService {
     private static final String ORG_UNITS = "$.organisationUnits";
     private static final String DATA_ELEMENTS = "$.dataElements";
 
-
+    private static final String NO_PAGING_NO_LINKS = "?paging=false&links=false";
 
     @Override
     public boolean sync() {
@@ -92,11 +97,12 @@ public class SyncServiceImpl implements SyncService {
         dataElementDataService.deleteAll();
 
         try {
-            addDataElements();
-            addAttributes();
-            addTrackedEntities();
-            addPrograms();
-            addOrgUnits();
+            Settings settings = settingsService.getSettings();
+            addDataElements(settings);
+            addAttributes(settings);
+            addTrackedEntities(settings);
+            addPrograms(settings);
+            addOrgUnits(settings);
 
             long endTime = System.nanoTime();
 
@@ -114,6 +120,7 @@ public class SyncServiceImpl implements SyncService {
             attributeDataService.deleteAll();
             trackedEntityDataService.deleteAll();
             orgUnitDataService.deleteAll();
+            dataElementDataService.deleteAll();
 
             logger.error("Problem with DHIS2 application Schema.Sync Unsuccessful");
             logger.error(e.toString());
@@ -124,12 +131,11 @@ public class SyncServiceImpl implements SyncService {
     }
 
 
-    private void addDataElements() {
+    private void addDataElements(Settings settings) {
 
-        Request dataElementRequest = new Request(HttpConstants.DATA_ELEMENTS_PATH + "?" +
-                HttpConstants.NO_PAGING_NO_LINKS);
+        Request dataElementRequest = new Request(settings.getDataElementsURI() + NO_PAGING_NO_LINKS);
 
-        List<Object> dataElements = JsonPath.read(httpQuery.send(dataElementRequest), DATA_ELEMENTS);
+        List<Object> dataElements = JsonPath.read(httpQuery.send(dataElementRequest, settings.getUsername(), settings.getPassword()), DATA_ELEMENTS);
 
         for (Object o : dataElements) {
             String name = JsonPath.read(o, NAME);
@@ -140,13 +146,12 @@ public class SyncServiceImpl implements SyncService {
     }
 
 
-    private void addAttributes()  {
+    private void addAttributes(Settings settings)  {
 
-        Request attributeRequest = new Request(HttpConstants.TRACKED_ENTITY_ATTRIBUTES_PATH + "?" +
-                HttpConstants.NO_PAGING_NO_LINKS);
+        Request attributeRequest = new Request(settings.getTrackedEntityAttributesURI() + NO_PAGING_NO_LINKS);
 
 
-        List<Object> attributes = JsonPath.read(httpQuery.send(attributeRequest), TRACKED_ENTITY_ATTRIBUTES);
+        List<Object> attributes = JsonPath.read(httpQuery.send(attributeRequest, settings.getUsername(), settings.getPassword()), TRACKED_ENTITY_ATTRIBUTES);
 
         for (Object o : attributes) {
             String name = JsonPath.read(o, NAME);
@@ -158,12 +163,11 @@ public class SyncServiceImpl implements SyncService {
 
     }
 
-    private void addTrackedEntities() {
+    private void addTrackedEntities(Settings settings) {
 
-        Request trackedEntityRequest = new Request(HttpConstants.TRACKED_ENTITY_PATH + "?" +
-                HttpConstants.NO_PAGING_NO_LINKS);
+        Request trackedEntityRequest = new Request(settings.getTrackedEntityURI() + NO_PAGING_NO_LINKS);
 
-        List<Object> trackedEntities = JsonPath.read(httpQuery.send(trackedEntityRequest), TRACKED_ENTITIES);
+        List<Object> trackedEntities = JsonPath.read(httpQuery.send(trackedEntityRequest, settings.getUsername(), settings.getPassword()), TRACKED_ENTITIES);
 
         for (Object o : trackedEntities) {
             String name = JsonPath.read(o, NAME);
@@ -174,26 +178,36 @@ public class SyncServiceImpl implements SyncService {
         }
     }
 
-    private void addPrograms()  {
+    private void addPrograms(Settings settings)  {
 
 
-        Request programsRequest = new Request(HttpConstants.PROGRAM_PATH + "?" + HttpConstants.NO_PAGING_NO_LINKS);
-        List<Object> programs = JsonPath.read(httpQuery.send(programsRequest), PROGRAMS);
+        Request programsRequest = new Request(settings.getProgramURI() + NO_PAGING_NO_LINKS);
+        List<Object> programs = JsonPath.read(httpQuery.send(programsRequest, settings.getUsername(), settings.getPassword()), PROGRAMS);
 
         for (Object o : programs) {
             String id = JsonPath.read(o, ID);
-            Program program = buildProgram(id);
-            programDataService.create(program);
+            Program program = buildProgram(settings, id);
 
+            /**
+             * TODO: The program will be null if no tracked entity is registered. Add more sophisticated handling.
+             */
+            if (program != null) {
+                programDataService.create(program);
+            }
         }
-
-
     }
 
-    private Program buildProgram(String id) {
+    private Program buildProgram(Settings settings, String id) {
+        Request programRequest = new Request(settings.getProgramURI() + "/" + id);
+        Object programInfo = httpQuery.send(programRequest, settings.getUsername(), settings.getPassword());
+        boolean registration = JsonPath.parse(programInfo).read(REGISTRATION);
 
-        Request programRequest = new Request(HttpConstants.PROGRAM_PATH + "/" + id);
-        Object programInfo = httpQuery.send(programRequest);
+        /**
+         * TODO: We do not currently support this case. Will add more sophisticated handling.
+         */
+        if (!registration) {
+            return null;
+        }
 
         String name = JsonPath.read(programInfo, NAME);
 
@@ -202,10 +216,7 @@ public class SyncServiceImpl implements SyncService {
         String trackedEntityId = JsonPath.read(programInfo, TRACKED_ENTITY_ID);
         TrackedEntity trackedEntity = trackedEntityDataService.findByUuid(trackedEntityId);
 
-
         boolean singleEvent = JsonPath.parse(programInfo).read(SINGLE_EVENT);
-        boolean registration = JsonPath.parse(programInfo).read(REGISTRATION);
-
 
          /*Build program stages list*/
         List<Stage> programStages = new ArrayList<>();
@@ -213,7 +224,7 @@ public class SyncServiceImpl implements SyncService {
 
         for (Object o : stages) {
             String stageId = JsonPath.read(o, ID);
-            programStages.add(buildStage(stageId , id));
+            programStages.add(buildStage(settings, stageId , id));
         }
 
         List<TrackedEntityAttribute> programTrackedEntityAttributes = new ArrayList<>();
@@ -253,10 +264,10 @@ public class SyncServiceImpl implements SyncService {
         return program;
     }
 
-    private Stage buildStage(String id, String programId)  {
+    private Stage buildStage(Settings settings, String id, String programId)  {
 
-        Request stageRequest = new Request(HttpConstants.STAGES_PATH + "/" + id);
-        Object stageInfo = httpQuery.send(stageRequest);
+        Request stageRequest = new Request(settings.getStagesURI() + "/" + id);
+        Object stageInfo = httpQuery.send(stageRequest, settings.getUsername(), settings.getPassword());
 
         String name = JsonPath.read(stageInfo, NAME);
 
@@ -292,12 +303,11 @@ public class SyncServiceImpl implements SyncService {
         return true;
     }
 
-    private void addOrgUnits() {
+    private void addOrgUnits(Settings settings) {
 
-        Request orgUnitRequest = new Request(HttpConstants.ORG_UNITS_PATH + "?" +
-                HttpConstants.NO_PAGING_NO_LINKS);
+        Request orgUnitRequest = new Request(settings.getOrgUnitsURI() + NO_PAGING_NO_LINKS);
 
-        List<Object> orgUnits = JsonPath.read(httpQuery.send(orgUnitRequest), ORG_UNITS);
+        List<Object> orgUnits = JsonPath.read(httpQuery.send(orgUnitRequest, settings.getUsername(), settings.getPassword()), ORG_UNITS);
 
         for (Object o : orgUnits) {
             String name = JsonPath.read(o, NAME);
