@@ -50,4 +50,11 @@ public class AttributeDto {
         AttributeDto other = (AttributeDto) obj;
         return this.getDhis2Uuid().equals(other.getDhis2Uuid()) && this.getValue().equals(other.getValue());
     }
+
+    @Override
+    public int hashCode() {
+        int result =  dhis2Uuid.hashCode();
+        result = 31 * result + value.hashCode();
+        return result;
+    }
 }

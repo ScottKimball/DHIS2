@@ -9,7 +9,7 @@ public class Settings {
     private String username;
     private String password;
 
-    public Settings() {}
+    public Settings() { }
 
     public Settings(String serverURI, String username, String password) {
         this.serverURI = serverURI;
