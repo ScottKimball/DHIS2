@@ -102,10 +102,10 @@ public class StageTriggerBuilder  {
     private List<ActionParameterRequest> buildRequestForStage(Stage stage) {
 
         List<ActionParameterRequest> parameterRequests = new ArrayList<>();
-        ActionParameterRequestBuilder actionParameterBuilder;
+
 
         for (DataElement element : stage.getDataElements()) {
-            actionParameterBuilder = new ActionParameterRequestBuilder()
+            ActionParameterRequestBuilder actionParameterBuilder = new ActionParameterRequestBuilder()
                     .setDisplayName(element.getName())
                     .setKey(element.getUuid())
                     .setType(UNICODE)

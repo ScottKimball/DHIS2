@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -57,12 +58,27 @@ public class Dhis2SchemaServiceImpl implements Dhis2SchemaService {
 
     @Override
     public List<Program> getPrograms() {
-        return programDataService.retrieveAll();
+
+
+        List<Program> programs = programDataService.retrieveAll();
+
+        /*Single Event without registration removed*/
+        Iterator<Program> itr = programs.iterator();
+        while (itr.hasNext()) {
+            Program p = itr.next();
+
+            if (!p.hasRegistration()) {
+                itr.remove();
+            }
+        }
+
+        return programs;
     }
 
     @Override
     public List<Stage> getStages() {
-        List<Program> programs = getPrograms();
+
+        List<Program> programs = programDataService.retrieveAll();
 
         List<Stage> stages = new ArrayList<>();
 

@@ -198,25 +198,16 @@ public class SyncServiceImpl implements SyncService {
     }
 
     private Program buildProgram(Settings settings, String id) {
+
+        Program program = new Program();
+
         Request programRequest = new Request(settings.getProgramURI() + "/" + id);
         Object programInfo = httpQuery.send(programRequest, settings.getUsername(), settings.getPassword());
-        boolean registration = JsonPath.parse(programInfo).read(REGISTRATION);
 
-        /**
-         * TODO: We do not currently support this case. Will add more sophisticated handling.
-         */
-        if (!registration) {
-            return null;
-        }
+        boolean registration = JsonPath.parse(programInfo).read(REGISTRATION);
+        boolean singleEvent = JsonPath.parse(programInfo).read(SINGLE_EVENT);
 
         String name = JsonPath.read(programInfo, NAME);
-
-         /*Get associated tracked entity*/
-
-        String trackedEntityId = JsonPath.read(programInfo, TRACKED_ENTITY_ID);
-        TrackedEntity trackedEntity = trackedEntityDataService.findByUuid(trackedEntityId);
-
-        boolean singleEvent = JsonPath.parse(programInfo).read(SINGLE_EVENT);
 
          /*Build program stages list*/
         List<Stage> programStages = new ArrayList<>();
@@ -232,9 +223,13 @@ public class SyncServiceImpl implements SyncService {
         /*If program has a tracked entity*/
         if (registration) {
 
+            /*Setting tracked Entity*/
+            String trackedEntityId = JsonPath.read(programInfo, TRACKED_ENTITY_ID);
+            TrackedEntity trackedEntity = trackedEntityDataService.findByUuid(trackedEntityId);
+            program.setTrackedEntity(trackedEntity);
+
             try {
                 List<Object> attributes = JsonPath.read(programInfo, PROGRAM_TRACKED_ENTITY_ATTRIBUTES);
-
 
 
         /*Build program attributes list*/
@@ -251,11 +246,8 @@ public class SyncServiceImpl implements SyncService {
 
         }
 
-
-        Program program = new Program();
         program.setUuid(id);
         program.setName(name);
-        program.setTrackedEntity(trackedEntity);
         program.setStages(programStages);
         program.setAttributes(programTrackedEntityAttributes);
         program.setSingleEvent(singleEvent);
@@ -272,14 +264,18 @@ public class SyncServiceImpl implements SyncService {
         String name = JsonPath.read(stageInfo, NAME);
 
 
-
         List<DataElement> programStageDataElements = new ArrayList<>();
 
         try {
             List<Object> dataElements = JsonPath.read(stageInfo, PROGRAM_STAGE_DATA_ELEMENTS);
             for (Object o : dataElements) {
                 String elementId = JsonPath.read(o, ID);
+
                 DataElement dataElement = dataElementDataService.findByUuid(elementId);
+                if (dataElement == null) {
+                    String elementName = JsonPath.read(o, NAME);
+                    logger.debug("ID: " + elementId + " Name: " + name);
+                }
                 programStageDataElements.add(dataElement);
 
             }
