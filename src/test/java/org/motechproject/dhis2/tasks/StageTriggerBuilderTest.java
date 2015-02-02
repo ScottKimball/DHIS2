@@ -25,7 +25,7 @@ public class StageTriggerBuilderTest {
     private StageTriggerBuilder stageTriggerBuilder;
 
     @Test
-    public void testBuildStagesWithDataElements() {
+    public void testBuildStagesWithDataElements() throws Exception{
         stageTriggerBuilder = new StageTriggerBuilder();
         List<Stage> stages = new ArrayList<>();
 
