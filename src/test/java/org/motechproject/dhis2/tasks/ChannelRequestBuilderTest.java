@@ -168,7 +168,7 @@ public class ChannelRequestBuilderTest {
     }
 
     private void setupStages() {
-        
+
         DataElement dataElement1 = new DataElement("dataElementName1","dataElementID1");
         DataElement dataElement2 = new DataElement("dataElementName2","dataElementID2");
 
