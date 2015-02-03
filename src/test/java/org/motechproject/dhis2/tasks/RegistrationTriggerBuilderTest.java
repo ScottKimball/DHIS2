@@ -25,7 +25,7 @@ import static org.junit.Assert.assertNull;
 public class RegistrationTriggerBuilderTest {
 
     @Test
-    public void testBuildTrackedEntities() {
+    public void testBuildTrackedEntities() throws Exception{
 
         RegistrationTriggerBuilder builder = new RegistrationTriggerBuilder();
 
