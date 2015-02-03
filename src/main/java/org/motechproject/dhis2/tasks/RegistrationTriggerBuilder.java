@@ -21,7 +21,7 @@ public class RegistrationTriggerBuilder {
 
     private static final String UNICODE = "UNICODE";
     private static final int ATTRIBUTE_COUNT = 3;
-    private int counter;
+
 
     public List<ActionEventRequest> build(List<TrackedEntityAttribute> attributes, List<TrackedEntity> trackedEntities) {
 
@@ -30,7 +30,7 @@ public class RegistrationTriggerBuilder {
 
         for (TrackedEntity entity : trackedEntities) {
 
-            counter = 0;
+            int counter = 0;
             SortedSet<ActionParameterRequest> actionParameters = new TreeSet<>();
             actionParameters.addAll(attributeParameters);
 
@@ -75,8 +75,6 @@ public class RegistrationTriggerBuilder {
             actionEventRequests.add(builder.createActionEventRequest());
 
         }
-
-
 
         return actionEventRequests;
     }
