@@ -5,11 +5,18 @@ import org.motechproject.dhis2.domain.Program;
 import org.motechproject.dhis2.domain.Stage;
 import org.motechproject.dhis2.domain.TrackedEntity;
 import org.motechproject.dhis2.domain.TrackedEntityAttribute;
+import org.motechproject.dhis2.event.EventParams;
+import org.motechproject.dhis2.event.EventSubjects;
 import org.motechproject.tasks.contract.ActionEventRequest;
+import org.motechproject.tasks.contract.ActionParameterRequest;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.SortedSet;
 
+import static junit.framework.Assert.assertNull;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
@@ -19,6 +26,8 @@ public class ProgramTriggerBuilderTest {
 
     @Test
     public void TestBuildPrograms() throws Exception {
+
+
         ProgramTriggerBuilder builder = new ProgramTriggerBuilder();
         List<Program> programs = new ArrayList<Program>();
         List<Stage> stages = new ArrayList<>();
@@ -56,5 +65,33 @@ public class ProgramTriggerBuilderTest {
 
         assertNotNull(actionEventRequests);
 
+        ActionEventRequest request = actionEventRequests.get(0);
+        assertEquals(request.getSubject(), EventSubjects.ENROLL_IN_PROGRAM);
+        assertEquals(request.getName(),program1.getName());
+        assertEquals(request.getDisplayName(),DisplayNames.PROGRAM_ENROLLMENT + " [" + program1.getName() + "]");
+
+        SortedSet<ActionParameterRequest> actionParameters = request.getActionParameters();
+
+        Iterator<ActionParameterRequest> itr = actionParameters.iterator();
+        ActionParameterRequest parameterRequest = itr.next();
+        assertEquals(parameterRequest.getDisplayName(),DisplayNames.EXTERNAL_ID);
+        assertEquals(parameterRequest.getKey(),EventParams.EXTERNAL_ID);
+
+        parameterRequest = itr.next();
+        assertEquals(parameterRequest.getDisplayName(),DisplayNames.ENROLLMENT_DATE);
+        assertEquals(parameterRequest.getKey(),EventParams.DATE);
+
+        parameterRequest = itr.next();
+        assertEquals(parameterRequest.getDisplayName(),DisplayNames.PROGRAM_NAME);
+        assertEquals(parameterRequest.getKey(),EventParams.PROGRAM);
+        assertEquals(parameterRequest.getValue(),"program1UUID");
+
+        parameterRequest = itr.next();
+        assertEquals(parameterRequest.getDisplayName(),attribute1.getName());
+        assertEquals(parameterRequest.getKey(),attribute1.getUuid());
+        assertNull(parameterRequest.getValue());
+
+
     }
+    
 }
