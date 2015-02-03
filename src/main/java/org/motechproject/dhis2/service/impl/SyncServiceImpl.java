@@ -2,6 +2,10 @@ package org.motechproject.dhis2.service.impl;
 
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.motechproject.dhis2.domain.DataElement;
 import org.motechproject.dhis2.domain.OrgUnit;
 import org.motechproject.dhis2.domain.Program;
@@ -189,7 +193,7 @@ public class SyncServiceImpl implements SyncService {
             Program program = buildProgram(settings, id);
 
             /**
-             * TODO: The program will be null if no tracked entity is registered. Add more sophisticated handling.
+             * TODO The program will be null if no tracked entity is registered. Add more sophisticated handling.
              */
             if (program != null) {
                 programDataService.create(program);
@@ -274,7 +278,7 @@ public class SyncServiceImpl implements SyncService {
                 DataElement dataElement = dataElementDataService.findByUuid(elementId);
                 if (dataElement == null) {
                     String elementName = JsonPath.read(o, NAME);
-                    logger.debug("ID: " + elementId + " Name: " + name);
+                    logger.debug("ID: " + elementId + " Name: " + elementName);
                 }
                 programStageDataElements.add(dataElement);
 
@@ -295,8 +299,25 @@ public class SyncServiceImpl implements SyncService {
     }
 
     private boolean testConnection() {
-        /*TODO Write testConnection method*/
-        return true;
+        DefaultHttpClient httpClient = new DefaultHttpClient();
+        Settings settings = settingsService.getSettings();
+        HttpGet get = new HttpGet(settings.getProgramURI());
+
+        try {
+            HttpResponse httpResponse = httpClient.execute(get);
+
+            if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                return true;
+            }
+
+        } catch (Exception e) {
+            logger.error(e.toString());
+            return false;
+        }
+
+        return false;
+
+
     }
 
     private void addOrgUnits(Settings settings) {

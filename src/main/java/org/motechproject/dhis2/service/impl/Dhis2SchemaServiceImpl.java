@@ -8,13 +8,13 @@ import org.motechproject.dhis2.domain.TrackedEntity;
 import org.motechproject.dhis2.domain.TrackedEntityAttribute;
 import org.motechproject.dhis2.repository.DataElementDataService;
 import org.motechproject.dhis2.repository.ProgramDataService;
+import org.motechproject.dhis2.repository.StageDataService;
 import org.motechproject.dhis2.repository.TrackedEntityAttributeDataService;
 import org.motechproject.dhis2.repository.TrackedEntityDataService;
 import org.motechproject.dhis2.service.Dhis2SchemaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -36,6 +36,9 @@ public class Dhis2SchemaServiceImpl implements Dhis2SchemaService {
 
     @Autowired
     private DataElementDataService dataElementDataService;
+
+    @Autowired
+    private StageDataService stageDataService;
 
 
     @Override
@@ -77,19 +80,10 @@ public class Dhis2SchemaServiceImpl implements Dhis2SchemaService {
 
     @Override
     public List<Stage> getStages() {
+        return stageDataService.retrieveAll();
 
-        List<Program> programs = programDataService.retrieveAll();
-
-        List<Stage> stages = new ArrayList<>();
-
-        for (Program program : programs) {
-            List<Stage> programStages = program.getStages();
-            stages.addAll(programStages);
-
-        }
-
-        return stages;
     }
+
 
 
 }

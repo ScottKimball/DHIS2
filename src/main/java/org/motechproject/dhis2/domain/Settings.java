@@ -5,7 +5,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 /**
  * DHIS 2 server configuration details.
  */
-@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Settings {
     private static final String API_ENDPOINT = "/api";
     private static final String PROGRAM_PATH = "/programs";
