@@ -138,12 +138,14 @@ public class SyncServiceImpl implements SyncService {
     private void addDataElements(Settings settings) {
 
         Request dataElementRequest = new Request(settings.getDataElementsURI() + NO_PAGING_NO_LINKS);
+        logger.debug("In Add Data Elements");
 
         List<Object> dataElements = JsonPath.read(httpQuery.send(dataElementRequest, settings.getUsername(), settings.getPassword()), DATA_ELEMENTS);
 
         for (Object o : dataElements) {
             String name = JsonPath.read(o, NAME);
             String id = JsonPath.read(o, ID);
+            logger.debug("DataElement name:" + name + " ID: " + id);
             dataElementDataService.create(new DataElement(name, id));
         }
 
