@@ -14,7 +14,16 @@ public class Stage extends BasicEntity {
 
     private String program;
 
+    private boolean registration;
 
+
+    public boolean hasRegistration() {
+        return registration;
+    }
+
+    public void setRegistration(boolean registration) {
+        this.registration = registration;
+    }
 
     public List<DataElement> getDataElements() {
         return dataElements;

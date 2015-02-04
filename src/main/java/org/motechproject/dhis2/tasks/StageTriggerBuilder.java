@@ -33,16 +33,36 @@ public class StageTriggerBuilder  {
             SortedSet<ActionParameterRequest> actionParameters = new TreeSet<>();
             ActionEventRequestBuilder builder = new ActionEventRequestBuilder();
 
+            ActionParameterRequestBuilder actionParameterBuilder;
+            String registration;
 
-            /*External ID*/
-            ActionParameterRequestBuilder actionParameterBuilder = new ActionParameterRequestBuilder()
-                    .setDisplayName(DisplayNames.EXTERNAL_ID)
-                    .setKey(EventParams.EXTERNAL_ID)
-                    .setType(UNICODE)
-                    .setRequired(true)
-                    .setOrder(counter++);
+            if (stage.hasRegistration()) {
+                registration = "true";
+                    /*External ID*/
+                actionParameterBuilder = new ActionParameterRequestBuilder()
+                        .setDisplayName(DisplayNames.EXTERNAL_ID)
+                        .setKey(EventParams.EXTERNAL_ID)
+                        .setType(UNICODE)
+                        .setRequired(true)
+                        .setOrder(counter++);
+
+                actionParameters.add(actionParameterBuilder.createActionParameterRequest());
+
+            } else {
+                registration = "false";
+            }
+
+             /*Program details*/
+            actionParameterBuilder = new ActionParameterRequestBuilder()
+                    .setKey(EventParams.REGISTRATION)
+                    .setValue(registration)
+                    .setHidden(true)
+                    .setOrder(counter++)
+                    .setDisplayName(EventParams.REGISTRATION);
 
             actionParameters.add(actionParameterBuilder.createActionParameterRequest());
+
+
 
             /*Program details*/
             actionParameterBuilder = new ActionParameterRequestBuilder()

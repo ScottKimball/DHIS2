@@ -194,10 +194,7 @@ public class SyncServiceImpl implements SyncService {
             String id = JsonPath.read(o, ID);
             Program program = buildProgram(settings, id);
 
-            /**
-             * TODO The program will be null if no tracked entity is registered. Add more sophisticated handling.
-             */
-            if (program != null) {
+            if (program.hasRegistration()) {
                 programDataService.create(program);
             }
         }
@@ -221,7 +218,7 @@ public class SyncServiceImpl implements SyncService {
 
         for (Object o : stages) {
             String stageId = JsonPath.read(o, ID);
-            programStages.add(buildStage(settings, stageId , id));
+            programStages.add(buildStage(settings, stageId , id, registration));
         }
 
         List<TrackedEntityAttribute> programTrackedEntityAttributes = new ArrayList<>();
@@ -262,7 +259,7 @@ public class SyncServiceImpl implements SyncService {
         return program;
     }
 
-    private Stage buildStage(Settings settings, String id, String programId)  {
+    private Stage buildStage(Settings settings, String id, String programId, boolean registration)  {
 
         Request stageRequest = new Request(settings.getStagesURI() + "/" + id);
         Object stageInfo = httpQuery.send(stageRequest, settings.getUsername(), settings.getPassword());
@@ -295,6 +292,7 @@ public class SyncServiceImpl implements SyncService {
         stage.setUuid(id);
         stage.setDataElements(programStageDataElements);
         stage.setProgram(programId);
+        stage.setRegistration(registration);
 
         return stage;
 

@@ -14,6 +14,7 @@ public final class EventParams {
     public static final String EXTERNAL_ID = "externalId";
     public static final String ENTITY_TYPE = "entityType";
     public static final String STAGE = "stage";
+    public static final String REGISTRATION = "registration";
 
 
 

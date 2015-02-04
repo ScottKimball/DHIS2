@@ -33,6 +33,9 @@ public class StageDto implements Dto {
         this.dataElementDtos = dataElementDtos;
     }
 
+    public StageDto() {
+    }
+
     public String getDate() {
         return date;
     }

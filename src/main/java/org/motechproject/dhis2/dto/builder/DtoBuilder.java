@@ -81,6 +81,9 @@ public class DtoBuilder {
 
         Map<String, Object> params = event.getParameters();
 
+        String registationString = (String)params.remove(EventParams.REGISTRATION);
+        boolean registration = registationString.contains("true") ? true : false;
+
         /*Get instance uuid*/
         TrackedEntityInstanceMapper instanceMapper = trackedEntityInstanceDataService.
                 findByExternalName((String) params.remove(EventParams.EXTERNAL_ID));
@@ -101,7 +104,19 @@ public class DtoBuilder {
 
          addRemainingItemsToDto(params, stageDataElementDtos);
 
-        return new StageDto(program, orgUnitUuid, date, stage, instanceMapper.getDhis2Uuid(), stageDataElementDtos);
+        StageDto stageDto = new StageDto();
+        stageDto.setProgram(program);
+        stageDto.setDhis2Uuid(stage);
+        stageDto.setDate(date);
+        stageDto.setOrgUnit(orgUnitUuid);
+        stageDto.setDataElementDtos(stageDataElementDtos);
+
+        if (registration) {
+            stageDto.setTrackedEntityInstance(instanceMapper.getDhis2Uuid());
+        }
+
+
+        return stageDto;
     }
 
     private TrackedEntityInstanceDto createInstance(MotechEvent event) {
