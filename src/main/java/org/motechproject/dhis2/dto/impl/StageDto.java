@@ -22,6 +22,7 @@ public class StageDto implements Dto {
     private String date;
     private String trackedEntityInstance;
     private String orgUnit;
+    private boolean registration;
 
 
     public StageDto(String program, String orgUnit, String date, String dhis2Uuid, String trackedEntityInstance, List<AttributeDto> dataElementDtos) {
@@ -34,6 +35,14 @@ public class StageDto implements Dto {
     }
 
     public StageDto() {
+    }
+
+    public boolean hasRegistration() {
+        return registration;
+    }
+
+    public void setRegistration(boolean registration) {
+        this.registration = registration;
     }
 
     public String getDate() {
@@ -110,7 +119,10 @@ public class StageDto implements Dto {
         root.put("orgUnit", getOrgUnit());
         root.put("eventDate", getDate());
         root.put("programStage", getDhis2Uuid());
-        root.put("trackedEntityInstance", getTrackedEntityInstance());
+
+        if (registration) {
+            root.put("trackedEntityInstance", getTrackedEntityInstance());
+        }
 
         ArrayNode nodeList = objectMapper.createArrayNode();
 

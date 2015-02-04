@@ -161,6 +161,7 @@ public class DtoBuilderTest {
         params.put(testAttributeDto1.getDhis2Uuid(), testAttributeDto1.getValue());
         params.put(testAttributeDto2.getDhis2Uuid(), testAttributeDto2.getValue());
         params.put("nullValue", null);
+        params.put(EventParams.REGISTRATION,"true");
 
         MotechEvent event = new MotechEvent(EventSubjects.UPDATE_PROGRAM_STAGE, params);
 
@@ -173,6 +174,48 @@ public class DtoBuilderTest {
         assertEquals(stageDto.getOrgUnit(),ORGUNIT_ID);
         assertEquals(stageDto.getDhis2Uuid(),STAGE_ID);
         assertEquals(stageDto.getTrackedEntityInstance(),INSTANCE_DHIS2_ID);
+
+        List<AttributeDto> dataElements = stageDto.getDataElementDtos();
+        assertNotNull(dataElements);
+        assertTrue(dataElements.contains(testAttributeDto1));
+        assertTrue(dataElements.contains(testAttributeDto2));
+        assertEquals(2,dataElements.size());
+
+        assertEquals(toJson,stageDto.toJson());
+
+    }
+
+    @Test
+    public void testStageUpdateWithoutRegistration () throws Exception {
+
+        String toJson = "{\"program\":\"programID\",\"orgUnit\":\"OrgUnitID\",\"eventDate\":\"date\"," +
+                "\"programStage\":\"stageID\",\"dataValues\":" +
+                "[{\"dataElement\":\"attributeUuid2\",\"value\":\"attributeValue2\"}," +
+                "{\"dataElement\":\"attributeUuid1\",\"value\":\"attributeValue1\"}]}";
+
+
+        Map<String, Object> params = new HashMap<>();
+        params.put(EventParams.EXTERNAL_ID,INSTANCE_EXT_ID);
+        params.put(EventParams.LOCATION,ORGUNIT_NAME);
+        params.put(EventParams.DATE,DATE);
+        params.put(EventParams.STAGE,STAGE_ID);
+        params.put(EventParams.PROGRAM,PROGRAM_ID);
+        params.put(testAttributeDto1.getDhis2Uuid(), testAttributeDto1.getValue());
+        params.put(testAttributeDto2.getDhis2Uuid(), testAttributeDto2.getValue());
+        params.put("nullValue", null);
+        params.put(EventParams.REGISTRATION,"false");
+
+        MotechEvent event = new MotechEvent(EventSubjects.UPDATE_PROGRAM_STAGE, params);
+
+        StageDto stageDto = (StageDto) builder.createDto(event);
+
+        assertNotNull(stageDto);
+        assertNull(stageDto.getTrackedEntityInstance());
+        assertEquals(stageDto.getDate(),DATE);
+        assertEquals(stageDto.getProgram(),PROGRAM_ID);
+        assertEquals(stageDto.getOrgUnit(),ORGUNIT_ID);
+        assertEquals(stageDto.getDhis2Uuid(),STAGE_ID);
+
 
         List<AttributeDto> dataElements = stageDto.getDataElementDtos();
         assertNotNull(dataElements);
