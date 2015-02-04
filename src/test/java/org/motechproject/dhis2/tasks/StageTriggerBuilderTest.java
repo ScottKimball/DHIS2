@@ -138,8 +138,6 @@ public class StageTriggerBuilderTest {
 
         Iterator<ActionParameterRequest> itr = actionParameters.iterator();
         ActionParameterRequest request = itr.next();
-
-        request = itr.next();
         assertEquals(request.getKey(),EventParams.REGISTRATION);
         assertEquals(request.getDisplayName(),EventParams.REGISTRATION);
 
