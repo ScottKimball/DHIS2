@@ -33,16 +33,36 @@ public class StageTriggerBuilder  {
             SortedSet<ActionParameterRequest> actionParameters = new TreeSet<>();
             ActionEventRequestBuilder builder = new ActionEventRequestBuilder();
 
+            ActionParameterRequestBuilder actionParameterBuilder;
+            String registration;
 
-            /*External ID*/
-            ActionParameterRequestBuilder actionParameterBuilder = new ActionParameterRequestBuilder()
-                    .setDisplayName(DisplayNames.EXTERNAL_ID)
-                    .setKey(EventParams.EXTERNAL_ID)
-                    .setType(UNICODE)
-                    .setRequired(true)
-                    .setOrder(counter++);
+            if (stage.hasRegistration()) {
+                registration = "true";
+                    /*External ID*/
+                actionParameterBuilder = new ActionParameterRequestBuilder()
+                        .setDisplayName(DisplayNames.EXTERNAL_ID)
+                        .setKey(EventParams.EXTERNAL_ID)
+                        .setType(UNICODE)
+                        .setRequired(true)
+                        .setOrder(counter++);
+
+                actionParameters.add(actionParameterBuilder.createActionParameterRequest());
+
+            } else {
+                registration = "false";
+            }
+
+             /*Program details*/
+            actionParameterBuilder = new ActionParameterRequestBuilder()
+                    .setKey(EventParams.REGISTRATION)
+                    .setValue(registration)
+                    .setHidden(true)
+                    .setOrder(counter++)
+                    .setDisplayName(EventParams.REGISTRATION);
 
             actionParameters.add(actionParameterBuilder.createActionParameterRequest());
+
+
 
             /*Program details*/
             actionParameterBuilder = new ActionParameterRequestBuilder()
@@ -102,10 +122,10 @@ public class StageTriggerBuilder  {
     private List<ActionParameterRequest> buildRequestForStage(Stage stage) {
 
         List<ActionParameterRequest> parameterRequests = new ArrayList<>();
-        ActionParameterRequestBuilder actionParameterBuilder;
+
 
         for (DataElement element : stage.getDataElements()) {
-            actionParameterBuilder = new ActionParameterRequestBuilder()
+            ActionParameterRequestBuilder actionParameterBuilder = new ActionParameterRequestBuilder()
                     .setDisplayName(element.getName())
                     .setKey(element.getUuid())
                     .setType(UNICODE)

@@ -2,6 +2,10 @@ package org.motechproject.dhis2.service.impl;
 
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.motechproject.dhis2.domain.DataElement;
 import org.motechproject.dhis2.domain.OrgUnit;
 import org.motechproject.dhis2.domain.Program;
@@ -134,12 +138,14 @@ public class SyncServiceImpl implements SyncService {
     private void addDataElements(Settings settings) {
 
         Request dataElementRequest = new Request(settings.getDataElementsURI() + NO_PAGING_NO_LINKS);
+        logger.debug("In Add Data Elements");
 
         List<Object> dataElements = JsonPath.read(httpQuery.send(dataElementRequest, settings.getUsername(), settings.getPassword()), DATA_ELEMENTS);
 
         for (Object o : dataElements) {
             String name = JsonPath.read(o, NAME);
             String id = JsonPath.read(o, ID);
+            logger.debug("DataElement name:" + name + " ID: " + id);
             dataElementDataService.create(new DataElement(name, id));
         }
 
@@ -188,35 +194,23 @@ public class SyncServiceImpl implements SyncService {
             String id = JsonPath.read(o, ID);
             Program program = buildProgram(settings, id);
 
-            /**
-             * TODO: The program will be null if no tracked entity is registered. Add more sophisticated handling.
-             */
-            if (program != null) {
+            if (program.hasRegistration()) {
                 programDataService.create(program);
             }
         }
     }
 
     private Program buildProgram(Settings settings, String id) {
+
+        Program program = new Program();
+
         Request programRequest = new Request(settings.getProgramURI() + "/" + id);
         Object programInfo = httpQuery.send(programRequest, settings.getUsername(), settings.getPassword());
-        boolean registration = JsonPath.parse(programInfo).read(REGISTRATION);
 
-        /**
-         * TODO: We do not currently support this case. Will add more sophisticated handling.
-         */
-        if (!registration) {
-            return null;
-        }
+        boolean registration = JsonPath.parse(programInfo).read(REGISTRATION);
+        boolean singleEvent = JsonPath.parse(programInfo).read(SINGLE_EVENT);
 
         String name = JsonPath.read(programInfo, NAME);
-
-         /*Get associated tracked entity*/
-
-        String trackedEntityId = JsonPath.read(programInfo, TRACKED_ENTITY_ID);
-        TrackedEntity trackedEntity = trackedEntityDataService.findByUuid(trackedEntityId);
-
-        boolean singleEvent = JsonPath.parse(programInfo).read(SINGLE_EVENT);
 
          /*Build program stages list*/
         List<Stage> programStages = new ArrayList<>();
@@ -224,7 +218,7 @@ public class SyncServiceImpl implements SyncService {
 
         for (Object o : stages) {
             String stageId = JsonPath.read(o, ID);
-            programStages.add(buildStage(settings, stageId , id));
+            programStages.add(buildStage(settings, stageId , id, registration));
         }
 
         List<TrackedEntityAttribute> programTrackedEntityAttributes = new ArrayList<>();
@@ -232,9 +226,13 @@ public class SyncServiceImpl implements SyncService {
         /*If program has a tracked entity*/
         if (registration) {
 
+            /*Setting tracked Entity*/
+            String trackedEntityId = JsonPath.read(programInfo, TRACKED_ENTITY_ID);
+            TrackedEntity trackedEntity = trackedEntityDataService.findByUuid(trackedEntityId);
+            program.setTrackedEntity(trackedEntity);
+
             try {
                 List<Object> attributes = JsonPath.read(programInfo, PROGRAM_TRACKED_ENTITY_ATTRIBUTES);
-
 
 
         /*Build program attributes list*/
@@ -251,11 +249,8 @@ public class SyncServiceImpl implements SyncService {
 
         }
 
-
-        Program program = new Program();
         program.setUuid(id);
         program.setName(name);
-        program.setTrackedEntity(trackedEntity);
         program.setStages(programStages);
         program.setAttributes(programTrackedEntityAttributes);
         program.setSingleEvent(singleEvent);
@@ -264,13 +259,12 @@ public class SyncServiceImpl implements SyncService {
         return program;
     }
 
-    private Stage buildStage(Settings settings, String id, String programId)  {
+    private Stage buildStage(Settings settings, String id, String programId, boolean registration)  {
 
         Request stageRequest = new Request(settings.getStagesURI() + "/" + id);
         Object stageInfo = httpQuery.send(stageRequest, settings.getUsername(), settings.getPassword());
 
         String name = JsonPath.read(stageInfo, NAME);
-
 
 
         List<DataElement> programStageDataElements = new ArrayList<>();
@@ -279,7 +273,12 @@ public class SyncServiceImpl implements SyncService {
             List<Object> dataElements = JsonPath.read(stageInfo, PROGRAM_STAGE_DATA_ELEMENTS);
             for (Object o : dataElements) {
                 String elementId = JsonPath.read(o, ID);
+
                 DataElement dataElement = dataElementDataService.findByUuid(elementId);
+                if (dataElement == null) {
+                    String elementName = JsonPath.read(o, NAME);
+                    logger.debug("ID: " + elementId + " Name: " + elementName);
+                }
                 programStageDataElements.add(dataElement);
 
             }
@@ -293,14 +292,32 @@ public class SyncServiceImpl implements SyncService {
         stage.setUuid(id);
         stage.setDataElements(programStageDataElements);
         stage.setProgram(programId);
+        stage.setRegistration(registration);
 
         return stage;
 
     }
 
     private boolean testConnection() {
-        /*TODO Write testConnection method*/
-        return true;
+        DefaultHttpClient httpClient = new DefaultHttpClient();
+        Settings settings = settingsService.getSettings();
+        HttpGet get = new HttpGet(settings.getProgramURI());
+
+        try {
+            HttpResponse httpResponse = httpClient.execute(get);
+
+            if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                return true;
+            }
+
+        } catch (Exception e) {
+            logger.error(e.toString());
+            return false;
+        }
+
+        return false;
+
+
     }
 
     private void addOrgUnits(Settings settings) {
