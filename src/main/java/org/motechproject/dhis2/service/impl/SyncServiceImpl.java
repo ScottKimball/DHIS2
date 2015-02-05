@@ -18,6 +18,7 @@ import org.motechproject.dhis2.http.Request;
 import org.motechproject.dhis2.repository.DataElementDataService;
 import org.motechproject.dhis2.repository.OrgUnitDataService;
 import org.motechproject.dhis2.repository.ProgramDataService;
+import org.motechproject.dhis2.repository.StageDataService;
 import org.motechproject.dhis2.repository.TrackedEntityAttributeDataService;
 import org.motechproject.dhis2.repository.TrackedEntityDataService;
 import org.motechproject.dhis2.service.SettingsService;
@@ -61,6 +62,9 @@ public class SyncServiceImpl implements SyncService {
     @Autowired
     private DataElementDataService dataElementDataService;
 
+    @Autowired
+    private StageDataService stageDataService;
+
 
     private Logger logger = LoggerFactory.getLogger(SyncServiceImpl.class);
 
@@ -85,10 +89,13 @@ public class SyncServiceImpl implements SyncService {
     public boolean sync() {
 
 
+
+
         logger.debug("Starting Sync");
         long startTime = System.nanoTime();
+        Settings settings = settingsService.getSettings();
 
-        if (!testConnection()) {
+        if (!testConnection(settings)) {
             return false;
         }
 
@@ -101,7 +108,7 @@ public class SyncServiceImpl implements SyncService {
         dataElementDataService.deleteAll();
 
         try {
-            Settings settings = settingsService.getSettings();
+
             addDataElements(settings);
             addAttributes(settings);
             addTrackedEntities(settings);
@@ -275,10 +282,6 @@ public class SyncServiceImpl implements SyncService {
                 String elementId = JsonPath.read(o, ID);
 
                 DataElement dataElement = dataElementDataService.findByUuid(elementId);
-                if (dataElement == null) {
-                    String elementName = JsonPath.read(o, NAME);
-                    logger.debug("ID: " + elementId + " Name: " + elementName);
-                }
                 programStageDataElements.add(dataElement);
 
             }
@@ -294,13 +297,15 @@ public class SyncServiceImpl implements SyncService {
         stage.setProgram(programId);
         stage.setRegistration(registration);
 
+        stageDataService.create(stage);
+
         return stage;
 
     }
 
-    private boolean testConnection() {
+    private boolean testConnection(Settings settings) {
+
         DefaultHttpClient httpClient = new DefaultHttpClient();
-        Settings settings = settingsService.getSettings();
         HttpGet get = new HttpGet(settings.getProgramURI());
 
         try {
