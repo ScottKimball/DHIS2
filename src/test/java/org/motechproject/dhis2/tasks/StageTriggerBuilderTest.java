@@ -84,7 +84,7 @@ public class StageTriggerBuilderTest {
 
         request = itr.next();
         assertEquals(request.getKey(),EventParams.STAGE);
-        assertEquals(request.getValue(),stage1.getuuid());
+        assertEquals(request.getValue(),stage1.getUuid());
 
         request = itr.next();
         assertEquals(request.getDisplayName(),DisplayNames.EVENT_DATE);
@@ -147,7 +147,7 @@ public class StageTriggerBuilderTest {
 
         request = itr.next();
         assertEquals(request.getKey(),EventParams.STAGE);
-        assertEquals(request.getValue(),stage2.getuuid());
+        assertEquals(request.getValue(),stage2.getUuid());
 
         request = itr.next();
         assertEquals(request.getDisplayName(),DisplayNames.EVENT_DATE);

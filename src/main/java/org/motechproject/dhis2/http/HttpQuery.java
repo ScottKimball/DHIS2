@@ -12,15 +12,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-/**
- * Created by scott on 11/3/14.
- */
-
 @Service
 public class HttpQuery {
 
     private Logger logger = LoggerFactory.getLogger(HttpQuery.class);
-
 
     public Object send(Request request, String username, String password) {
 

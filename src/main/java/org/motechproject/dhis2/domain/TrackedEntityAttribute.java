@@ -1,18 +1,41 @@
 package org.motechproject.dhis2.domain;
 
 import org.motechproject.mds.annotations.Entity;
+import org.motechproject.mds.annotations.Field;
+
 
 /**
  * Created by scott on 1/6/15.
  */
 
 @Entity
-public class TrackedEntityAttribute extends BasicEntity {
+public class TrackedEntityAttribute {
+    @Field
+    private String uuid;
 
-    public TrackedEntityAttribute(String name, String id) {
-        super(name, id);
+    @Field
+    private String name;
 
+    public TrackedEntityAttribute() {}
 
+    public TrackedEntityAttribute(String name, String uuid) {
+        this.name = name;
+        this.uuid = uuid;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 }

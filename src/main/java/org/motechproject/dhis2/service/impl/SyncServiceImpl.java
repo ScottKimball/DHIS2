@@ -106,6 +106,7 @@ public class SyncServiceImpl implements SyncService {
         trackedEntityDataService.deleteAll();
         orgUnitDataService.deleteAll();
         dataElementDataService.deleteAll();
+        stageDataService.deleteAll();
 
         try {
 
@@ -132,6 +133,7 @@ public class SyncServiceImpl implements SyncService {
             trackedEntityDataService.deleteAll();
             orgUnitDataService.deleteAll();
             dataElementDataService.deleteAll();
+            stageDataService.deleteAll();
 
             logger.error("Problem with DHIS2 application Schema.Sync Unsuccessful");
             logger.error(e.toString());

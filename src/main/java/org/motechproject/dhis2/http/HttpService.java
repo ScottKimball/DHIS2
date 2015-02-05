@@ -3,18 +3,15 @@ package org.motechproject.dhis2.http;
 import com.jayway.jsonpath.Configuration;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
-
-/**
- * Created by scott on 9/17/14.
- */
 
 @Service
 public class HttpService {
@@ -24,13 +21,16 @@ public class HttpService {
 
 
     /*  Constructs an HTTP POST request and returns the response  */
-    public Object send(Request request) {
+    public Object send(Request request, String username, String password) {
 
         DefaultHttpClient httpClient = new DefaultHttpClient();
         HttpPost httpPost = new HttpPost(request.getUrl());
         httpPost.addHeader("content-type", "application/json");
         httpPost.addHeader("accept", "application/json");
-
+        httpPost.addHeader(BasicScheme.authenticate(
+                new UsernamePasswordCredentials(username, password),
+                "UTF-8",
+                false));
 
         try {
             StringEntity params = new StringEntity(request.getBody());

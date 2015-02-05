@@ -2,6 +2,7 @@ package org.motechproject.dhis2.domain;
 
 import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
+import org.motechproject.mds.annotations.Field;
 
 import java.util.List;
 
@@ -10,18 +11,27 @@ import java.util.List;
  */
 
 @Entity
-public class Program extends BasicEntity {
+public class Program {
+    @Field
+    private String uuid;
 
+    @Field
+    private String name;
 
+    @Field
     private TrackedEntity trackedEntity;
 
+    @Field
     @Cascade(delete = true)
     private List<Stage> stages;
 
+    @Field
     private List<TrackedEntityAttribute> attributes;
 
+    @Field
     private boolean singleEvent;
 
+    @Field
     private boolean registration;
 
 
@@ -65,21 +75,20 @@ public class Program extends BasicEntity {
         this.attributes = attributes;
     }
 
-    public String getuuid() {
-        return super.getUuid();
+    public String getUuid() {
+        return uuid;
     }
 
     public void setUuid(String uuid) {
-        super.setUuid(uuid);
+        this.uuid = uuid;
     }
 
     public String getName() {
-        return super.getName();
+        return name;
     }
 
     public void setName(String name) {
-        super.setName(name);
+        this.name = name;
     }
-
 
 }
