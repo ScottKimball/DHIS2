@@ -4,6 +4,7 @@ import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import javax.jdo.annotations.Unique;
 import java.util.List;
 
 /**
@@ -12,7 +13,8 @@ import java.util.List;
 
 @Entity
 public class Program {
-    @Field
+    @Field(required = true)
+    @Unique
     private String uuid;
 
     @Field

@@ -3,6 +3,8 @@ package org.motechproject.dhis2.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import javax.jdo.annotations.Unique;
+
 /**
  * Created by scott on 10/22/14.
  */
@@ -17,6 +19,7 @@ public class TrackedEntityInstanceMapper {
     private String dhis2Name;
 
     @Field
+    @Unique
     private String dhis2Uuid;
 
     public TrackedEntityInstanceMapper() {}

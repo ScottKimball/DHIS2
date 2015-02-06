@@ -3,6 +3,8 @@ package org.motechproject.dhis2.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import javax.jdo.annotations.Unique;
+
 
 /**
  * Created by scott on 1/6/15.
@@ -10,7 +12,8 @@ import org.motechproject.mds.annotations.Field;
 
 @Entity
 public class TrackedEntityAttribute {
-    @Field
+    @Field(required = true)
+    @Unique
     private String uuid;
 
     @Field

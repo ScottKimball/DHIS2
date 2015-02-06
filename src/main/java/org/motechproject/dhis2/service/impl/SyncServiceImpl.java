@@ -4,7 +4,9 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.HttpResponse;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.motechproject.dhis2.domain.DataElement;
 import org.motechproject.dhis2.domain.OrgUnit;
@@ -282,10 +284,17 @@ public class SyncServiceImpl implements SyncService {
             List<Object> dataElements = JsonPath.read(stageInfo, PROGRAM_STAGE_DATA_ELEMENTS);
             for (Object o : dataElements) {
                 String elementId = JsonPath.read(o, ID);
+                String elementName = JsonPath.read(o, NAME);
 
                 DataElement dataElement = dataElementDataService.findByUuid(elementId);
-                programStageDataElements.add(dataElement);
 
+                if (dataElement == null) {
+                    dataElement = new DataElement();
+                    dataElement.setUuid(elementId);
+                    dataElement.setName(elementName);
+                }
+
+                programStageDataElements.add(dataElement);
             }
         } catch (PathNotFoundException e) {
             logger.debug("No path for programStageDataElements for stage : " + name);
@@ -306,12 +315,14 @@ public class SyncServiceImpl implements SyncService {
     }
 
     private boolean testConnection(Settings settings) {
-
-        DefaultHttpClient httpClient = new DefaultHttpClient();
         HttpGet get = new HttpGet(settings.getProgramURI());
+        get.addHeader(BasicScheme.authenticate(
+                new UsernamePasswordCredentials(settings.getUsername(), settings.getPassword()),
+                "UTF-8",
+                false));
 
         try {
-            HttpResponse httpResponse = httpClient.execute(get);
+            HttpResponse httpResponse = new DefaultHttpClient().execute(get);
 
             if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 return true;
