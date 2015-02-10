@@ -22,7 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static junit.framework.Assert.*;
+
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 /**
@@ -93,7 +94,7 @@ public class DtoBuilderTest {
         TrackedEntityInstanceDto instance = (TrackedEntityInstanceDto) builder.createDto(event);
 
         assertNotNull(instance);
-        assertEquals(instance.getTrackedEntityType(),ENTITY_TYPE_ID);
+        assertEquals(instance.getTrackedEntityType(), ENTITY_TYPE_ID);
         assertEquals(instance.getExternalId(),INSTANCE_EXT_ID);
         assertEquals(instance.getOrgUnit(),ORGUNIT_ID);
 
@@ -105,6 +106,8 @@ public class DtoBuilderTest {
 
         assertEquals(instance.toJson(), toJson);
     }
+
+
 
     @Test
     public void testProgramEnrollment() throws Exception {
@@ -136,7 +139,7 @@ public class DtoBuilderTest {
         assertNotNull(attributeDtos);
         assertTrue(attributeDtos.contains(testAttributeDto1));
         assertTrue(attributeDtos.contains(testAttributeDto2));
-        assertEquals(2,attributeDtos.size());
+        assertEquals(2, attributeDtos.size());
 
         assertEquals(toJson,enrollmentDto.toJson());
 
@@ -161,7 +164,7 @@ public class DtoBuilderTest {
         params.put(testAttributeDto1.getDhis2Uuid(), testAttributeDto1.getValue());
         params.put(testAttributeDto2.getDhis2Uuid(), testAttributeDto2.getValue());
         params.put("nullValue", null);
-        params.put(EventParams.REGISTRATION,"true");
+        params.put(EventParams.REGISTRATION, "true");
 
         MotechEvent event = new MotechEvent(EventSubjects.UPDATE_PROGRAM_STAGE, params);
 
@@ -169,9 +172,9 @@ public class DtoBuilderTest {
 
         assertNotNull(stageDto);
         assertEquals(stageDto.getTrackedEntityInstance(),INSTANCE_DHIS2_ID);
-        assertEquals(stageDto.getDate(),DATE);
-        assertEquals(stageDto.getProgram(),PROGRAM_ID);
-        assertEquals(stageDto.getOrgUnit(),ORGUNIT_ID);
+        assertEquals(stageDto.getDate(), DATE);
+        assertEquals(stageDto.getProgram(), PROGRAM_ID);
+        assertEquals(stageDto.getOrgUnit(), ORGUNIT_ID);
         assertEquals(stageDto.getDhis2Uuid(),STAGE_ID);
         assertEquals(stageDto.getTrackedEntityInstance(),INSTANCE_DHIS2_ID);
 
