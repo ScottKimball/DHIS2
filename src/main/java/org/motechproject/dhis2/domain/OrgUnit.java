@@ -19,7 +19,7 @@ public class OrgUnit {
     @Field
     private String name;
 
-    public OrgUnit() {}
+    public OrgUnit() { }
 
     public OrgUnit(String name, String uuid) {
         this.uuid = uuid;

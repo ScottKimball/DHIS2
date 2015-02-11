@@ -22,7 +22,7 @@ public class TrackedEntityInstanceMapper {
     @Unique
     private String dhis2Uuid;
 
-    public TrackedEntityInstanceMapper() {}
+    public TrackedEntityInstanceMapper() { }
 
     public TrackedEntityInstanceMapper(String externalName, String dhis2Uuid) {
         this.dhis2Uuid = dhis2Uuid;

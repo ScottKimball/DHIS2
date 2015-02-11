@@ -19,7 +19,7 @@ public class TrackedEntityAttribute {
     @Field
     private String name;
 
-    public TrackedEntityAttribute() {}
+    public TrackedEntityAttribute() { }
 
     public TrackedEntityAttribute(String name, String uuid) {
         this.name = name;

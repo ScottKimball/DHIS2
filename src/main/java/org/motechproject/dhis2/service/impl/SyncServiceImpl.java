@@ -80,12 +80,14 @@ public class SyncServiceImpl implements SyncService {
     private static final String SINGLE_EVENT = "$.singleEvent";
     private static final String REGISTRATION = "$.registration";
     private static final String PROGRAM_STAGES = "$.programStages";
-    private static final String PROGRAM_TRACKED_ENTITY_ATTRIBUTES = "$.programTrackedEntityAttributes[*].attribute";
+    private static final String PROGRAM_TRACKED_ENTITY_ATTRIBUTES = "$.programTrackedEntityAttributes[*].trackedEntityAttribute";
     private static final String PROGRAM_STAGE_DATA_ELEMENTS = "$.programStageDataElements[*].dataElement";
     private static final String ORG_UNITS = "$.organisationUnits";
     private static final String DATA_ELEMENTS = "$.dataElements";
 
     private static final String NO_PAGING_NO_LINKS = "?paging=false&links=false";
+
+    private static final String DEBUG_ID = " ID: ";
 
     @Override
     public boolean sync() {
@@ -156,7 +158,7 @@ public class SyncServiceImpl implements SyncService {
         for (Object o : dataElements) {
             String name = JsonPath.read(o, NAME);
             String id = JsonPath.read(o, ID);
-            logger.debug("DataElement name:" + name + " ID: " + id);
+            logger.debug("DataElement name:" + name +  DEBUG_ID + id);
             dataElementDataService.create(new DataElement(name, id));
         }
 
@@ -174,6 +176,7 @@ public class SyncServiceImpl implements SyncService {
             String name = JsonPath.read(o, NAME);
             String id = JsonPath.read(o, ID);
 
+            logger.debug("Tracked Entity Attribute name: " + name  + DEBUG_ID + id);
             attributeDataService.create(new TrackedEntityAttribute(name, id));
 
         }
@@ -190,6 +193,7 @@ public class SyncServiceImpl implements SyncService {
             String name = JsonPath.read(o, NAME);
             String id = JsonPath.read(o, ID);
 
+            logger.debug("Tracked Entity Name: " + name + " ID: " + id);
             trackedEntityDataService.create(new TrackedEntity(name, id));
 
         }
@@ -206,6 +210,7 @@ public class SyncServiceImpl implements SyncService {
             Program program = buildProgram(settings, id);
 
             if (program.hasRegistration()) {
+                logger.debug("Program name: " + program.getName() + DEBUG_ID + program.getUuid());
                 programDataService.create(program);
             }
         }
@@ -251,8 +256,14 @@ public class SyncServiceImpl implements SyncService {
                     String attributeId = JsonPath.read(o, ID);
 
                     TrackedEntityAttribute attribute = attributeDataService.findByUuid(attributeId);
+
+                    if (attribute == null) {
+                        String attributeName = JsonPath.read(o, NAME);
+                        attribute = new TrackedEntityAttribute(attributeName, attributeId);
+                    }
                     programTrackedEntityAttributes.add(attribute);
                 }
+
 
             } catch (PathNotFoundException e) {
                 logger.debug("No path for programTrackedEntityAttributes for program : " + name);
@@ -292,6 +303,7 @@ public class SyncServiceImpl implements SyncService {
                     dataElement = new DataElement();
                     dataElement.setUuid(elementId);
                     dataElement.setName(elementName);
+                    dataElementDataService.create(dataElement);
                 }
 
                 programStageDataElements.add(dataElement);
@@ -308,6 +320,7 @@ public class SyncServiceImpl implements SyncService {
         stage.setProgram(programId);
         stage.setRegistration(registration);
 
+        logger.debug("Stage name: " + stage.getName() + DEBUG_ID + stage.getUuid());
         stageDataService.create(stage);
 
         return stage;
@@ -348,6 +361,7 @@ public class SyncServiceImpl implements SyncService {
             String name = JsonPath.read(o, NAME);
             String id = JsonPath.read(o, ID);
 
+            logger.debug("Org Unit name: " + name + DEBUG_ID + id);
             orgUnitDataService.create(new OrgUnit(name, id));
 
         }

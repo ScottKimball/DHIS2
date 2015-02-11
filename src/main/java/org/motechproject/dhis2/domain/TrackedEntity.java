@@ -18,7 +18,7 @@ public class TrackedEntity {
     @Field
     private String name;
 
-    public TrackedEntity() {}
+    public TrackedEntity() { }
 
     public TrackedEntity(String name, String uuid) {
         this.name = name;

@@ -18,7 +18,7 @@ public class DataElement {
     @Field
     private String name;
 
-    public DataElement() {}
+    public DataElement() { }
 
     public DataElement(String name, String uuid) {
         this.uuid = uuid;
