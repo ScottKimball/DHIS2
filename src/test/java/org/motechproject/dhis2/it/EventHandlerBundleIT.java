@@ -36,6 +36,8 @@ import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.Assert.assertNotNull;
+
 /**
  * Created by scott on 1/22/15.
  */
@@ -45,9 +47,93 @@ import java.util.Map;
 @ExamFactory(MotechNativeTestContainerFactory.class)
 public class EventHandlerBundleIT extends BasePaxIT {
 
-    @Test
-    public void emptyTest () throws Exception{
+    private static final String ENTITY_TYPE_ID = "entityUUID"; // Person
+    private static final String INSTANCE_EXT_ID = "externalId";
+    private static final String INSTANCE_DHIS2_ID = "dhis2ID";
+    private static final String ORGUNIT_NAME = "OrgUnitName";
+    private static final String ORGUNIT_ID = "OrgUnitID";
+    private static final String PROGRAM_ID = "programID";
+    private static final String DATE = "date";
+    private static final String STAGE_ID ="stageID";
+    private static final String ATTRIBUTE_UUID_1 = "attributeUuid1";
+    private static final String ATTRIUBTE_VALUE_1 = "attributeValue1";
+    private static final String ATTRIBUTE_UUID_2 = "attributeUuid2";
+    private static final String ATTRIUBTE_VALUE_2 = "attributeValue2";
+
+
+
+
+    @Inject
+    OrgUnitDataService orgUnitDataService;
+
+    @Inject
+    TrackedEntityInstanceDataService trackedEntityInstanceDataService;
+
+
+    @Inject
+    EventRelay eventRelay;
+
+
+
+    @Inject
+    @Qualifier("dhis2SettingsService")
+    SettingsService settingsService;
+
+
+
+
+
+    @Before
+    public void setup() {
+
+        Settings settings = new Settings("http://fakeurl.fake","name","password");
+        settingsService.updateSettings(settings);
+        clearDatabase();
+        populateDatabase();
 
     }
+
+    @After
+    public void tearDown () {
+        clearDatabase();
+    }
+
+
+    @Test
+    public void testHandleRegistration() throws Exception{
+
+        AttributeDto testAttributeDto1 = new AttributeDto(null, ATTRIBUTE_UUID_1 , ATTRIUBTE_VALUE_1);
+        AttributeDto testAttributeDto2 = new AttributeDto(null,ATTRIBUTE_UUID_2, ATTRIUBTE_VALUE_2);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put(EventParams.ENTITY_TYPE, ENTITY_TYPE_ID);
+        params.put(EventParams.EXTERNAL_ID, INSTANCE_EXT_ID);
+        params.put(EventParams.LOCATION, ORGUNIT_NAME);
+        params.put(testAttributeDto1.getDhis2Uuid(), testAttributeDto1.getValue());
+        params.put(testAttributeDto2.getDhis2Uuid(), testAttributeDto2.getValue());
+        params.put("nullValue", null);
+
+        MotechEvent event = new MotechEvent(EventSubjects.REGISTER_ENTITY,params);
+        eventRelay.sendEventMessage(event);
+        assertNotNull(null);
+
+
+
+
+
+    }
+
+    private void populateDatabase () {
+        orgUnitDataService.create(new OrgUnit(ORGUNIT_NAME,ORGUNIT_ID));
+        trackedEntityInstanceDataService.create(new TrackedEntityInstanceMapper(INSTANCE_EXT_ID,INSTANCE_DHIS2_ID));
+
+    }
+
+    private void clearDatabase () {
+        orgUnitDataService.deleteAll();
+        trackedEntityInstanceDataService.deleteAll();
+
+    }
+
 
 }

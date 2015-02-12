@@ -61,4 +61,6 @@
 
     <osgi:service ref="dhisSettingsService" interface="org.motechproject.dhis2.service.SettingsService" />
 
+    <osgi:reference id="channelService" interface= "org.motechproject.tasks.service.ChannelService" />
+
 </beans>
