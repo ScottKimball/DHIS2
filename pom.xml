@@ -167,6 +167,8 @@
             <artifactId>commons-codec</artifactId>
             <version>1.7</version>
         </dependency>
+
+
     </dependencies>
 
     <build>
@@ -196,11 +198,24 @@
                         <Export-Package>org.motechproject.dhis2.service;version=${project.version},
                             org.motechproject.dhis2.repository;version=${project.version},
                             org.motechproject.dhis2.domain;version=${project.version},
+                            org.motechproject.dhis2.dto;version=${project.version},
+                            org.motechproject.dhis2.event;version=${project.version},
+                            org.motechproject.dhis2.repository;version=${project.version},
+                            org.motechproject.dhis2.service;version=${project.version},
+                            org.motechproject.dhis2.tasks;version=${project.version},
+                            org.motechproject.dhis2.web;version=${project.version},
+                            org.motechproject.dhis2.http;version=${project.version},
+                            org.motechproject.tasks.service.impl.ChannelServiceImpl;version=${project.version},
+
                         </Export-Package>
                         <Import-Package>
                             org.motechproject.osgi.web,
                             org.motechproject.event.listener,
                             org.motechproject.event.listener.annotations,
+                            org.motechproject.server.config,
+                            org.motechproject.server.config.service,
+                            org.motechproject.config.service,
+                            org.springframework.context.config,
                             *
                         </Import-Package>
                     </instructions>
@@ -235,6 +250,7 @@
     </build>
 
     <profiles>
+        <!--
         <profile>
             <id>IT</id>
             <build>
@@ -307,5 +323,6 @@
                 </plugins>
             </build>
         </profile>
+         -->
     </profiles>
 </project>
