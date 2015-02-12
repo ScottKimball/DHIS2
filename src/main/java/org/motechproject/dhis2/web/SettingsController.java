@@ -48,7 +48,6 @@ public class SettingsController {
     @RequestMapping(value = "/sync", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public void sync() {
-        /*TODO save login credentials */
 
         boolean success = syncService.sync();
 
