@@ -47,7 +47,8 @@ public class SettingsController {
 
     @RequestMapping(value = "/sync", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public void sync() {
+    @ResponseBody
+    public boolean sync() {
 
         boolean success = syncService.sync();
 
@@ -55,6 +56,10 @@ public class SettingsController {
             tasksService.updateChannel();
 
         }
+
+        return success;
+
+
 
     }
 }

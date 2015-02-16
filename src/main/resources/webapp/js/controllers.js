@@ -4,7 +4,8 @@
     /* Controllers */
     var controllers = angular.module('dhis2.controllers', []);
 
-    controllers.controller('Dhis2SettingsCtrl', function ($scope, $http, Sync) {
+    controllers.controller('Dhis2SettingsCtrl', function ($scope, $http) {
+
         $http.get('../dhis2/dhis2-settings')
             .success(function (response) {
                 $scope.settings = response;
@@ -15,7 +16,19 @@
             });
 
         $scope.sync = function () {
-            Sync.get({});
+            $scope.blocked = true;
+            $scope.success = null;
+            $http.get('../dhis2/sync')
+
+                .success(function (response) {
+                    $scope.blocked = false;
+                    $scope.success = response;
+                })
+
+                .error(function (response) {
+                    $scope.blocked = false;
+                    $scope.success = false;
+                })
         };
 
         $scope.submit = function () {

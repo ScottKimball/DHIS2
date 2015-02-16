@@ -339,6 +339,11 @@ public class SyncServiceImpl implements SyncService {
 
             if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 return true;
+            } else {
+                logger.error("Connection to dhis2 server failed");
+                logger.error(httpResponse.toString());
+                return false;
+
             }
 
         } catch (Exception e) {
@@ -346,7 +351,7 @@ public class SyncServiceImpl implements SyncService {
             return false;
         }
 
-        return false;
+
 
 
     }
