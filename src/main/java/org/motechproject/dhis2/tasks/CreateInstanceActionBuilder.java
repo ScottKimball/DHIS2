@@ -17,7 +17,7 @@ import java.util.TreeSet;
 /**
  * Created by scott on 1/15/15.
  */
-public class CreateActionBuilder {
+public class CreateInstanceActionBuilder {
 
     private static final String UNICODE = "UNICODE";
     private static final int ATTRIBUTE_COUNT = 3;

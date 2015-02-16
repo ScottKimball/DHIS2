@@ -22,12 +22,12 @@ import static org.junit.Assert.assertNull;
 /**
  * Created by scottkimball on 1/27/15.
  */
-public class CreateActionBuilderTest {
+public class CreateInstanceActionBuilderTest {
 
     @Test
     public void testBuildTrackedEntities() throws Exception{
 
-        CreateActionBuilder builder = new CreateActionBuilder();
+        CreateInstanceActionBuilder builder = new CreateInstanceActionBuilder();
 
         List<TrackedEntity> trackedEntities = new ArrayList<>();
         TrackedEntity trackedEntity1 = new TrackedEntity("name1", "ID1");

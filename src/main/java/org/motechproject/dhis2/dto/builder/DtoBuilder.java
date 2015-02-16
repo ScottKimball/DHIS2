@@ -54,6 +54,9 @@ public class DtoBuilder {
             case EventSubjects.UPDATE_PROGRAM_STAGE:
                 return createStage(event);
 
+            case EventSubjects.CREATE_AND_ENROLL:
+                return createInstance(event);
+
             default:
                 break;
         }

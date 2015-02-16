@@ -32,7 +32,7 @@ public class ChannelRequestBuilder  {
     public ChannelRequest build() {
 
         ProgramActionBuilder programActionBuilder = new ProgramActionBuilder();
-        CreateActionBuilder createActionBuilder = new CreateActionBuilder();
+        CreateInstanceActionBuilder createInstanceActionBuilder = new CreateInstanceActionBuilder();
         StageActionBuilder stageActionBuilder = new StageActionBuilder();
 
         List<ActionEventRequest> actions = new ArrayList<>();
@@ -46,7 +46,7 @@ public class ChannelRequestBuilder  {
 
         List<TrackedEntityAttribute> attributes = dhis2SchemaService.getTrackedEntityAttributes();
         List<TrackedEntity> trackedEntities = dhis2SchemaService.getTrackedEntities();
-        actions.addAll(createActionBuilder.build(attributes, trackedEntities));
+        actions.addAll(createInstanceActionBuilder.build(attributes, trackedEntities));
 
         return new ChannelRequest(DisplayNames.DHIS2_DISPLAY_NAME, bundleContext.getBundle().getSymbolicName(),
                 bundleContext.getBundle().getVersion().toString(), null, new ArrayList<TriggerEventRequest>(), actions);

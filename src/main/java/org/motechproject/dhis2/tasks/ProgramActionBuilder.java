@@ -23,7 +23,7 @@ public class ProgramActionBuilder {
     private static final String UNICODE = "UNICODE";
     private int counter;
 
-    
+
 
     public List<ActionEventRequest> build(List<Program> programs) {
 

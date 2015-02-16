@@ -58,12 +58,13 @@ public class EventHandler {
     }
 
     @MotechListener(subjects = {EventSubjects.CREATE_AND_ENROLL })
-    public void handleRegisterAndEnroll(MotechEvent event) {
+    public void handleCreateAndEnroll(MotechEvent event) {
 
         Map<String, Object> params = new HashMap<>();
-        params.put(EventParams.PROGRAM, event.getParameters().get(EventParams.PROGRAM));
+        params.put(EventParams.PROGRAM, event.getParameters().remove(EventParams.PROGRAM));
+        params.put(EventParams.DATE, event.getParameters().remove(EventParams.DATE));
         params.put(EventParams.EXTERNAL_ID, event.getParameters().get(EventParams.EXTERNAL_ID));
-        params.put(EventParams.DATE, event.getParameters().get(EventParams.DATE));
+
 
         TrackedEntityInstanceDto instance = (TrackedEntityInstanceDto) dtoBuilder.createDto(event);
         instanceCreationService.send(instance, settingsService.getSettings().getTrackedEntityInstancesURI());
