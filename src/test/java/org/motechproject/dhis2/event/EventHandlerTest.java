@@ -14,6 +14,7 @@ import org.motechproject.dhis2.http.Request;
 import org.motechproject.dhis2.repository.TrackedEntityInstanceDataService;
 import org.motechproject.dhis2.service.DataTransferService;
 import org.motechproject.dhis2.service.InstanceCreationService;
+import org.motechproject.dhis2.service.SettingsService;
 import org.motechproject.dhis2.service.impl.InstanceCreationServiceImpl;
 import org.motechproject.event.MotechEvent;
 
@@ -60,6 +61,9 @@ public class EventHandlerTest {
     @Mock
     TrackedEntityInstanceDataService instanceDataService;
 
+    @Mock
+    SettingsService settingsService;
+
 
 
 
@@ -68,8 +72,8 @@ public class EventHandlerTest {
     public void setUp() {
 
 
-        instanceCreationService = new InstanceCreationServiceImpl(httpService,instanceDataService);
-        handler = new EventHandler(instanceCreationService,builder,dataTransferService);
+        instanceCreationService = new InstanceCreationServiceImpl(httpService,instanceDataService, settingsService);
+        handler = new EventHandler(instanceCreationService,builder,dataTransferService,settingsService);
 
         try {
             when(instanceDto.toJson()).thenReturn("toJson");
