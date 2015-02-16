@@ -8,6 +8,6 @@ import org.junit.runners.Suite;
  */
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({EventHandlerBundleIT.class})
+@Suite.SuiteClasses({EventHandlerBundleIT.class,SyncBundleIT.class})
 public class EventHandlerIntegrationTests {
 }
