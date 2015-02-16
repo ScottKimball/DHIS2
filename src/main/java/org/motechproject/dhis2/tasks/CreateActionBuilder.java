@@ -17,7 +17,7 @@ import java.util.TreeSet;
 /**
  * Created by scott on 1/15/15.
  */
-public class RegistrationTriggerBuilder {
+public class CreateActionBuilder {
 
     private static final String UNICODE = "UNICODE";
     private static final int ATTRIBUTE_COUNT = 3;
@@ -69,7 +69,7 @@ public class RegistrationTriggerBuilder {
             ActionEventRequestBuilder builder = new ActionEventRequestBuilder()
                     .setDisplayName(DisplayNames.CREATE_TRACKED_ENTITY_INSTANCE + " [" + entity.getName() + "]")
                     .setName(entity.getName())
-                    .setSubject(EventSubjects.REGISTER_ENTITY)
+                    .setSubject(EventSubjects.CREATE_ENTITY)
                     .setActionParameters(actionParameters);
 
             actionEventRequests.add(builder.createActionEventRequest());

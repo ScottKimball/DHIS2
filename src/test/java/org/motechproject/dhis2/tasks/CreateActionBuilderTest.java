@@ -22,12 +22,12 @@ import static org.junit.Assert.assertNull;
 /**
  * Created by scottkimball on 1/27/15.
  */
-public class RegistrationTriggerBuilderTest {
+public class CreateActionBuilderTest {
 
     @Test
     public void testBuildTrackedEntities() throws Exception{
 
-        RegistrationTriggerBuilder builder = new RegistrationTriggerBuilder();
+        CreateActionBuilder builder = new CreateActionBuilder();
 
         List<TrackedEntity> trackedEntities = new ArrayList<>();
         TrackedEntity trackedEntity1 = new TrackedEntity("name1", "ID1");
@@ -49,7 +49,7 @@ public class RegistrationTriggerBuilderTest {
         ActionEventRequest actionEventRequest = requests.get(0);
         assertEquals(actionEventRequest.getDisplayName(),DisplayNames.CREATE_TRACKED_ENTITY_INSTANCE +
                 " [" + trackedEntity1.getName() + "]");
-        assertEquals(actionEventRequest.getSubject(), EventSubjects.REGISTER_ENTITY);
+        assertEquals(actionEventRequest.getSubject(), EventSubjects.CREATE_ENTITY);
         assertEquals(actionEventRequest.getName(),trackedEntity1.getName());
 
         SortedSet<ActionParameterRequest> actionParameters = actionEventRequest.getActionParameters();

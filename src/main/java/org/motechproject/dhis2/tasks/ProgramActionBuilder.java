@@ -18,12 +18,12 @@ import java.util.TreeSet;
 /**
  * Created by scott on 1/15/15.
  */
-public class ProgramTriggerBuilder {
+public class ProgramActionBuilder {
 
     private static final String UNICODE = "UNICODE";
     private int counter;
 
-
+    
 
     public List<ActionEventRequest> build(List<Program> programs) {
 
@@ -72,6 +72,38 @@ public class ProgramTriggerBuilder {
                     .setDisplayName(DisplayNames.PROGRAM_ENROLLMENT + " [" + program.getName() + "]")
                     .setSubject(EventSubjects.ENROLL_IN_PROGRAM)
                     .setName(program.getName());
+
+
+            actionEventRequests.add(builder.createActionEventRequest());
+
+            /*Add corresponding create and enroll action*/
+
+            actionParameterBuilder = new ActionParameterRequestBuilder()
+                    .setDisplayName(program.getTrackedEntity().getName())
+                    .setType(UNICODE)
+                    .setHidden(true)
+                    .setKey(EventParams.ENTITY_TYPE)
+                    .setValue(program.getTrackedEntity().getUuid())
+                    .setOrder(counter++);
+
+            actionParameters.add(actionParameterBuilder.createActionParameterRequest());
+
+            actionParameterBuilder = new ActionParameterRequestBuilder()
+                    .setDisplayName(DisplayNames.ORG_UNIT)
+                    .setType(UNICODE)
+                    .setKey(EventParams.LOCATION)
+                    .setOrder(counter++)
+                    .setRequired(true);
+
+            actionParameters.add(actionParameterBuilder.createActionParameterRequest());
+
+
+            builder.setActionParameters(actionParameters)
+                    .setDisplayName(DisplayNames.CREATE_TRACKED_ENTITY_INSTANCE + " [" +
+                            program.getTrackedEntity().getName() + "]" + " and " + DisplayNames.PROGRAM_ENROLLMENT +
+                            " [" + program.getName() + "]")
+                    .setSubject(EventSubjects.CREATE_AND_ENROLL)
+                    .setName(program.getTrackedEntity().getName()  + ", " + program.getName());
 
 
             actionEventRequests.add(builder.createActionEventRequest());

@@ -10,7 +10,6 @@ import org.motechproject.dhis2.dto.impl.EnrollmentDto;
 import org.motechproject.dhis2.dto.impl.StageDto;
 import org.motechproject.dhis2.dto.impl.TrackedEntityInstanceDto;
 import org.motechproject.dhis2.http.HttpService;
-import org.motechproject.dhis2.http.Request;
 import org.motechproject.dhis2.repository.TrackedEntityInstanceDataService;
 import org.motechproject.dhis2.service.DataTransferService;
 import org.motechproject.dhis2.service.InstanceCreationService;
@@ -19,8 +18,6 @@ import org.motechproject.dhis2.service.impl.InstanceCreationServiceImpl;
 import org.motechproject.event.MotechEvent;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -89,7 +86,7 @@ public class EventHandlerTest {
 
     @Test
     public void testReceiveInstanceCreationEvent() throws Exception {
-        instanceEvent = new MotechEvent(EventSubjects.REGISTER_ENTITY);
+        instanceEvent = new MotechEvent(EventSubjects.CREATE_ENTITY);
 
     }
 }

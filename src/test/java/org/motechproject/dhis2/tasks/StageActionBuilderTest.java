@@ -20,14 +20,14 @@ import static org.junit.Assert.assertNull;
 /**
  * Created by scottkimball on 1/27/15.
  */
-public class StageTriggerBuilderTest {
+public class StageActionBuilderTest {
 
-    private StageTriggerBuilder stageTriggerBuilder;
+    private StageActionBuilder stageActionBuilder;
 
     @Test
     public void testBuildStagesWithDataElements() throws Exception{
 
-        stageTriggerBuilder = new StageTriggerBuilder();
+        stageActionBuilder = new StageActionBuilder();
         List<Stage> stages = new ArrayList<>();
 
         DataElement dataElement1 = new DataElement("dataElementName1","dataElementID1");
@@ -56,7 +56,7 @@ public class StageTriggerBuilderTest {
         stages.add(stage1);
         stages.add(stage2);
 
-        List<ActionEventRequest> actionEventRequests = stageTriggerBuilder.build(stages);
+        List<ActionEventRequest> actionEventRequests = stageActionBuilder.build(stages);
 
         assertNotNull(actionEventRequests);
         assertEquals(actionEventRequests.size(),2);
@@ -103,7 +103,7 @@ public class StageTriggerBuilderTest {
     @Test
     public void testBuildStagesWithoutRegistration () throws Exception {
 
-        stageTriggerBuilder = new StageTriggerBuilder();
+        stageActionBuilder = new StageActionBuilder();
         List<Stage> stages = new ArrayList<>();
 
         DataElement dataElement1 = new DataElement("dataElementName1","dataElementID1");
@@ -123,7 +123,7 @@ public class StageTriggerBuilderTest {
 
         stages.add(stage2);
 
-        List<ActionEventRequest> actionEventRequests = stageTriggerBuilder.build(stages);
+        List<ActionEventRequest> actionEventRequests = stageActionBuilder.build(stages);
 
         assertNotNull(actionEventRequests);
         assertEquals(actionEventRequests.size(),1);

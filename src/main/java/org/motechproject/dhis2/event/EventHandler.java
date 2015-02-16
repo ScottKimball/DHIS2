@@ -13,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Component
 public class EventHandler {
 
@@ -34,7 +37,7 @@ public class EventHandler {
     }
 
 
-    @MotechListener(subjects = {EventSubjects.REGISTER_ENTITY })
+    @MotechListener(subjects = {EventSubjects.CREATE_ENTITY })
     public void handleRegistration(MotechEvent event) {
         TrackedEntityInstanceDto instance = (TrackedEntityInstanceDto) dtoBuilder.createDto(event);
         instanceCreationService.send(instance, settingsService.getSettings().getTrackedEntityInstancesURI());
@@ -52,6 +55,24 @@ public class EventHandler {
     public void handleStageUpdate(MotechEvent event) {
         StageDto stageDto = (StageDto) dtoBuilder.createDto(event);
         dataTransferService.send(stageDto, settingsService.getSettings().getEventsURI());
+    }
+
+    @MotechListener(subjects = {EventSubjects.CREATE_AND_ENROLL })
+    public void handleRegisterAndEnroll(MotechEvent event) {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put(EventParams.PROGRAM, event.getParameters().get(EventParams.PROGRAM));
+        params.put(EventParams.EXTERNAL_ID, event.getParameters().get(EventParams.EXTERNAL_ID));
+        params.put(EventParams.DATE, event.getParameters().get(EventParams.DATE));
+
+        TrackedEntityInstanceDto instance = (TrackedEntityInstanceDto) dtoBuilder.createDto(event);
+        instanceCreationService.send(instance, settingsService.getSettings().getTrackedEntityInstancesURI());
+
+        MotechEvent newEvent = new MotechEvent(EventSubjects.ENROLL_IN_PROGRAM, params);
+        EnrollmentDto enrollmentDto = (EnrollmentDto) dtoBuilder.createDto(newEvent);
+        dataTransferService.send(enrollmentDto, settingsService.getSettings().getEnrollmentsURI());
+
+
     }
 
 

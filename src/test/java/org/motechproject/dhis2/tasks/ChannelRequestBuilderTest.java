@@ -12,7 +12,6 @@ import org.motechproject.dhis2.domain.TrackedEntity;
 import org.motechproject.dhis2.domain.TrackedEntityAttribute;
 import org.motechproject.dhis2.event.EventSubjects;
 import org.motechproject.dhis2.service.Dhis2SchemaService;
-import org.motechproject.dhis2.service.impl.Dhis2SchemaServiceImpl;
 import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.ChannelRequest;
 import org.osgi.framework.Bundle;
@@ -88,7 +87,7 @@ public class ChannelRequestBuilderTest {
 
         assertNotNull(request);
         assertEquals(request.getDisplayName(),DisplayNames.DHIS2_DISPLAY_NAME);
-        assertEquals(request.getActionTaskEvents().size(),6);
+        assertEquals(request.getActionTaskEvents().size(),8);
 
     }
 
@@ -104,9 +103,21 @@ public class ChannelRequestBuilderTest {
         assertNotNull(actionEventRequest.getActionParameters());
 
         actionEventRequest = itr.next();
+        assertEquals(actionEventRequest.getName(), "trackedEntityName, Program1");
+        assertEquals(actionEventRequest.getSubject(), EventSubjects.CREATE_AND_ENROLL);
+        assertNotNull(actionEventRequest.getActionParameters());
+
+
+        actionEventRequest = itr.next();
         assertEquals(actionEventRequest.getName(),"Program2");
         assertEquals(actionEventRequest.getSubject(), EventSubjects.ENROLL_IN_PROGRAM);
         assertNotNull(actionEventRequest.getActionParameters());
+
+        actionEventRequest = itr.next();
+        assertEquals(actionEventRequest.getName(), "trackedEntityName, Program2");
+        assertEquals(actionEventRequest.getSubject(), EventSubjects.CREATE_AND_ENROLL);
+        assertNotNull(actionEventRequest.getActionParameters());
+
 
         actionEventRequest = itr.next();
         assertEquals(actionEventRequest.getName(),"stage1");
@@ -121,12 +132,12 @@ public class ChannelRequestBuilderTest {
 
         actionEventRequest = itr.next();
         assertEquals(actionEventRequest.getName(),"trackedEntity1");
-        assertEquals(actionEventRequest.getSubject(), EventSubjects.REGISTER_ENTITY);
+        assertEquals(actionEventRequest.getSubject(), EventSubjects.CREATE_ENTITY);
         assertNotNull(actionEventRequest.getActionParameters());
 
         actionEventRequest = itr.next();
         assertEquals(actionEventRequest.getName(),"trackedEntity2");
-        assertEquals(actionEventRequest.getSubject(), EventSubjects.REGISTER_ENTITY);
+        assertEquals(actionEventRequest.getSubject(), EventSubjects.CREATE_ENTITY);
         assertNotNull(actionEventRequest.getActionParameters());
 
 

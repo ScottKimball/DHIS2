@@ -17,7 +17,7 @@ import java.util.TreeSet;
 /**
  * Created by scott on 1/15/15.
  */
-public class StageTriggerBuilder  {
+public class StageActionBuilder {
 
     private static final String UNICODE = "UNICODE";
     private int counter;

@@ -31,21 +31,22 @@ public class ChannelRequestBuilder  {
 
     public ChannelRequest build() {
 
-        ProgramTriggerBuilder programTriggerBuilder = new ProgramTriggerBuilder();
-        RegistrationTriggerBuilder registrationTriggerBuilder = new RegistrationTriggerBuilder();
-        StageTriggerBuilder stageTriggerBuilder = new StageTriggerBuilder();
+        ProgramActionBuilder programActionBuilder = new ProgramActionBuilder();
+        CreateActionBuilder createActionBuilder = new CreateActionBuilder();
+        StageActionBuilder stageActionBuilder = new StageActionBuilder();
 
         List<ActionEventRequest> actions = new ArrayList<>();
 
         List<Program> programs = dhis2SchemaService.getPrograms();
-        actions.addAll(programTriggerBuilder.build(programs));
+        actions.addAll(programActionBuilder.build(programs));
+
 
         List<Stage> stages = dhis2SchemaService.getStages();
-        actions.addAll(stageTriggerBuilder.build(stages));
+        actions.addAll(stageActionBuilder.build(stages));
 
         List<TrackedEntityAttribute> attributes = dhis2SchemaService.getTrackedEntityAttributes();
         List<TrackedEntity> trackedEntities = dhis2SchemaService.getTrackedEntities();
-        actions.addAll(registrationTriggerBuilder.build(attributes, trackedEntities));
+        actions.addAll(createActionBuilder.build(attributes, trackedEntities));
 
         return new ChannelRequest(DisplayNames.DHIS2_DISPLAY_NAME, bundleContext.getBundle().getSymbolicName(),
                 bundleContext.getBundle().getVersion().toString(), null, new ArrayList<TriggerEventRequest>(), actions);

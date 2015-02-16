@@ -89,7 +89,7 @@ public class DtoBuilderTest {
         params.put(testAttributeDto2.getDhis2Uuid(), testAttributeDto2.getValue());
         params.put("nullValue", null);
 
-        MotechEvent event = new MotechEvent(EventSubjects.REGISTER_ENTITY,params);
+        MotechEvent event = new MotechEvent(EventSubjects.CREATE_ENTITY,params);
 
         TrackedEntityInstanceDto instance = (TrackedEntityInstanceDto) builder.createDto(event);
 
