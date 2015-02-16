@@ -19,7 +19,6 @@ public class TasksServiceImpl implements TasksService {
     private BundleContext bundleContext;
     private Dhis2SchemaService schemaService;
     private ChannelService channelService;
-    private ChannelRequestBuilder channelRequestBuilder;
 
     @Autowired
     public TasksServiceImpl(BundleContext bundleContext, Dhis2SchemaService schemaService, ChannelService channelService) {
@@ -30,7 +29,7 @@ public class TasksServiceImpl implements TasksService {
 
     @Override
     public void updateChannel() {
-        channelRequestBuilder = new ChannelRequestBuilder(schemaService, bundleContext);
+        ChannelRequestBuilder channelRequestBuilder = new ChannelRequestBuilder(schemaService, bundleContext);
         channelService.registerChannel(channelRequestBuilder.build());
     }
 
