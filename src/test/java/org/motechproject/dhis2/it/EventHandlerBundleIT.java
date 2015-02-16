@@ -22,6 +22,7 @@ import org.motechproject.dhis2.service.InstanceCreationService;
 import org.motechproject.dhis2.service.SettingsService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventListener;
+import org.motechproject.event.listener.EventListenerRegistryService;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -74,13 +75,9 @@ public class EventHandlerBundleIT extends BasePaxIT {
     EventRelay eventRelay;
 
 
-
     @Inject
     @Qualifier("dhis2SettingsService")
     SettingsService settingsService;
-
-
-
 
 
     @Before
@@ -111,11 +108,10 @@ public class EventHandlerBundleIT extends BasePaxIT {
         params.put(EventParams.LOCATION, ORGUNIT_NAME);
         params.put(testAttributeDto1.getDhis2Uuid(), testAttributeDto1.getValue());
         params.put(testAttributeDto2.getDhis2Uuid(), testAttributeDto2.getValue());
-        params.put("nullValue", null);
 
         MotechEvent event = new MotechEvent(EventSubjects.REGISTER_ENTITY,params);
         eventRelay.sendEventMessage(event);
-        assertNotNull(null);
+
 
 
 
