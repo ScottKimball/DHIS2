@@ -11,4 +11,7 @@ import org.motechproject.mds.service.MotechDataService;
 public interface OrgUnitDataService extends MotechDataService<OrgUnit> {
     @Lookup
     OrgUnit findByName(@LookupField(name = "name") String name);
+
+    @Lookup
+    OrgUnit findByUuid(@LookupField(name = "uuid") String uuid);
 }

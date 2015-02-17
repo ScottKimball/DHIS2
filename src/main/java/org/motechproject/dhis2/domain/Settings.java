@@ -17,6 +17,7 @@ public class Settings {
     private static final String STAGES_PATH = "/programStages";
     private static final String TRACKED_ENTITY_PATH = "/trackedEntities";
     private static final String DATA_ELEMENTS_PATH = "/dataElements";
+    private static final String METADATA_TEMPLATE = "/metaData?assumeTrue=false&%s=true";
 
     private String serverURI;
     private String username;
@@ -52,6 +53,18 @@ public class Settings {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getResourceURI(String resource) {
+        return serverURI + API_ENDPOINT + "/" + resource;
+    }
+
+    public String getResourcesURI(String resource) {
+        return serverURI + API_ENDPOINT + String.format(METADATA_TEMPLATE, resource);
+    }
+
+    public String getMetaDataURI(String resource) {
+        return serverURI + API_ENDPOINT + String.format(METADATA_TEMPLATE, resource);
     }
 
     public String getProgramURI() {
