@@ -1,6 +1,7 @@
 package org.motechproject.dhis2.it;
 
 import com.google.inject.Inject;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
@@ -16,6 +17,11 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
 public class SyncBundleIT {
+
+    @Test
+    public void emptyTest () throws Exception {
+
+    }
 
 
 }
