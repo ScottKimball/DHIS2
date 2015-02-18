@@ -84,7 +84,7 @@ public class DtoBuilder {
         Map<String, Object> params = event.getParameters();
 
         String registationString = (String) params.remove(EventParams.REGISTRATION);
-        boolean registration = registationString.contains("true") ? true : false;
+        boolean registration = registationString.contains("true");
 
         TrackedEntityInstanceMapper instanceMapper = trackedEntityInstanceDataService.
                 findByExternalName((String) params.remove(EventParams.EXTERNAL_ID));

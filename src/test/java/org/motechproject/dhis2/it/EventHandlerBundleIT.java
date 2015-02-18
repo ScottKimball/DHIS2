@@ -7,12 +7,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.dhis2.domain.OrgUnit;
 import org.motechproject.dhis2.domain.Settings;
+import org.motechproject.dhis2.domain.TrackedEntityAttribute;
+import org.motechproject.dhis2.domain.TrackedEntityInstanceMapper;
 import org.motechproject.dhis2.dto.builder.DtoBuilder;
 import org.motechproject.dhis2.dto.impl.AttributeDto;
 import org.motechproject.dhis2.event.EventHandler;
 import org.motechproject.dhis2.event.EventParams;
 import org.motechproject.dhis2.event.EventSubjects;
 import org.motechproject.dhis2.repository.OrgUnitDataService;
+import org.motechproject.dhis2.repository.TrackedEntityAttributeDataService;
 import org.motechproject.dhis2.repository.TrackedEntityInstanceDataService;
 import org.motechproject.dhis2.service.DataTransferService;
 import org.motechproject.dhis2.service.InstanceCreationService;
@@ -37,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 
@@ -62,9 +66,6 @@ public class EventHandlerBundleIT extends BasePaxIT {
     private static final String ATTRIBUTE_UUID_2 = "attributeUuid2";
     private static final String ATTRIUBTE_VALUE_2 = "attributeValue2";
 
-
-
-
     @Inject
     private OrgUnitDataService orgUnitDataService;
 
@@ -80,22 +81,10 @@ public class EventHandlerBundleIT extends BasePaxIT {
 
 
 
-
-
     @Before
     public void setup() {
-
-
-
-        Settings settings = new Settings("http://fakeurl.fake","name","password");
-        settingsService.updateSettings(settings);
         clearDatabase();
         populateDatabase();
-
-
-
-
-
     }
 
     @After
@@ -111,6 +100,13 @@ public class EventHandlerBundleIT extends BasePaxIT {
                 ":0,\"deleted\":0},\"reference\":\"IbqmvQFz0zW\"}{\"status\":\"SUCCESS\",\"importCount\":{\"imported\"" +
                 ":1,\"updated\":0,\"ignored\":0,\"deleted\":0},\"reference\":\"GmHEBGJtymq\"}";
 
+
+        SimpleHttpServer simpleServer = SimpleHttpServer.getInstance();
+        String URL = simpleServer.start("api/trackedEntityInstances",201,responseBody);
+
+        Settings settings = new Settings(URL,"name","password");
+        settingsService.updateSettings(settings);
+
         AttributeDto testAttributeDto1 = new AttributeDto(null, ATTRIBUTE_UUID_1 , ATTRIUBTE_VALUE_1);
         AttributeDto testAttributeDto2 = new AttributeDto(null,ATTRIBUTE_UUID_2, ATTRIUBTE_VALUE_2);
 
@@ -124,19 +120,21 @@ public class EventHandlerBundleIT extends BasePaxIT {
 
         MotechEvent event = new MotechEvent(EventSubjects.REGISTER_ENTITY,params);
 
-
-        SimpleHttpServer simpleServer = SimpleHttpServer.getInstance();
-        simpleServer.start(settingsService.getSettings().getTrackedEntityInstancesURI(),201,responseBody);
-
         relay.sendEventMessage(event);
-        assertNotNull(trackedEntityInstanceDataService.findByExternalName(INSTANCE_EXT_ID));
 
+        /*Need to wait for event to be processed*/
+        Thread.sleep(1000);
+
+        TrackedEntityInstanceMapper mapper = trackedEntityInstanceDataService.findByExternalName(INSTANCE_EXT_ID);
+        assertNotNull(mapper);
+        assertEquals(mapper.getExternalName(),INSTANCE_EXT_ID);
+        assertNotNull(mapper.getDhis2Uuid());
+        assertEquals(mapper.getDhis2Uuid(),"IbqmvQFz0zW");
 
     }
 
     private void populateDatabase () {
         orgUnitDataService.create(new OrgUnit(ORGUNIT_NAME,ORGUNIT_ID));
-
 
     }
 
@@ -145,6 +143,5 @@ public class EventHandlerBundleIT extends BasePaxIT {
         trackedEntityInstanceDataService.deleteAll();
 
     }
-
 
 }
