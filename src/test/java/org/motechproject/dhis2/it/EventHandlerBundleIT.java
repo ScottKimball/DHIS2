@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.dhis2.domain.OrgUnit;
 import org.motechproject.dhis2.domain.Settings;
-import org.motechproject.dhis2.domain.TrackedEntityInstanceMapper;
+
 import org.motechproject.dhis2.dto.impl.AttributeDto;
 import org.motechproject.dhis2.event.EventParams;
 import org.motechproject.dhis2.event.EventSubjects;
@@ -16,19 +16,26 @@ import org.motechproject.dhis2.repository.TrackedEntityInstanceDataService;
 import org.motechproject.dhis2.service.SettingsService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
+import org.motechproject.event.listener.impl.EventListenerRegistry;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
+import org.motechproject.testing.osgi.http.SimpleHttpClient;
+import org.motechproject.testing.osgi.http.SimpleHttpServer;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+
 import javax.inject.Inject;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.junit.Assert.assertNotNull;
+
 
 /**
  * Created by scott on 1/22/15.
@@ -56,28 +63,35 @@ public class EventHandlerBundleIT extends BasePaxIT {
 
 
     @Inject
-    OrgUnitDataService orgUnitDataService;
+    private OrgUnitDataService orgUnitDataService;
 
     @Inject
-    TrackedEntityInstanceDataService trackedEntityInstanceDataService;
-
+    private TrackedEntityInstanceDataService trackedEntityInstanceDataService;
 
     @Inject
-    EventRelay eventRelay;
-
+    EventRelay relay;
 
     @Inject
     @Qualifier("dhis2SettingsService")
-    SettingsService settingsService;
+    private SettingsService settingsService;
+
+
+
 
 
     @Before
     public void setup() {
 
+
+
         Settings settings = new Settings("http://fakeurl.fake","name","password");
         settingsService.updateSettings(settings);
         clearDatabase();
         populateDatabase();
+
+
+
+
 
     }
 
@@ -90,8 +104,13 @@ public class EventHandlerBundleIT extends BasePaxIT {
     @Test
     public void testHandleRegistration() throws Exception{
 
+        final String responseBody = "{\"status\":\"SUCCESS\",\"importCount\":{\"imported\":1,\"updated\":0,\"ignored\"" +
+                ":0,\"deleted\":0},\"reference\":\"IbqmvQFz0zW\"}{\"status\":\"SUCCESS\",\"importCount\":{\"imported\"" +
+                ":1,\"updated\":0,\"ignored\":0,\"deleted\":0},\"reference\":\"GmHEBGJtymq\"}";
+
         AttributeDto testAttributeDto1 = new AttributeDto(null, ATTRIBUTE_UUID_1 , ATTRIUBTE_VALUE_1);
         AttributeDto testAttributeDto2 = new AttributeDto(null,ATTRIBUTE_UUID_2, ATTRIUBTE_VALUE_2);
+
 
         Map<String, Object> params = new HashMap<>();
         params.put(EventParams.ENTITY_TYPE, ENTITY_TYPE_ID);
@@ -100,19 +119,24 @@ public class EventHandlerBundleIT extends BasePaxIT {
         params.put(testAttributeDto1.getDhis2Uuid(), testAttributeDto1.getValue());
         params.put(testAttributeDto2.getDhis2Uuid(), testAttributeDto2.getValue());
 
+
         MotechEvent event = new MotechEvent(EventSubjects.CREATE_ENTITY,params);
-        eventRelay.sendEventMessage(event);
+        relay.sendEventMessage(event);
 
 
 
+        SimpleHttpServer simpleServer = SimpleHttpServer.getInstance();
+        simpleServer.start(settingsService.getSettings().getTrackedEntityInstancesURI(),201,responseBody);
 
+        relay.sendEventMessage(event);
+        assertNotNull(trackedEntityInstanceDataService.findByExternalName(INSTANCE_EXT_ID));
 
 
     }
 
     private void populateDatabase () {
         orgUnitDataService.create(new OrgUnit(ORGUNIT_NAME,ORGUNIT_ID));
-        trackedEntityInstanceDataService.create(new TrackedEntityInstanceMapper(INSTANCE_EXT_ID,INSTANCE_DHIS2_ID));
+
 
     }
 
