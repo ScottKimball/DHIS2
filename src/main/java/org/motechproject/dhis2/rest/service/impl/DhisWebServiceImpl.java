@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service("dhisWebService")
@@ -40,7 +39,7 @@ public class DhisWebServiceImpl implements DhisWebService {
         try {
             resource = new ObjectMapper().readValue(content, clazz);
         } catch (Exception e) {
-            throw new DhisWebException("Error parsing resource", e);
+            throw new DhisWebException("Error parsing resource at uri: " + uri, e);
         }
 
         return resource;
@@ -57,7 +56,7 @@ public class DhisWebServiceImpl implements DhisWebService {
         try {
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.UNWRAP_ROOT_VALUE, true);
-            JavaType type = mapper.getTypeFactory().constructParametricType(ArrayList.class, clazz);
+            JavaType type = mapper.getTypeFactory().constructParametricType(List.class, clazz);
             resources = mapper.reader(type).withRootName(resourceName).readValue(content);
         } catch (Exception e) {
             throw new DhisWebException("Error parsing resources", e);

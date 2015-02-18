@@ -1,68 +1,15 @@
 package org.motechproject.dhis2.rest.domain;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.Generated;
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
-@JsonPropertyOrder({
-        "id",
-        "created",
-        "name",
-        "href",
-        "lastUpdated",
-        "type",
-        "kind",
-        "version",
-        "dateOfEnrollmentDescription",
-        "description",
-        "onlyEnrollOnce",
-        "externalAccess",
-        "displayIncidentDate",
-        "dateOfIncidentDescription",
-        "registration",
-        "selectEnrollmentDatesInFuture",
-        "dataEntryMethod",
-        "singleEvent",
-        "relationshipText",
-        "ignoreOverdueEvents",
-        "relationshipFromA",
-        "displayName",
-        "selectIncidentDatesInFuture",
-        "trackedEntity",
-        "access",
-        "validationCriterias",
-        "programStages",
-        "instanceReminders",
-        "organisationUnits",
-        "programTrackedEntityAttributes",
-        "userRoles",
-        "userGroupAccesses"
-})
-public class ProgramDto {
+public class ProgramDto extends BasicLinkedEntity {
 
-    @JsonProperty("id")
-    private String id;
-    @JsonProperty("created")
-    private String created;
-    @JsonProperty("name")
-    private String name;
-    @JsonProperty("href")
-    private String href;
-    @JsonProperty("lastUpdated")
-    private String lastUpdated;
     @JsonProperty("type")
     private Integer type;
     @JsonProperty("kind")
@@ -117,109 +64,14 @@ public class ProgramDto {
     private List<UserRoleDto> userRoleDtos = new ArrayList<UserRoleDto>();
     @JsonProperty("userGroupAccesses")
     private List<Object> userGroupAccesses = new ArrayList<Object>();
-    @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-
-    /**
-     *
-     * @return
-     *     The id
-     */
-    @JsonProperty("id")
-    public String getId() {
-        return id;
-    }
-
-    /**
-     *
-     * @param id
-     *     The id
-     */
-    @JsonProperty("id")
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    /**
-     *
-     * @return
-     *     The created
-     */
-    @JsonProperty("created")
-    public String getCreated() {
-        return created;
-    }
-
-    /**
-     *
-     * @param created
-     *     The created
-     */
-    @JsonProperty("created")
-    public void setCreated(String created) {
-        this.created = created;
-    }
-
-    /**
-     *
-     * @return
-     *     The name
-     */
-    @JsonProperty("name")
-    public String getName() {
-        return name;
-    }
-
-    /**
-     *
-     * @param name
-     *     The name
-     */
-    @JsonProperty("name")
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     *
-     * @return
-     *     The href
-     */
-    @JsonProperty("href")
-    public String getHref() {
-        return href;
-    }
-
-    /**
-     *
-     * @param href
-     *     The href
-     */
-    @JsonProperty("href")
-    public void setHref(String href) {
-        this.href = href;
-    }
-
-    /**
-     *
-     * @return
-     *     The lastUpdated
-     */
-    @JsonProperty("lastUpdated")
-    public String getLastUpdated() {
-        return lastUpdated;
-    }
-
-    /**
-     *
-     * @param lastUpdated
-     *     The lastUpdated
-     */
-    @JsonProperty("lastUpdated")
-    public void setLastUpdated(String lastUpdated) {
-        this.lastUpdated = lastUpdated;
-    }
-
+    @JsonProperty("relatedProgram")
+    private ProgramDto relatedProgram;
+    @JsonProperty("relationshipType")
+    private Object relationshipType;
+    @JsonProperty("publicAccess")
+    private String publicAccess;
+    @JsonProperty("user")
+    private UserDto user;
     /**
      *
      * @return
@@ -760,36 +612,35 @@ public class ProgramDto {
         this.userGroupAccesses = userGroupAccesses;
     }
 
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+    public ProgramDto getRelatedProgram() {
+        return relatedProgram;
     }
 
-    @JsonAnyGetter
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+    public void setRelatedProgram(ProgramDto relatedProgram) {
+        this.relatedProgram = relatedProgram;
     }
 
-    @JsonAnySetter
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
+    public Object getRelationshipType() {
+        return relationshipType;
     }
 
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder().append(id).append(created).append(name).append(href).append(lastUpdated).append(type).append(kind).append(version).append(dateOfEnrollmentDescription).append(description).append(onlyEnrollOnce).append(externalAccess).append(displayIncidentDate).append(dateOfIncidentDescription).append(registration).append(selectEnrollmentDatesInFuture).append(dataEntryMethod).append(singleEvent).append(relationshipText).append(ignoreOverdueEvents).append(relationshipFromA).append(displayName).append(selectIncidentDatesInFuture).append(trackedEntityDto).append(accessDto).append(validationCriterias).append(programStageDtos).append(instanceReminders).append(organisationUnitDtos).append(programTrackedEntityAttributeDtos).append(userRoleDtos).append(userGroupAccesses).append(additionalProperties).toHashCode();
+    public void setRelationshipType(Object relationshipType) {
+        this.relationshipType = relationshipType;
     }
 
-    @Override
-    public boolean equals(Object other) {
-        if (other == this) {
-            return true;
-        }
-        if ((other instanceof ProgramDto) == false) {
-            return false;
-        }
-        ProgramDto rhs = ((ProgramDto) other);
-        return new EqualsBuilder().append(id, rhs.id).append(created, rhs.created).append(name, rhs.name).append(href, rhs.href).append(lastUpdated, rhs.lastUpdated).append(type, rhs.type).append(kind, rhs.kind).append(version, rhs.version).append(dateOfEnrollmentDescription, rhs.dateOfEnrollmentDescription).append(description, rhs.description).append(onlyEnrollOnce, rhs.onlyEnrollOnce).append(externalAccess, rhs.externalAccess).append(displayIncidentDate, rhs.displayIncidentDate).append(dateOfIncidentDescription, rhs.dateOfIncidentDescription).append(registration, rhs.registration).append(selectEnrollmentDatesInFuture, rhs.selectEnrollmentDatesInFuture).append(dataEntryMethod, rhs.dataEntryMethod).append(singleEvent, rhs.singleEvent).append(relationshipText, rhs.relationshipText).append(ignoreOverdueEvents, rhs.ignoreOverdueEvents).append(relationshipFromA, rhs.relationshipFromA).append(displayName, rhs.displayName).append(selectIncidentDatesInFuture, rhs.selectIncidentDatesInFuture).append(trackedEntityDto, rhs.trackedEntityDto).append(accessDto, rhs.accessDto).append(validationCriterias, rhs.validationCriterias).append(programStageDtos, rhs.programStageDtos).append(instanceReminders, rhs.instanceReminders).append(organisationUnitDtos, rhs.organisationUnitDtos).append(programTrackedEntityAttributeDtos, rhs.programTrackedEntityAttributeDtos).append(userRoleDtos, rhs.userRoleDtos).append(userGroupAccesses, rhs.userGroupAccesses).append(additionalProperties, rhs.additionalProperties).isEquals();
+    public String getPublicAccess() {
+        return publicAccess;
     }
 
+    public void setPublicAccess(String publicAccess) {
+        this.publicAccess = publicAccess;
+    }
+
+    public UserDto getUser() {
+        return user;
+    }
+
+    public void setUser(UserDto user) {
+        this.user = user;
+    }
 }

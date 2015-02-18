@@ -1,64 +1,15 @@
 package org.motechproject.dhis2.rest.domain;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.Generated;
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
-@JsonPropertyOrder({
-        "id",
-        "created",
-        "name",
-        "href",
-        "lastUpdated",
-        "code",
-        "shortName",
-        "zeroIsSignificant",
-        "type",
-        "externalAccess",
-        "publicAccess",
-        "aggregationOperator",
-        "url",
-        "numberType",
-        "domainType",
-        "dimension",
-        "displayName",
-        "access",
-        "categoryCombo",
-        "user",
-        "aggregationLevels",
-        "dataElementGroups",
-        "dataSets",
-        "attributeValues",
-        "items",
-        "userGroupAccesses"
-})
-public class DataElementDto {
+public class DataElementDto extends BasicLinkedEntity {
 
-    @JsonProperty("id")
-    private String id;
-    @JsonProperty("created")
-    private String created;
-    @JsonProperty("name")
-    private String name;
-    @JsonProperty("href")
-    private String href;
-    @JsonProperty("lastUpdated")
-    private String lastUpdated;
-    @JsonProperty("code")
-    private String code;
     @JsonProperty("shortName")
     private String shortName;
     @JsonProperty("zeroIsSignificant")
@@ -67,6 +18,8 @@ public class DataElementDto {
     private String type;
     @JsonProperty("externalAccess")
     private Boolean externalAccess;
+    @JsonProperty("textType")
+    private String textType;
     @JsonProperty("publicAccess")
     private String publicAccess;
     @JsonProperty("aggregationOperator")
@@ -79,8 +32,12 @@ public class DataElementDto {
     private String domainType;
     @JsonProperty("dimension")
     private String dimension;
+    @JsonProperty("dimensionType")
+    private String dimensionType;
     @JsonProperty("displayName")
     private String displayName;
+    @JsonProperty("formName")
+    private String formName;
     @JsonProperty("access")
     private AccessDto accessDto;
     @JsonProperty("categoryCombo")
@@ -99,128 +56,13 @@ public class DataElementDto {
     private List<Object> items = new ArrayList<Object>();
     @JsonProperty("userGroupAccesses")
     private List<Object> userGroupAccesses = new ArrayList<Object>();
-    @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    @JsonProperty("optionSet")
+    private OptionSetDto optionSet;
+    @JsonProperty("commentOptionSet")
+    private OptionSetDto commentOptionSet;
+    @JsonProperty("description")
+    private String description;
 
-    /**
-     *
-     * @return
-     *     The id
-     */
-    @JsonProperty("id")
-    public String getId() {
-        return id;
-    }
-
-    /**
-     *
-     * @param id
-     *     The id
-     */
-    @JsonProperty("id")
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    /**
-     *
-     * @return
-     *     The created
-     */
-    @JsonProperty("created")
-    public String getCreated() {
-        return created;
-    }
-
-    /**
-     *
-     * @param created
-     *     The created
-     */
-    @JsonProperty("created")
-    public void setCreated(String created) {
-        this.created = created;
-    }
-
-    /**
-     *
-     * @return
-     *     The name
-     */
-    @JsonProperty("name")
-    public String getName() {
-        return name;
-    }
-
-    /**
-     *
-     * @param name
-     *     The name
-     */
-    @JsonProperty("name")
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     *
-     * @return
-     *     The href
-     */
-    @JsonProperty("href")
-    public String getHref() {
-        return href;
-    }
-
-    /**
-     *
-     * @param href
-     *     The href
-     */
-    @JsonProperty("href")
-    public void setHref(String href) {
-        this.href = href;
-    }
-
-    /**
-     *
-     * @return
-     *     The lastUpdated
-     */
-    @JsonProperty("lastUpdated")
-    public String getLastUpdated() {
-        return lastUpdated;
-    }
-
-    /**
-     *
-     * @param lastUpdated
-     *     The lastUpdated
-     */
-    @JsonProperty("lastUpdated")
-    public void setLastUpdated(String lastUpdated) {
-        this.lastUpdated = lastUpdated;
-    }
-
-    /**
-     *
-     * @return
-     *     The code
-     */
-    @JsonProperty("code")
-    public String getCode() {
-        return code;
-    }
-
-    /**
-     *
-     * @param code
-     *     The code
-     */
-    @JsonProperty("code")
-    public void setCode(String code) {
-        this.code = code;
-    }
 
     /**
      *
@@ -300,6 +142,16 @@ public class DataElementDto {
     @JsonProperty("externalAccess")
     public void setExternalAccess(Boolean externalAccess) {
         this.externalAccess = externalAccess;
+    }
+
+    @JsonProperty("textType")
+    public String getTextType() {
+        return textType;
+    }
+
+    @JsonProperty("textType")
+    public void setTextType(String textType) {
+        this.textType = textType;
     }
 
     /**
@@ -440,6 +292,16 @@ public class DataElementDto {
     @JsonProperty("displayName")
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
+    }
+
+    @JsonProperty("formName")
+    public String getFormName() {
+        return formName;
+    }
+
+    @JsonProperty("formName")
+    public void setFormName(String formName) {
+        this.formName = formName;
     }
 
     /**
@@ -622,36 +484,41 @@ public class DataElementDto {
         this.userGroupAccesses = userGroupAccesses;
     }
 
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+    @JsonProperty("dimensionType")
+    public String getDimensionType() {
+        return dimensionType;
     }
 
-    @JsonAnyGetter
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+    @JsonProperty("dimensionType")
+    public void setDimensionType(String dimensionType) {
+        this.dimensionType = dimensionType;
     }
 
-    @JsonAnySetter
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
+    @JsonProperty("optionSet")
+    public OptionSetDto getOptionSet() {
+        return optionSet;
     }
 
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder().append(id).append(created).append(name).append(href).append(lastUpdated).append(code).append(shortName).append(zeroIsSignificant).append(type).append(externalAccess).append(publicAccess).append(aggregationOperator).append(url).append(numberType).append(domainType).append(dimension).append(displayName).append(accessDto).append(categoryComboDto).append(userDto).append(aggregationLevels).append(dataElementGroupDtos).append(dataSetDtos).append(attributeValues).append(items).append(userGroupAccesses).append(additionalProperties).toHashCode();
+    @JsonProperty("optionSet")
+    public void setOptionSet(OptionSetDto optionSet) {
+        this.optionSet = optionSet;
     }
 
-    @Override
-    public boolean equals(Object other) {
-        if (other == this) {
-            return true;
-        }
-        if ((other instanceof DataElementDto) == false) {
-            return false;
-        }
-        DataElementDto rhs = ((DataElementDto) other);
-        return new EqualsBuilder().append(id, rhs.id).append(created, rhs.created).append(name, rhs.name).append(href, rhs.href).append(lastUpdated, rhs.lastUpdated).append(code, rhs.code).append(shortName, rhs.shortName).append(zeroIsSignificant, rhs.zeroIsSignificant).append(type, rhs.type).append(externalAccess, rhs.externalAccess).append(publicAccess, rhs.publicAccess).append(aggregationOperator, rhs.aggregationOperator).append(url, rhs.url).append(numberType, rhs.numberType).append(domainType, rhs.domainType).append(dimension, rhs.dimension).append(displayName, rhs.displayName).append(accessDto, rhs.accessDto).append(categoryComboDto, rhs.categoryComboDto).append(userDto, rhs.userDto).append(aggregationLevels, rhs.aggregationLevels).append(dataElementGroupDtos, rhs.dataElementGroupDtos).append(dataSetDtos, rhs.dataSetDtos).append(attributeValues, rhs.attributeValues).append(items, rhs.items).append(userGroupAccesses, rhs.userGroupAccesses).append(additionalProperties, rhs.additionalProperties).isEquals();
+    @JsonProperty("commentOptionSet")
+    public OptionSetDto getCommentOptionSet() {
+        return commentOptionSet;
     }
 
+    @JsonProperty("commentOptionSet")
+    public void setCommentOptionSet(OptionSetDto commentOptionSet) {
+        this.commentOptionSet = commentOptionSet;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }
