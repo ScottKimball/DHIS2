@@ -90,7 +90,7 @@ public class SyncServiceImpl implements SyncService {
             addDataElements();
             addAttributes();
             addTrackedEntities();
-            addProgramsV2();
+            addPrograms();
             addOrgUnits();
 
             long endTime = System.nanoTime();
@@ -116,56 +116,78 @@ public class SyncServiceImpl implements SyncService {
         }
     }
 
-
+    /**
+     * Request data elements from DHIS and persist in MDS. The partial data element objects returned by the top-level api
+     * endpoint suffice for current needs.
+     */
     private void addDataElements() {
-        List<DataElementDto> partialDtos = dhisWebService.getResources("dataElements", DataElementDto.class);
+        List<DataElementDto> dataElementDtos = dhisWebService.getResources("dataElements", DataElementDto.class);
 
-        for (DataElementDto partialDto : partialDtos) {
-            DataElementDto fullDataElementDto = dhisWebService.getResource(partialDto.getHref(), DataElementDto.class);
-            dataElementService.createFromDetails(fullDataElementDto);
+        for (DataElementDto dataElementDto : dataElementDtos) {
+            dataElementService.createFromDetails(dataElementDto);
         }
     }
 
-
+    /**
+     * Request tracked entity attributes from DHIS and persist in MDS. The partial tracked entity attribute objects returned by
+     * the top-level api endpoint suffice for current needs.
+     */
     private void addAttributes()  {
-        List<TrackedEntityAttributeDto> partialDtos = dhisWebService.getResources("trackedEntityAttributes", TrackedEntityAttributeDto.class);
-        for (TrackedEntityAttributeDto partialDto : partialDtos) {
-            TrackedEntityAttributeDto fullTrackedEntityAttributeDto = dhisWebService.getResource(partialDto.getHref(), TrackedEntityAttributeDto.class);
-            trackedEntityAttributeService.createFromDetails(fullTrackedEntityAttributeDto);
+        List<TrackedEntityAttributeDto> trackedEntityAttributeDtos = dhisWebService.getResources("trackedEntityAttributes", TrackedEntityAttributeDto.class);
+        for (TrackedEntityAttributeDto trackedEntityAttributeDto : trackedEntityAttributeDtos) {
+            trackedEntityAttributeService.createFromDetails(trackedEntityAttributeDto);
         }
     }
 
+    /**
+     * Request tracked entities from DHIS and persist in MDS. The partial tracked entity objects returned by the top-level
+     * api endpoint suffice for current needs.
+     */
     private void addTrackedEntities() {
-        List<TrackedEntityDto> partialDtos = dhisWebService.getResources("trackedEntities", TrackedEntityDto.class);
-        for (TrackedEntityDto partialDto : partialDtos) {
-            TrackedEntityDto fullTrackedEntityDto = dhisWebService.getResource(partialDto.getHref(), TrackedEntityDto.class);
-            trackedEntityService.createFromDetails(fullTrackedEntityDto);
+        List<TrackedEntityDto> trackedEntityDtos = dhisWebService.getResources("trackedEntities", TrackedEntityDto.class);
+        for (TrackedEntityDto trackedEntityDto : trackedEntityDtos) {
+            trackedEntityService.createFromDetails(trackedEntityDto);
         }
     }
 
-    private void addProgramsV2() {
+    /**
+     * Request programs from DHIS and persist in MDS. Since we need data from full program objects, we load the partial
+     * objects from the top-level endpoints and then iterate through the links for the complete objects.
+     */
+    private void addPrograms() {
         List<ProgramDto> partialDtos = dhisWebService.getResources("programs", ProgramDto.class);
 
         for (ProgramDto partialDto : partialDtos) {
             ProgramDto fullDto = dhisWebService.getResource(partialDto.getHref(), ProgramDto.class);
             Program program = programService.createFromDetails(fullDto);
 
-            if (fullDto.getTrackedEntityDto() != null) {
-                program.setTrackedEntity(getProgramTrackedEntityFromDto(fullDto.getTrackedEntityDto()));
+            /**
+             * Request and add the program's sub-objects (tracked entity, program stages, program tracked entity's attributes).
+             */
+            if (fullDto.getTrackedEntity() != null) {
+                program.setTrackedEntity(getProgramTrackedEntityFromDto(fullDto.getTrackedEntity()));
             }
 
-            if (fullDto.getProgramStageDtos() != null) {
-                program.setStages(getStagesFromDtos(fullDto.getProgramStageDtos(), program.getUuid(), program.hasRegistration()));
+            if (fullDto.getProgramStages() != null) {
+                program.setStages(getStagesFromDtos(fullDto.getProgramStages(), program.getUuid(), program.hasRegistration()));
             }
 
-            if (fullDto.getProgramTrackedEntityAttributeDtos() != null) {
-                program.setAttributes(getTrackedEntityAttributesFromDetails(fullDto.getProgramTrackedEntityAttributeDtos()));
+            if (fullDto.getProgramTrackedEntityAttributes() != null) {
+                program.setAttributes(getTrackedEntityAttributesFromDtos(fullDto.getProgramTrackedEntityAttributes()));
             }
 
             programService.update(program);
         }
     }
 
+    /**
+     * Helper to load the program's tracked entity from MDS, if we've already persisted it, or make a request to DHIS and persist,
+     * if we haven't.
+     * @param partialDto
+     *  The partial tracked entity dto from the program dto.
+     * @return
+     *  The MDS-managed tracked entity.
+     */
     private TrackedEntity getProgramTrackedEntityFromDto(TrackedEntityDto partialDto) {
         TrackedEntity trackedEntity = trackedEntityService.findById(partialDto.getId());
         if (trackedEntity == null) {
@@ -175,16 +197,28 @@ public class SyncServiceImpl implements SyncService {
         return trackedEntity;
     }
 
-    private List<Stage> getStagesFromDtos(List<ProgramStageDto> dtos, String programId, boolean hasRegistration) {
+    /**
+     * Helper to load the program's program stages from MDS, if we've already persisted them, or make a request to DHIS, persist,
+     * if we haven't.
+     * @param partialStageDtos
+     *  The program's partial stage dtos.
+     * @param programId
+     *  The id of the program.
+     * @param hasRegistration
+     *  Whether or not the stage's program is registered.
+     * @return
+     *  The MDS-managed program stages.
+     */
+    private List<Stage> getStagesFromDtos(List<ProgramStageDto> partialStageDtos, String programId, boolean hasRegistration) {
         List<Stage> stages = new ArrayList<Stage>();
 
-        for (ProgramStageDto partialDto : dtos) {
-            Stage stage = stageService.findById(partialDto.getId());
+        for (ProgramStageDto partialStageDto : partialStageDtos) {
+            Stage stage = stageService.findById(partialStageDto.getId());
 
             if (stage == null) {
-                ProgramStageDto fullDto = dhisWebService.getResource(partialDto.getHref(), ProgramStageDto.class);
+                ProgramStageDto fullDto = dhisWebService.getResource(partialStageDto.getHref(), ProgramStageDto.class);
                 stage = stageService.createFromDetails(fullDto, programId, hasRegistration);
-                stage.setDataElements(getStageDataElementsFromDetails(fullDto.getProgramStageDataElementDtos()));
+                stage.setDataElements(getStageDataElementsFromDtos(fullDto.getProgramStageDataElements()));
             }
             stages.add(stage);
         }
@@ -192,11 +226,19 @@ public class SyncServiceImpl implements SyncService {
         return stages;
     }
 
-    private List<DataElement> getStageDataElementsFromDetails(List<ProgramStageDataElementDto> dtos) {
+    /**
+     * Helper to load the program stage's data elements from MDS, if we've already persisted them, or make a request to DHIS,
+     * persist, if we haven't.
+     * @param programStageDataElementDtos
+     *  The program stage's partial data element dtos.
+     * @return
+     *  The MDS-managed data elements.
+     */
+    private List<DataElement> getStageDataElementsFromDtos(List<ProgramStageDataElementDto> programStageDataElementDtos) {
         List<DataElement> dataElements = new ArrayList<DataElement>();
 
-        for (ProgramStageDataElementDto dto : dtos) {
-            DataElementDto dataElementDto = dto.getDataElementDto();
+        for (ProgramStageDataElementDto programStageDataElementDto : programStageDataElementDtos) {
+            DataElementDto dataElementDto = programStageDataElementDto.getDataElement();
             DataElement dataElement = dataElementService.findById(dataElementDto.getId());
             if (dataElement == null) {
                 dataElement = dataElementService.createFromDetails(dataElementDto);
@@ -206,11 +248,17 @@ public class SyncServiceImpl implements SyncService {
         return dataElements;
     }
 
-    private List<TrackedEntityAttribute> getTrackedEntityAttributesFromDetails(List<ProgramTrackedEntityAttributeDto> dtos) {
+    /**
+     * Helper to laod the program's program tracked entity attributes from MDS, if we've already persisted them, or make a
+     * request to DHIS and persist, if we haven't.
+     * @param programTrackedEntityAttributeDtos
+     * @return
+     */
+    private List<TrackedEntityAttribute> getTrackedEntityAttributesFromDtos(List<ProgramTrackedEntityAttributeDto> programTrackedEntityAttributeDtos) {
         List<TrackedEntityAttribute> trackedEntityAttributes = new ArrayList<TrackedEntityAttribute>();
 
-        for (ProgramTrackedEntityAttributeDto dto : dtos) {
-            TrackedEntityAttributeDto trackedEntityAttributeDto = dto.getTrackedEntityAttributeDto();
+        for (ProgramTrackedEntityAttributeDto programTrackedEntityAttributeDto : programTrackedEntityAttributeDtos) {
+            TrackedEntityAttributeDto trackedEntityAttributeDto = programTrackedEntityAttributeDto.getTrackedEntityAttribute();
             TrackedEntityAttribute trackedEntityAttribute = trackedEntityAttributeService.findById(trackedEntityAttributeDto.getId());
             if (trackedEntityAttribute == null) {
                 trackedEntityAttribute = trackedEntityAttributeService.createFromDetails(trackedEntityAttributeDto);
@@ -242,11 +290,14 @@ public class SyncServiceImpl implements SyncService {
         return false;
     }
 
+    /**
+     * Request organisation units from DHIS and persist in MDS. The partial organisation unit objects returned by the top-level
+     * api endpoint suffice for current needs.
+     */
     private void addOrgUnits() {
-        List<OrganisationUnitDto> partialDtos = dhisWebService.getResources("organisationUnits", OrganisationUnitDto.class);
-        for (OrganisationUnitDto partialDto : partialDtos) {
-            OrganisationUnitDto fullOrganisationUnitDto = dhisWebService.getResource(partialDto.getHref(), OrganisationUnitDto.class);
-            orgUnitService.createFromDetails(fullOrganisationUnitDto);
+        List<OrganisationUnitDto> orgUnitDtos = dhisWebService.getResources("organisationUnits", OrganisationUnitDto.class);
+        for (OrganisationUnitDto orgUnitDto : orgUnitDtos) {
+            orgUnitService.createFromDetails(orgUnitDto);
         }
     }
 }
