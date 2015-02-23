@@ -133,6 +133,24 @@ public class EventHandlerBundleIT extends BasePaxIT {
 
     }
 
+
+    @Test
+    public void testHandleEnrollment() {
+        final String responseBody = "{\"status\":\"SUCCESS\",\"importCount\":{\"imported\":1,\"updated\":0," +
+                "\"ignored\":0,\"deleted\":0},\"reference\":\"fvFdqPrS82p\"}";
+
+
+        SimpleHttpServer simpleServer = SimpleHttpServer.getInstance();
+        String URL = simpleServer.start("api/enrollments",201,responseBody);
+
+        Settings settings = new Settings(URL,"name","password");
+        settingsService.updateSettings(settings);
+
+        /*todo: add verification to SimpleHttpServer*/
+
+
+    }
+
     private void populateDatabase () {
         orgUnitDataService.create(new OrgUnit(ORGUNIT_NAME,ORGUNIT_ID));
 
