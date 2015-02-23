@@ -7,10 +7,17 @@ import org.motechproject.dhis2.service.TrackedEntityAttributeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service("trackedEntityAttributeService")
 public class TrackedEntityAttributeServiceImpl implements TrackedEntityAttributeService {
     @Autowired
     private TrackedEntityAttributeDataService trackedEntityAttributeDataService;
+
+    @Override
+    public List<TrackedEntityAttribute> findAll() {
+        return trackedEntityAttributeDataService.retrieveAll();
+    }
 
     @Override
     public TrackedEntityAttribute findById(String id) {

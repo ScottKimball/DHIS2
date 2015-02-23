@@ -14,6 +14,7 @@ import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.motechproject.dhis2.domain.Settings;
 import org.motechproject.dhis2.rest.domain.DataElementDto;
+import org.motechproject.dhis2.rest.domain.DhisEventDto;
 import org.motechproject.dhis2.rest.domain.EnrollmentDto;
 import org.motechproject.dhis2.rest.domain.OrganisationUnitDto;
 import org.motechproject.dhis2.rest.domain.ProgramDto;
@@ -21,6 +22,7 @@ import org.motechproject.dhis2.rest.domain.ProgramStageDto;
 import org.motechproject.dhis2.rest.domain.Resource;
 import org.motechproject.dhis2.rest.domain.TrackedEntityAttributeDto;
 import org.motechproject.dhis2.rest.domain.TrackedEntityDto;
+import org.motechproject.dhis2.rest.domain.TrackedEntityInstanceDto;
 import org.motechproject.dhis2.service.DhisWebException;
 import org.motechproject.dhis2.rest.service.DhisWebService;
 import org.motechproject.dhis2.service.SettingsService;
@@ -33,6 +35,12 @@ import java.util.List;
 
 @Service("dhisWebService")
 public class DhisWebServiceImpl implements DhisWebService {
+    private static final String DATA_ELEMENTS = "dataElements";
+    private static final String ORG_UNITS = "organisationUnits";
+    private static final String PROGRAMS = "programs";
+    private static final String PROGRAM_STAGES = "programStages";
+    private static final String TRACKED_ENTITIES = "trackedEntities";
+    private static final String TRACKED_ENITTY_ATTRIBUTES = "trackedEntityAttributes";
     private static final String NO_PAGING = "?paging=false";
 
     @Autowired
@@ -41,7 +49,7 @@ public class DhisWebServiceImpl implements DhisWebService {
 
     @Override
     public List<DataElementDto> getDataElements() {
-        return getResources("dataElements", DataElementDto.class);
+        return getResources(DATA_ELEMENTS, DataElementDto.class);
     }
 
     @Override
@@ -51,7 +59,7 @@ public class DhisWebServiceImpl implements DhisWebService {
 
     @Override
     public List<OrganisationUnitDto> getOrganisationUnits() {
-        return getResources("organisationUnits", OrganisationUnitDto.class);
+        return getResources(ORG_UNITS, OrganisationUnitDto.class);
     }
 
     @Override
@@ -61,7 +69,7 @@ public class DhisWebServiceImpl implements DhisWebService {
 
     @Override
     public List<ProgramDto> getPrograms() {
-        return getResources("programs", ProgramDto.class);
+        return getResources(PROGRAMS, ProgramDto.class);
     }
 
     @Override
@@ -71,7 +79,7 @@ public class DhisWebServiceImpl implements DhisWebService {
 
     @Override
     public List<ProgramStageDto> getProgramStages() {
-        return getResources("programStages", ProgramStageDto.class);
+        return getResources(PROGRAM_STAGES, ProgramStageDto.class);
     }
 
     @Override
@@ -81,7 +89,7 @@ public class DhisWebServiceImpl implements DhisWebService {
 
     @Override
     public List<TrackedEntityDto> getTrackedEntities() {
-        return getResources("trackedEntities", TrackedEntityDto.class);
+        return getResources(TRACKED_ENTITIES, TrackedEntityDto.class);
     }
 
     @Override
@@ -91,7 +99,7 @@ public class DhisWebServiceImpl implements DhisWebService {
 
     @Override
     public List<TrackedEntityAttributeDto> getTrackedEntityAttributes() {
-        return getResources("trackedEntityAttributes", TrackedEntityAttributeDto.class);
+        return getResources(TRACKED_ENITTY_ATTRIBUTES, TrackedEntityAttributeDto.class);
     }
 
     @Override
@@ -147,6 +155,42 @@ public class DhisWebServiceImpl implements DhisWebService {
         }
 
         HttpUriRequest request = generatePostRequest(settings, settings.getEnrollmentsURI(), json);
+        InputStream content = getContentForRequest(request);
+
+        return content.toString();
+    }
+
+    @Override
+    public String createEvent(DhisEventDto event) {
+        Settings settings = settingsService.getSettings();
+        ObjectMapper mapper = new ObjectMapper();
+        String json;
+
+        try {
+            json = mapper.writeValueAsString(event);
+        } catch (Exception e) {
+            throw new DhisWebException("Unable to parse event", e);
+        }
+
+        HttpUriRequest request = generatePostRequest(settings, settings.getEventsURI(), json);
+        InputStream content = getContentForRequest(request);
+
+        return content.toString();
+    }
+
+    @Override
+    public String createTrackedEntityInstance(TrackedEntityInstanceDto trackedEntity) {
+        Settings settings = settingsService.getSettings();
+        ObjectMapper mapper = new ObjectMapper();
+        String json;
+
+        try {
+            json = mapper.writeValueAsString(trackedEntity);
+        } catch (Exception e) {
+            throw new DhisWebException("Unable to parse tracked entity instance", e);
+        }
+
+        HttpUriRequest request = generatePostRequest(settings, settings.getTrackedEntityInstancesURI(), json);
         InputStream content = getContentForRequest(request);
 
         return content.toString();

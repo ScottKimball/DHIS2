@@ -7,10 +7,17 @@ import org.motechproject.dhis2.service.StageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service("stageService")
 public class StageServiceImpl implements StageService {
     @Autowired
     private StageDataService stageDataService;
+
+    @Override
+    public List<Stage> findAll() {
+        return stageDataService.retrieveAll();
+    }
 
     @Override
     public Stage findById(String id) {

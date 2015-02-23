@@ -18,6 +18,11 @@ public class OrgUnitServiceImpl implements OrgUnitService {
     }
 
     @Override
+    public OrgUnit findByName(String name) {
+        return orgUnitDataService.findByName(name);
+    }
+
+    @Override
     public OrgUnit createFromDetails(OrganisationUnitDto details) {
         OrgUnit orgUnit = new OrgUnit();
         orgUnit.setUuid(details.getId());

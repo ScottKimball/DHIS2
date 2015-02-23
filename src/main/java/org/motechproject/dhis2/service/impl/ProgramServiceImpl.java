@@ -7,6 +7,8 @@ import org.motechproject.dhis2.service.ProgramService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service("programService")
 public class ProgramServiceImpl implements ProgramService {
     @Autowired
@@ -35,5 +37,10 @@ public class ProgramServiceImpl implements ProgramService {
     @Override
     public void deleteAll() {
         programDataService.deleteAll();
+    }
+
+    @Override
+    public List<Program> findByRegistration(boolean registration) {
+        return programDataService.findByRegistration(registration);
     }
 }
