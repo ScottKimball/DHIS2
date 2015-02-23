@@ -121,7 +121,7 @@ public class SyncServiceImpl implements SyncService {
      * endpoint suffice for current needs.
      */
     private void addDataElements() {
-        List<DataElementDto> dataElementDtos = dhisWebService.getResources("dataElements", DataElementDto.class);
+        List<DataElementDto> dataElementDtos = dhisWebService.getDataElements();
 
         for (DataElementDto dataElementDto : dataElementDtos) {
             dataElementService.createFromDetails(dataElementDto);
@@ -133,7 +133,7 @@ public class SyncServiceImpl implements SyncService {
      * the top-level api endpoint suffice for current needs.
      */
     private void addAttributes()  {
-        List<TrackedEntityAttributeDto> trackedEntityAttributeDtos = dhisWebService.getResources("trackedEntityAttributes", TrackedEntityAttributeDto.class);
+        List<TrackedEntityAttributeDto> trackedEntityAttributeDtos = dhisWebService.getTrackedEntityAttributes();
         for (TrackedEntityAttributeDto trackedEntityAttributeDto : trackedEntityAttributeDtos) {
             trackedEntityAttributeService.createFromDetails(trackedEntityAttributeDto);
         }
@@ -144,7 +144,7 @@ public class SyncServiceImpl implements SyncService {
      * api endpoint suffice for current needs.
      */
     private void addTrackedEntities() {
-        List<TrackedEntityDto> trackedEntityDtos = dhisWebService.getResources("trackedEntities", TrackedEntityDto.class);
+        List<TrackedEntityDto> trackedEntityDtos = dhisWebService.getTrackedEntities();
         for (TrackedEntityDto trackedEntityDto : trackedEntityDtos) {
             trackedEntityService.createFromDetails(trackedEntityDto);
         }
@@ -155,10 +155,10 @@ public class SyncServiceImpl implements SyncService {
      * objects from the top-level endpoints and then iterate through the links for the complete objects.
      */
     private void addPrograms() {
-        List<ProgramDto> partialDtos = dhisWebService.getResources("programs", ProgramDto.class);
+        List<ProgramDto> partialDtos = dhisWebService.getPrograms();
 
         for (ProgramDto partialDto : partialDtos) {
-            ProgramDto fullDto = dhisWebService.getResource(partialDto.getHref(), ProgramDto.class);
+            ProgramDto fullDto = dhisWebService.getProgramByHref(partialDto.getHref());
             Program program = programService.createFromDetails(fullDto);
 
             /**
@@ -191,7 +191,7 @@ public class SyncServiceImpl implements SyncService {
     private TrackedEntity getProgramTrackedEntityFromDto(TrackedEntityDto partialDto) {
         TrackedEntity trackedEntity = trackedEntityService.findById(partialDto.getId());
         if (trackedEntity == null) {
-            TrackedEntityDto fullDto = dhisWebService.getResource(partialDto.getHref(), TrackedEntityDto.class);
+            TrackedEntityDto fullDto = dhisWebService.getTrackedEntityByHref(partialDto.getHref());
             trackedEntity = trackedEntityService.createFromDetails(fullDto);
         }
         return trackedEntity;
@@ -216,7 +216,7 @@ public class SyncServiceImpl implements SyncService {
             Stage stage = stageService.findById(partialStageDto.getId());
 
             if (stage == null) {
-                ProgramStageDto fullDto = dhisWebService.getResource(partialStageDto.getHref(), ProgramStageDto.class);
+                ProgramStageDto fullDto = dhisWebService.getProgramStageByHref(partialStageDto.getHref());
                 stage = stageService.createFromDetails(fullDto, programId, hasRegistration);
                 stage.setDataElements(getStageDataElementsFromDtos(fullDto.getProgramStageDataElements()));
             }
@@ -295,7 +295,7 @@ public class SyncServiceImpl implements SyncService {
      * api endpoint suffice for current needs.
      */
     private void addOrgUnits() {
-        List<OrganisationUnitDto> orgUnitDtos = dhisWebService.getResources("organisationUnits", OrganisationUnitDto.class);
+        List<OrganisationUnitDto> orgUnitDtos = dhisWebService.getOrganisationUnits();
         for (OrganisationUnitDto orgUnitDto : orgUnitDtos) {
             orgUnitService.createFromDetails(orgUnitDto);
         }

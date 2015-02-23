@@ -13,20 +13,23 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.motechproject.dhis2.domain.Settings;
-import org.motechproject.dhis2.event.EventParams;
+import org.motechproject.dhis2.rest.domain.DataElementDto;
 import org.motechproject.dhis2.rest.domain.EnrollmentDto;
+import org.motechproject.dhis2.rest.domain.OrganisationUnitDto;
+import org.motechproject.dhis2.rest.domain.ProgramDto;
+import org.motechproject.dhis2.rest.domain.ProgramStageDto;
 import org.motechproject.dhis2.rest.domain.Resource;
+import org.motechproject.dhis2.rest.domain.TrackedEntityAttributeDto;
+import org.motechproject.dhis2.rest.domain.TrackedEntityDto;
 import org.motechproject.dhis2.service.DhisWebException;
 import org.motechproject.dhis2.rest.service.DhisWebService;
 import org.motechproject.dhis2.service.SettingsService;
-import org.motechproject.event.MotechEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 
 @Service("dhisWebService")
 public class DhisWebServiceImpl implements DhisWebService {
@@ -37,7 +40,66 @@ public class DhisWebServiceImpl implements DhisWebService {
     private SettingsService settingsService;
 
     @Override
-    public <T extends Resource> T getResource(String uri, Class<T>  clazz) {
+    public List<DataElementDto> getDataElements() {
+        return getResources("dataElements", DataElementDto.class);
+    }
+
+    @Override
+    public DataElementDto getDataElementByHref(String href) {
+        return getResource(href, DataElementDto.class);
+    }
+
+    @Override
+    public List<OrganisationUnitDto> getOrganisationUnits() {
+        return getResources("organisationUnits", OrganisationUnitDto.class);
+    }
+
+    @Override
+    public OrganisationUnitDto getOrganisationUnitByHref(String href) {
+        return getResource(href, OrganisationUnitDto.class);
+    }
+
+    @Override
+    public List<ProgramDto> getPrograms() {
+        return getResources("programs", ProgramDto.class);
+    }
+
+    @Override
+    public ProgramDto getProgramByHref(String href) {
+        return getResource(href, ProgramDto.class);
+    }
+
+    @Override
+    public List<ProgramStageDto> getProgramStages() {
+        return getResources("programStages", ProgramStageDto.class);
+    }
+
+    @Override
+    public ProgramStageDto getProgramStageByHref(String href) {
+        return getResource(href, ProgramStageDto.class);
+    }
+
+    @Override
+    public List<TrackedEntityDto> getTrackedEntities() {
+        return getResources("trackedEntities", TrackedEntityDto.class);
+    }
+
+    @Override
+    public TrackedEntityDto getTrackedEntityByHref(String href) {
+        return getResource(href, TrackedEntityDto.class);
+    }
+
+    @Override
+    public List<TrackedEntityAttributeDto> getTrackedEntityAttributes() {
+        return getResources("trackedEntityAttributes", TrackedEntityAttributeDto.class);
+    }
+
+    @Override
+    public TrackedEntityAttributeDto getTrackedEntityAttributeByHref(String href) {
+        return getResource(href, TrackedEntityAttributeDto.class);
+    }
+
+    private <T extends Resource> T getResource(String uri, Class<T>  clazz) {
         Settings settings = settingsService.getSettings();
         HttpUriRequest request = generateHttpRequest(settings, uri);
         InputStream content = getContentForRequest(request);
@@ -53,8 +115,7 @@ public class DhisWebServiceImpl implements DhisWebService {
         return resource;
     }
 
-    @Override
-    public <T extends Resource> List<T> getResources(String resourceName, Class<T> clazz) {
+    private <T extends Resource> List<T> getResources(String resourceName, Class<T> clazz) {
         Settings settings = settingsService.getSettings();
         HttpUriRequest request = generateHttpRequest(settings, settings.getResourceURI(resourceName) + NO_PAGING);
         InputStream content = getContentForRequest(request);
@@ -82,7 +143,7 @@ public class DhisWebServiceImpl implements DhisWebService {
         try {
             json = mapper.writeValueAsString(enrollment);
         } catch (JsonProcessingException e) {
-            throw new DhisWebException("Unable to parse enrollment");
+            throw new DhisWebException("Unable to parse enrollment", e);
         }
 
         HttpUriRequest request = generatePostRequest(settings, settings.getEnrollmentsURI(), json);
