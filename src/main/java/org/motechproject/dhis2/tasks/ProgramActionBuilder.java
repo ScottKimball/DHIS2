@@ -33,6 +33,7 @@ public class ProgramActionBuilder {
             counter = 0;
 
             SortedSet<ActionParameterRequest> actionParameters = new TreeSet<>();
+            SortedSet<ActionParameterRequest> actionParamsForCreateAndEnroll = new TreeSet<>();
 
             ActionEventRequestBuilder builder = new ActionEventRequestBuilder();
 
@@ -46,6 +47,8 @@ public class ProgramActionBuilder {
                     .setOrder(counter++);
 
             actionParameters.add(actionParameterBuilder.createActionParameterRequest());
+            actionParamsForCreateAndEnroll.add(actionParameterBuilder.createActionParameterRequest());
+
 
             actionParameterBuilder = new ActionParameterRequestBuilder()
                     .setDisplayName(DisplayNames.ENROLLMENT_DATE)
@@ -54,6 +57,7 @@ public class ProgramActionBuilder {
                     .setType(UNICODE);
 
             actionParameters.add(actionParameterBuilder.createActionParameterRequest());
+            actionParamsForCreateAndEnroll.add(actionParameterBuilder.createActionParameterRequest());
 
             actionParameterBuilder = new ActionParameterRequestBuilder()
                     .setDisplayName(DisplayNames.PROGRAM_NAME)
@@ -64,9 +68,11 @@ public class ProgramActionBuilder {
                     .setHidden(true);
 
             actionParameters.add(actionParameterBuilder.createActionParameterRequest());
+            actionParamsForCreateAndEnroll.add(actionParameterBuilder.createActionParameterRequest());
 
             /*Adds all tracked entity attributes for program*/
             actionParameters.addAll(buildRequestForProgram(program));
+            actionParamsForCreateAndEnroll.addAll(buildRequestForProgram(program));
 
             builder.setActionParameters(actionParameters)
                     .setDisplayName(DisplayNames.PROGRAM_ENROLLMENT + " [" + program.getName() + "]")
@@ -78,6 +84,7 @@ public class ProgramActionBuilder {
 
             /*Add corresponding create and enroll action*/
 
+
             actionParameterBuilder = new ActionParameterRequestBuilder()
                     .setDisplayName(program.getTrackedEntity().getName())
                     .setType(UNICODE)
@@ -86,7 +93,7 @@ public class ProgramActionBuilder {
                     .setValue(program.getTrackedEntity().getUuid())
                     .setOrder(counter++);
 
-            actionParameters.add(actionParameterBuilder.createActionParameterRequest());
+            actionParamsForCreateAndEnroll.add(actionParameterBuilder.createActionParameterRequest());
 
             actionParameterBuilder = new ActionParameterRequestBuilder()
                     .setDisplayName(DisplayNames.ORG_UNIT)
@@ -95,10 +102,10 @@ public class ProgramActionBuilder {
                     .setOrder(counter++)
                     .setRequired(true);
 
-            actionParameters.add(actionParameterBuilder.createActionParameterRequest());
+            actionParamsForCreateAndEnroll.add(actionParameterBuilder.createActionParameterRequest());
 
 
-            builder.setActionParameters(actionParameters)
+            builder.setActionParameters(actionParamsForCreateAndEnroll)
                     .setDisplayName(DisplayNames.CREATE_TRACKED_ENTITY_INSTANCE + " [" +
                             program.getTrackedEntity().getName() + "]" + " and " + DisplayNames.PROGRAM_ENROLLMENT +
                             " [" + program.getName() + "]")
