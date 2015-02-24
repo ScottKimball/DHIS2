@@ -61,31 +61,17 @@ public class EventHandlerBundleIT extends BasePaxIT {
     private static final String ATTRIUBTE_VALUE_2 = "attributeValue2";
 
     @Inject
-    private OrgUnitDataService orgUnitDataService;
-
-    @Inject
     private TrackedEntityInstanceDataService trackedEntityInstanceDataService;
-
     @Inject
     EventRelay relay;
-
     @Inject
     @Qualifier("dhis2SettingsService")
     private SettingsService settingsService;
 
-
-
-    @Before
-    public void setup() {
-        clearDatabase();
-        populateDatabase();
-    }
-
     @After
-    public void tearDown () {
-        clearDatabase();
+    public void tearDown() {
+        trackedEntityInstanceDataService.deleteAll();
     }
-
 
     @Test
     public void testHandleRegistration() throws Exception{
@@ -117,8 +103,6 @@ public class EventHandlerBundleIT extends BasePaxIT {
         relay.sendEventMessage(event);
 
 
-        relay.sendEventMessage(event);
-
         /*Need to wait for event to be processed*/
         Thread.sleep(1000);
 
@@ -127,35 +111,6 @@ public class EventHandlerBundleIT extends BasePaxIT {
         assertEquals(mapper.getExternalName(),INSTANCE_EXT_ID);
         assertNotNull(mapper.getDhis2Uuid());
         assertEquals(mapper.getDhis2Uuid(),"IbqmvQFz0zW");
-
-    }
-
-
-    @Test
-    public void testHandleEnrollment() {
-        final String responseBody = "{\"status\":\"SUCCESS\",\"importCount\":{\"imported\":1,\"updated\":0," +
-                "\"ignored\":0,\"deleted\":0},\"reference\":\"fvFdqPrS82p\"}";
-
-
-        SimpleHttpServer simpleServer = SimpleHttpServer.getInstance();
-        String URL = simpleServer.start("api/enrollments",201,responseBody);
-
-        Settings settings = new Settings(URL,"name","password");
-        settingsService.updateSettings(settings);
-
-        /*todo: add verification to SimpleHttpServer*/
-
-
-    }
-
-    private void populateDatabase () {
-        orgUnitDataService.create(new OrgUnit(ORGUNIT_NAME,ORGUNIT_ID));
-
-    }
-
-    private void clearDatabase () {
-        orgUnitDataService.deleteAll();
-        trackedEntityInstanceDataService.deleteAll();
 
     }
 

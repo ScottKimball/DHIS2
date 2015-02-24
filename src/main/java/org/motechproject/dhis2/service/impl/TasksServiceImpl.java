@@ -6,14 +6,14 @@ import org.motechproject.dhis2.tasks.ChannelRequestBuilder;
 import org.motechproject.tasks.service.ChannelService;
 import org.osgi.framework.BundleContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 
 /**
  * Created by scott on 1/15/15.
  */
 
-@Component
+@Service
 public class TasksServiceImpl implements TasksService {
 
     private BundleContext bundleContext;

@@ -61,6 +61,13 @@
 
     <osgi:service ref="dhisSettingsService" interface="org.motechproject.dhis2.service.SettingsService" />
 
+    <osgi:service id="dhis2SchemaServiceOsgi" ref="dhis2SchemaServiceImpl"
+                  interface="org.motechproject.dhis2.service.Dhis2SchemaService"/>
+
+    <osgi:service id="tasksServiceOsgi" ref="tasksServiceImpl"
+                  interface="org.motechproject.dhis2.service.TasksService"/>
+
+
     <osgi:reference id="channelService" interface= "org.motechproject.tasks.service.ChannelService" />
 
 </beans>
