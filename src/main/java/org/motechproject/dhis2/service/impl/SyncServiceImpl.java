@@ -1,15 +1,8 @@
 package org.motechproject.dhis2.service.impl;
 
 import com.jayway.jsonpath.PathNotFoundException;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.http.HttpResponse;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.auth.BasicScheme;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.motechproject.dhis2.domain.DataElement;
 import org.motechproject.dhis2.domain.Program;
-import org.motechproject.dhis2.domain.Settings;
 import org.motechproject.dhis2.domain.Stage;
 import org.motechproject.dhis2.domain.TrackedEntity;
 import org.motechproject.dhis2.domain.TrackedEntityAttribute;
@@ -25,7 +18,6 @@ import org.motechproject.dhis2.service.DataElementService;
 import org.motechproject.dhis2.rest.service.DhisWebService;
 import org.motechproject.dhis2.service.OrgUnitService;
 import org.motechproject.dhis2.service.ProgramService;
-import org.motechproject.dhis2.service.SettingsService;
 import org.motechproject.dhis2.service.StageService;
 import org.motechproject.dhis2.service.SyncService;
 import org.motechproject.dhis2.service.TrackedEntityAttributeService;
@@ -33,7 +25,6 @@ import org.motechproject.dhis2.service.TrackedEntityService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -63,21 +54,12 @@ public class SyncServiceImpl implements SyncService {
     @Autowired
     private OrgUnitService orgUnitService;
 
-    @Autowired
-    @Qualifier("dhisSettingsService")
-    private SettingsService settingsService;
-
     private Logger logger = LoggerFactory.getLogger(SyncServiceImpl.class);
 
     @Override
     public boolean sync() {
         logger.debug("Starting Sync");
         long startTime = System.nanoTime();
-        Settings settings = settingsService.getSettings();
-
-        if (!testConnection(settings)) {
-            return false;
-        }
 
         programService.deleteAll();
         trackedEntityAttributeService.deleteAll();
@@ -266,28 +248,6 @@ public class SyncServiceImpl implements SyncService {
             trackedEntityAttributes.add(trackedEntityAttribute);
         }
         return trackedEntityAttributes;
-    }
-
-    private boolean testConnection(Settings settings) {
-        HttpGet get = new HttpGet(settings.getProgramURI());
-        get.addHeader(BasicScheme.authenticate(
-                new UsernamePasswordCredentials(settings.getUsername(), settings.getPassword()),
-                "UTF-8",
-                false));
-
-        try {
-            HttpResponse httpResponse = new DefaultHttpClient().execute(get);
-
-            if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                return true;
-            }
-
-        } catch (Exception e) {
-            logger.error(e.toString());
-            return false;
-        }
-
-        return false;
     }
 
     /**

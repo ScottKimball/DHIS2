@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ProgramDto extends Resource {
+public class ProgramDto extends BaseDto {
 
     private boolean registration;
     private boolean singleEvent;

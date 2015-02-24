@@ -16,5 +16,5 @@ public interface ProgramDataService extends MotechDataService<Program> {
     Program findByUuid(@LookupField(name = "uuid") String uuid);
 
     @Lookup
-    List<Program> findByRegistration(@LookupField(name = "registration") boolean registration);
+    List<Program> findByRegistration(@LookupField(name = "registration") Boolean registration);
 }

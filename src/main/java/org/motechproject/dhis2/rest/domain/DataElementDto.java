@@ -5,4 +5,4 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DataElementDto extends Resource {}
+public class DataElementDto extends BaseDto {}

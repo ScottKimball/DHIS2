@@ -1,6 +1,5 @@
 package org.motechproject.dhis2.rest.service.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,13 +12,13 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.motechproject.dhis2.domain.Settings;
+import org.motechproject.dhis2.rest.domain.BaseDto;
 import org.motechproject.dhis2.rest.domain.DataElementDto;
 import org.motechproject.dhis2.rest.domain.DhisEventDto;
 import org.motechproject.dhis2.rest.domain.EnrollmentDto;
 import org.motechproject.dhis2.rest.domain.OrganisationUnitDto;
 import org.motechproject.dhis2.rest.domain.ProgramDto;
 import org.motechproject.dhis2.rest.domain.ProgramStageDto;
-import org.motechproject.dhis2.rest.domain.Resource;
 import org.motechproject.dhis2.rest.domain.TrackedEntityAttributeDto;
 import org.motechproject.dhis2.rest.domain.TrackedEntityDto;
 import org.motechproject.dhis2.rest.domain.TrackedEntityInstanceDto;
@@ -35,12 +34,17 @@ import java.util.List;
 
 @Service("dhisWebService")
 public class DhisWebServiceImpl implements DhisWebService {
+    private static final String ENROLLMENTS_PATH = "/enrollments";
+    private static final String EVENTS_PATH = "/events";
+    private static final String TRACKED_ENTITY_INSTANCES_PATH = "/trackedEntityInstances";
+
     private static final String DATA_ELEMENTS = "dataElements";
     private static final String ORG_UNITS = "organisationUnits";
     private static final String PROGRAMS = "programs";
     private static final String PROGRAM_STAGES = "programStages";
     private static final String TRACKED_ENTITIES = "trackedEntities";
     private static final String TRACKED_ENITTY_ATTRIBUTES = "trackedEntityAttributes";
+
     private static final String NO_PAGING = "?paging=false";
 
     @Autowired
@@ -107,7 +111,7 @@ public class DhisWebServiceImpl implements DhisWebService {
         return getResource(href, TrackedEntityAttributeDto.class);
     }
 
-    private <T extends Resource> T getResource(String uri, Class<T>  clazz) {
+    private <T extends BaseDto> T getResource(String uri, Class<T>  clazz) {
         Settings settings = settingsService.getSettings();
         HttpUriRequest request = generateHttpRequest(settings, uri);
         InputStream content = getContentForRequest(request);
@@ -123,9 +127,9 @@ public class DhisWebServiceImpl implements DhisWebService {
         return resource;
     }
 
-    private <T extends Resource> List<T> getResources(String resourceName, Class<T> clazz) {
+    private <T extends BaseDto> List<T> getResources(String resourceName, Class<T> clazz) {
         Settings settings = settingsService.getSettings();
-        HttpUriRequest request = generateHttpRequest(settings, settings.getResourceURI(resourceName) + NO_PAGING);
+        HttpUriRequest request = generateHttpRequest(settings, getURIForResource(settings.getServerURI(), resourceName));
         InputStream content = getContentForRequest(request);
 
         List<T> resources;
@@ -144,17 +148,10 @@ public class DhisWebServiceImpl implements DhisWebService {
 
     @Override
     public String createEnrollment(EnrollmentDto enrollment) {
+        String json = parseToJson(enrollment);
+
         Settings settings = settingsService.getSettings();
-        ObjectMapper mapper = new ObjectMapper();
-        String json;
-
-        try {
-            json = mapper.writeValueAsString(enrollment);
-        } catch (JsonProcessingException e) {
-            throw new DhisWebException("Unable to parse enrollment", e);
-        }
-
-        HttpUriRequest request = generatePostRequest(settings, settings.getEnrollmentsURI(), json);
+        HttpUriRequest request = generatePostRequest(settings, settings.getServerURI() + ENROLLMENTS_PATH, json);
         InputStream content = getContentForRequest(request);
 
         return content.toString();
@@ -162,17 +159,10 @@ public class DhisWebServiceImpl implements DhisWebService {
 
     @Override
     public String createEvent(DhisEventDto event) {
+        String json = parseToJson(event);
+
         Settings settings = settingsService.getSettings();
-        ObjectMapper mapper = new ObjectMapper();
-        String json;
-
-        try {
-            json = mapper.writeValueAsString(event);
-        } catch (Exception e) {
-            throw new DhisWebException("Unable to parse event", e);
-        }
-
-        HttpUriRequest request = generatePostRequest(settings, settings.getEventsURI(), json);
+        HttpUriRequest request = generatePostRequest(settings, settings.getServerURI() + EVENTS_PATH, json);
         InputStream content = getContentForRequest(request);
 
         return content.toString();
@@ -180,20 +170,24 @@ public class DhisWebServiceImpl implements DhisWebService {
 
     @Override
     public String createTrackedEntityInstance(TrackedEntityInstanceDto trackedEntity) {
+        String json = parseToJson(trackedEntity);
+
         Settings settings = settingsService.getSettings();
-        ObjectMapper mapper = new ObjectMapper();
-        String json;
-
-        try {
-            json = mapper.writeValueAsString(trackedEntity);
-        } catch (Exception e) {
-            throw new DhisWebException("Unable to parse tracked entity instance", e);
-        }
-
-        HttpUriRequest request = generatePostRequest(settings, settings.getTrackedEntityInstancesURI(), json);
+        HttpUriRequest request = generatePostRequest(settings, settings.getServerURI() + TRACKED_ENTITY_INSTANCES_PATH, json);
         InputStream content = getContentForRequest(request);
 
         return content.toString();
+    }
+
+    private String parseToJson(Object object) {
+        String json;
+
+        try {
+            json = new ObjectMapper().writeValueAsString(object);
+        } catch (Exception e) {
+            throw new DhisWebException("Unable to parse object to json", e);
+        }
+        return json;
     }
 
     private HttpUriRequest generateHttpRequest(Settings settings, String url) {
@@ -243,5 +237,9 @@ public class DhisWebServiceImpl implements DhisWebService {
         }
 
         return content;
+    }
+
+    private String getURIForResource(String baseURI, String resourceName) {
+        return String.format(baseURI + "/api/%s" + NO_PAGING, resourceName);
     }
 }

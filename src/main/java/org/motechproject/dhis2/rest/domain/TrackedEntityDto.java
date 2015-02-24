@@ -5,4 +5,4 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TrackedEntityDto extends Resource {}
+public class TrackedEntityDto extends BaseDto {}

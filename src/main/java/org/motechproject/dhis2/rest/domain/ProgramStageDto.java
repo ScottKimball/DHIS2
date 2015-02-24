@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ProgramStageDto extends Resource {
+public class ProgramStageDto extends BaseDto {
 
     private ProgramDto program;
     private List<ProgramStageDataElementDto> programStageDataElements = new ArrayList<ProgramStageDataElementDto>();

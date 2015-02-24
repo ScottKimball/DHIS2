@@ -1,6 +1,7 @@
 package org.motechproject.dhis2.web;
 
 import org.motechproject.dhis2.domain.Settings;
+import org.motechproject.dhis2.rest.service.DhisWebService;
 import org.motechproject.dhis2.service.SettingsService;
 import org.motechproject.dhis2.service.SyncService;
 import org.motechproject.dhis2.service.TasksService;
@@ -21,14 +22,17 @@ public class SettingsController {
     private SettingsService settingsService;
     private SyncService syncService;
     private TasksService tasksService;
+    private DhisWebService dhisWebService;
 
     @Autowired
     public SettingsController(@Qualifier("dhisSettingsService") SettingsService settingsService,
                               SyncService syncService,
-                              TasksService tasksService) {
+                              TasksService tasksService,
+                              DhisWebService dhisWebService) {
         this.settingsService = settingsService;
         this.syncService = syncService;
         this.tasksService = tasksService;
+        this.dhisWebService = dhisWebService;
     }
 
     @RequestMapping(value = "/dhis2-settings", method = RequestMethod.GET)
