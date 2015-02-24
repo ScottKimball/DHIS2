@@ -8,15 +8,14 @@ import org.junit.runner.RunWith;
 import org.motechproject.dhis2.domain.OrgUnit;
 import org.motechproject.dhis2.domain.Settings;
 
-import org.motechproject.dhis2.dto.impl.AttributeDto;
 import org.motechproject.dhis2.event.EventParams;
 import org.motechproject.dhis2.event.EventSubjects;
 import org.motechproject.dhis2.repository.OrgUnitDataService;
 import org.motechproject.dhis2.repository.TrackedEntityInstanceDataService;
+import org.motechproject.dhis2.rest.domain.AttributeDto;
 import org.motechproject.dhis2.service.SettingsService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
-import org.motechproject.event.listener.impl.EventListenerRegistry;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.testing.osgi.http.SimpleHttpClient;
@@ -30,16 +29,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import javax.inject.Inject;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static org.junit.Assert.assertNotNull;
-
-
-/**
- * Created by scott on 1/22/15.
- */
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
@@ -55,12 +47,9 @@ public class EventHandlerBundleIT extends BasePaxIT {
     private static final String DATE = "date";
     private static final String STAGE_ID ="stageID";
     private static final String ATTRIBUTE_UUID_1 = "attributeUuid1";
-    private static final String ATTRIUBTE_VALUE_1 = "attributeValue1";
+    private static final String ATTRIBUTE_VALUE_1 = "attributeValue1";
     private static final String ATTRIBUTE_UUID_2 = "attributeUuid2";
-    private static final String ATTRIUBTE_VALUE_2 = "attributeValue2";
-
-
-
+    private static final String ATTRIBUTE_VALUE_2 = "attributeValue2";
 
     @Inject
     private OrgUnitDataService orgUnitDataService;
@@ -75,10 +64,6 @@ public class EventHandlerBundleIT extends BasePaxIT {
     @Qualifier("dhis2SettingsService")
     private SettingsService settingsService;
 
-
-
-
-
     @Before
     public void setup() {
 
@@ -88,11 +73,6 @@ public class EventHandlerBundleIT extends BasePaxIT {
         settingsService.updateSettings(settings);
         clearDatabase();
         populateDatabase();
-
-
-
-
-
     }
 
     @After
@@ -108,25 +88,27 @@ public class EventHandlerBundleIT extends BasePaxIT {
                 ":0,\"deleted\":0},\"reference\":\"IbqmvQFz0zW\"}{\"status\":\"SUCCESS\",\"importCount\":{\"imported\"" +
                 ":1,\"updated\":0,\"ignored\":0,\"deleted\":0},\"reference\":\"GmHEBGJtymq\"}";
 
-        AttributeDto testAttributeDto1 = new AttributeDto(null, ATTRIBUTE_UUID_1 , ATTRIUBTE_VALUE_1);
-        AttributeDto testAttributeDto2 = new AttributeDto(null,ATTRIBUTE_UUID_2, ATTRIUBTE_VALUE_2);
+        AttributeDto testAttributeDto1 = new AttributeDto();
+        testAttributeDto1.setAttribute(ATTRIBUTE_UUID_1);
+        testAttributeDto1.setValue(ATTRIBUTE_VALUE_1);
 
+        AttributeDto testAttributeDto2 = new AttributeDto();
+        testAttributeDto2.setAttribute(ATTRIBUTE_UUID_2);
+        testAttributeDto2.setAttribute(ATTRIBUTE_VALUE_2);
 
         Map<String, Object> params = new HashMap<>();
         params.put(EventParams.ENTITY_TYPE, ENTITY_TYPE_ID);
         params.put(EventParams.EXTERNAL_ID, INSTANCE_EXT_ID);
         params.put(EventParams.LOCATION, ORGUNIT_NAME);
-        params.put(testAttributeDto1.getDhis2Uuid(), testAttributeDto1.getValue());
-        params.put(testAttributeDto2.getDhis2Uuid(), testAttributeDto2.getValue());
+        params.put(testAttributeDto1.getAttribute(), testAttributeDto1.getValue());
+        params.put(testAttributeDto2.getAttribute(), testAttributeDto2.getValue());
 
 
         MotechEvent event = new MotechEvent(EventSubjects.CREATE_ENTITY,params);
         relay.sendEventMessage(event);
 
-
-
         SimpleHttpServer simpleServer = SimpleHttpServer.getInstance();
-        simpleServer.start(settingsService.getSettings().getTrackedEntityInstancesURI(),201,responseBody);
+        simpleServer.start(settingsService.getSettings().getURIForResource("trackedEntityInstances"),201,responseBody);
 
         relay.sendEventMessage(event);
         assertNotNull(trackedEntityInstanceDataService.findByExternalName(INSTANCE_EXT_ID));

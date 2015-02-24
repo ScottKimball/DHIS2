@@ -4,7 +4,10 @@ import org.motechproject.dhis2.domain.Program;
 import org.motechproject.dhis2.domain.Stage;
 import org.motechproject.dhis2.domain.TrackedEntity;
 import org.motechproject.dhis2.domain.TrackedEntityAttribute;
-import org.motechproject.dhis2.service.Dhis2SchemaService;
+import org.motechproject.dhis2.service.ProgramService;
+import org.motechproject.dhis2.service.StageService;
+import org.motechproject.dhis2.service.TrackedEntityAttributeService;
+import org.motechproject.dhis2.service.TrackedEntityService;
 import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.ChannelRequest;
 import org.motechproject.tasks.contract.TriggerEventRequest;
@@ -13,20 +16,24 @@ import org.osgi.framework.BundleContext;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by scott on 1/15/15.
- */
 public class ChannelRequestBuilder  {
 
-
-
-
-    private Dhis2SchemaService dhis2SchemaService;
     private BundleContext bundleContext;
+    private ProgramService programService;
+    private StageService stageService;
+    private TrackedEntityAttributeService trackedEntityAttributeService;
+    private TrackedEntityService trackedEntityService;
 
-    public ChannelRequestBuilder(Dhis2SchemaService dhis2SchemaService , BundleContext bundleContext) {
-        this.dhis2SchemaService = dhis2SchemaService;
+    public ChannelRequestBuilder(BundleContext bundleContext,
+                                 ProgramService programService,
+                                 StageService stageService,
+                                 TrackedEntityAttributeService trackedEntityAttributeService,
+                                 TrackedEntityService trackedEntityService) {
         this.bundleContext = bundleContext;
+        this.programService = programService;
+        this.stageService = stageService;
+        this.trackedEntityAttributeService = trackedEntityAttributeService;
+        this.trackedEntityService = trackedEntityService;
     }
 
     public ChannelRequest build() {
@@ -37,15 +44,15 @@ public class ChannelRequestBuilder  {
 
         List<ActionEventRequest> actions = new ArrayList<>();
 
-        List<Program> programs = dhis2SchemaService.getPrograms();
+        List<Program> programs = programService.findByRegistration(true);
         actions.addAll(programActionBuilder.build(programs));
 
 
-        List<Stage> stages = dhis2SchemaService.getStages();
+        List<Stage> stages = stageService.findAll();
         actions.addAll(stageActionBuilder.build(stages));
 
-        List<TrackedEntityAttribute> attributes = dhis2SchemaService.getTrackedEntityAttributes();
-        List<TrackedEntity> trackedEntities = dhis2SchemaService.getTrackedEntities();
+        List<TrackedEntityAttribute> attributes = trackedEntityAttributeService.findAll();
+        List<TrackedEntity> trackedEntities = trackedEntityService.findAll();
         actions.addAll(createInstanceActionBuilder.build(attributes, trackedEntities));
 
         return new ChannelRequest(DisplayNames.DHIS2_DISPLAY_NAME, bundleContext.getBundle().getSymbolicName(),
