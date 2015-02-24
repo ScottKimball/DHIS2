@@ -18,9 +18,6 @@ import java.util.List;
  */
 public class ChannelRequestBuilder  {
 
-
-
-
     private Dhis2SchemaService dhis2SchemaService;
     private BundleContext bundleContext;
 

@@ -39,6 +39,8 @@ public class Dhis2IntegrationTests {
     private TrackedEntityDataService trackedEntityDataService;
     @Inject
     private StageDataService stageDataService;
+    @Inject
+    private TrackedEntityInstanceDataService trackedEntityInstanceDataService;
 
     @Before
     public void setup() {
@@ -50,8 +52,6 @@ public class Dhis2IntegrationTests {
     public void tearDown () {
         clearDatabase();
     }
-
-
 
     private void populateDatabase () {
         orgUnitDataService.create(new OrgUnit(ORGUNIT_NAME,ORGUNIT_ID));
@@ -65,6 +65,7 @@ public class Dhis2IntegrationTests {
         trackedEntityAttributeDataService.deleteAll();
         trackedEntityDataService.deleteAll();
         stageDataService.deleteAll();
+
     }
 
 

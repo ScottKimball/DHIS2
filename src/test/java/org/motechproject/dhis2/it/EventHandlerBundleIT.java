@@ -71,6 +71,7 @@ public class EventHandlerBundleIT extends BasePaxIT {
     @After
     public void tearDown() {
         trackedEntityInstanceDataService.deleteAll();
+
     }
 
     @Test

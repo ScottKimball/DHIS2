@@ -17,6 +17,7 @@ import org.motechproject.dhis2.repository.TrackedEntityDataService;
 import org.motechproject.dhis2.service.Dhis2SchemaService;
 import org.motechproject.dhis2.service.TasksService;
 import org.motechproject.dhis2.service.impl.TasksServiceImpl;
+import org.motechproject.tasks.domain.Channel;
 import org.motechproject.tasks.service.ChannelService;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
@@ -25,10 +26,15 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by scott on 2/16/15.
@@ -53,6 +59,7 @@ public class TasksBundleIT {
     private static final String STAGE_ID = "StageId";
     private static final String STAGE_NAME_NO_REG = "StageNameNoReg";
     private static final String STAGE_ID_NO_REG = "StageIdNoReg";
+    private static final String MODULE_NAME = "org.motechproject.DHIS2";
 
 
     @Inject
@@ -66,33 +73,34 @@ public class TasksBundleIT {
     @Inject
     private StageDataService stageDataService;
     @Inject
-    private BundleContext bundleContext;
-    @Inject
-    private Dhis2SchemaService dhis2SchemaService;
-
-
-    @Inject
     private TasksService tasksService;
+    @Inject
+    private ChannelService channelService;
+    private Logger logger = LoggerFactory.getLogger(TasksBundleIT.class);
 
     @Before
     public void setup() {
-
+        populateDatabase();
+        logger.debug("updating tasks Channel");
+        tasksService.updateChannel();
     }
+
 
 
     @Test
-    public void emptyTest () throws Exception {
+    public void testTasksChannelUpdate () throws Exception {
 
 
-        //   tasksService.updateChannel();
+        List<Channel> channels = channelService.getAllChannels();
+        Channel taskchannel = channelService.getChannel(MODULE_NAME);
+
+        assertNotNull(taskchannel);
+        assertEquals(taskchannel.getModuleName(),MODULE_NAME);
     }
 
 
-
-
-
-
     private void populateDatabase () {
+
         /*Data Elements*/
         DataElement dataElement = new DataElement(DATA_ELEMENT_NAME,DATA_ELEMENT_ID);
         dataElementDataService.create(dataElement);
@@ -107,6 +115,7 @@ public class TasksBundleIT {
 
         /*Tracked Entity*/
         TrackedEntity trackedEntity = new TrackedEntity(TRACKED_ENTITY_NAME,TRACKED_ENTITY_ID);
+        trackedEntityDataService.create(trackedEntity);
 
         /*Stages*/
         List<Stage> stages = new ArrayList<>();
@@ -127,7 +136,8 @@ public class TasksBundleIT {
         stageNoReg.setProgram(PROGRAM_NO_REGISTRATION_ID);
         stageNoReg.setDataElements(dataElements);
 
-        stages.add(stageNoReg);
+        List<Stage> stagesNoReg = new ArrayList<>();
+        stagesNoReg.add(stageNoReg);
         stageDataService.create(stageNoReg);
 
 
@@ -144,20 +154,14 @@ public class TasksBundleIT {
         programDataService.create(program);
 
         Program programNoRegistration = new Program();
-        programNoRegistration.setName(PROGRAM_REGISTRATION);
-        programNoRegistration.setUuid(PROGRAM_REGISTRATION_ID);
+        programNoRegistration.setName(PROGRAM_NO_REGISTRATION);
+        programNoRegistration.setUuid(PROGRAM_NO_REGISTRATION_ID);
         programNoRegistration.setAttributes(attributeList);
-        programNoRegistration.setTrackedEntity(trackedEntity);
-        programNoRegistration.setRegistration(true);
-        programNoRegistration.setSingleEvent(false);
-        programNoRegistration.setStages(stages);
+        programNoRegistration.setRegistration(false);
+        programNoRegistration.setSingleEvent(true);
+        programNoRegistration.setStages(stagesNoReg);
 
         programDataService.create(programNoRegistration);
 
-
-
     }
-
-
-
 }
