@@ -115,42 +115,59 @@ public class TasksBundleIT {
         assertEquals(event.getSubject(), EventSubjects.ENROLL_IN_PROGRAM);
 
         SortedSet<ActionParameter> actionParameters = event.getActionParameters();
-        for (ActionParameter actionParameter : actionParameters) {
-            logger.debug(actionParameter.toString());
-        }
+        Iterator<ActionParameter> actionParameterIterator = actionParameters.iterator();
+        assertEquals (actionParameters.size(),4);
 
-
-        assertEquals (actionParameters.size(),6);
-        ActionParameter parameter = actionParameters.first();
+        ActionParameter parameter = actionParameterIterator.next();
         assertEquals(parameter.getKey(), EventParams.EXTERNAL_ID);
 
-        parameter = actionParameters.first();
+        parameter = actionParameterIterator.next();
         assertEquals(parameter.getKey(),EventParams.DATE);
 
-        parameter = actionParameters.first();
+        parameter = actionParameterIterator.next();
         assertEquals(parameter.getKey(),EventParams.PROGRAM);
 
-        parameter = actionParameters.first();
-        assertEquals(parameter.getKey(),EventParams.ENTITY_TYPE);
-
-        parameter = actionParameters.first();
+        parameter = actionParameterIterator.next();
         assertEquals(parameter.getKey(),ATTRIBUTE_ID);
-
-        parameter = actionParameters.first();
-        assertEquals(parameter.getKey(),EventParams.LOCATION);
-
-        event = itr.next();
-
-
-
-
 
 
         /*Create tracked Entity instance and Enroll in program*/
+        event = itr.next();
 
-        /*Stages*/
+        logger.debug(event.getDisplayName());
 
-        /*Create tracked entity instance*/
+        assertEquals(event.getSubject(), EventSubjects.CREATE_AND_ENROLL);
+
+        actionParameters = event.getActionParameters();
+        actionParameterIterator = actionParameters.iterator();
+        assertEquals (actionParameters.size(),6);
+
+        parameter = actionParameterIterator.next();
+        assertEquals(parameter.getKey(), EventParams.EXTERNAL_ID);
+
+        parameter = actionParameterIterator.next();
+        assertEquals(parameter.getKey(),EventParams.DATE);
+
+        parameter = actionParameterIterator.next();
+        assertEquals(parameter.getKey(),EventParams.PROGRAM);
+
+        parameter = actionParameterIterator.next();
+        assertEquals(parameter.getKey(),EventParams.ENTITY_TYPE);
+
+        parameter = actionParameterIterator.next();
+        assertEquals(parameter.getKey(),EventParams.LOCATION);
+
+        parameter = actionParameterIterator.next();
+        assertEquals(parameter.getKey(),ATTRIBUTE_ID);
+
+
+
+
+
+        /*todo: Stages*/
+
+
+        /*todo: Create tracked entity instance*/
 
 
     }

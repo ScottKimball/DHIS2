@@ -159,11 +159,23 @@ public class ProgramActionBuilderTest {
         assertEquals(parameterRequest.getValue(),"program1UUID");
 
         parameterRequest = itr.next();
+        assertEquals(parameterRequest.getDisplayName(),trackedEntity.getName());
+        assertEquals(parameterRequest.getKey(),EventParams.ENTITY_TYPE);
+        assertEquals(parameterRequest.getValue(),trackedEntity.getUuid());
+
+        parameterRequest = itr.next();
+        assertEquals(parameterRequest.getDisplayName(),DisplayNames.ORG_UNIT);
+        assertEquals(parameterRequest.getKey(),EventParams.LOCATION);
+
+        
+        parameterRequest = itr.next();
         assertEquals(parameterRequest.getDisplayName(),attribute1.getName());
         assertEquals(parameterRequest.getKey(),attribute1.getUuid());
         assertNull(parameterRequest.getValue());
 
 
     }
+
+
 
 }

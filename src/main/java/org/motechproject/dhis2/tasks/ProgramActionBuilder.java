@@ -72,7 +72,7 @@ public class ProgramActionBuilder {
 
             /*Adds all tracked entity attributes for program*/
             actionParameters.addAll(buildRequestForProgram(program));
-            actionParamsForCreateAndEnroll.addAll(buildRequestForProgram(program));
+
 
             builder.setActionParameters(actionParameters)
                     .setDisplayName(DisplayNames.PROGRAM_ENROLLMENT + " [" + program.getName() + "]")
@@ -103,7 +103,7 @@ public class ProgramActionBuilder {
                     .setRequired(true);
 
             actionParamsForCreateAndEnroll.add(actionParameterBuilder.createActionParameterRequest());
-
+            actionParamsForCreateAndEnroll.addAll(buildRequestForProgram(program));
 
             builder.setActionParameters(actionParamsForCreateAndEnroll)
                     .setDisplayName(DisplayNames.CREATE_TRACKED_ENTITY_INSTANCE + " [" +
@@ -122,6 +122,7 @@ public class ProgramActionBuilder {
     }
 
     private List<ActionParameterRequest> buildRequestForProgram(Program program) {
+        int count = counter + 1;
 
         List<ActionParameterRequest> parameterRequests = new ArrayList<>();
         ActionParameterRequestBuilder actionParameterBuilder;
@@ -132,7 +133,7 @@ public class ProgramActionBuilder {
                     .setDisplayName(attribute.getName())
                     .setKey(attribute.getUuid())
                     .setType(UNICODE)
-                    .setOrder(counter++);
+                    .setOrder(count++);
 
             parameterRequests.add(actionParameterBuilder.createActionParameterRequest());
 
