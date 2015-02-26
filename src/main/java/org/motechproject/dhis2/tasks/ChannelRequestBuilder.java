@@ -47,7 +47,6 @@ public class ChannelRequestBuilder  {
         List<Program> programs = programService.findByRegistration(true);
         actions.addAll(programActionBuilder.build(programs));
 
-
         List<Stage> stages = stageService.findAll();
         actions.addAll(stageActionBuilder.build(stages));
 
