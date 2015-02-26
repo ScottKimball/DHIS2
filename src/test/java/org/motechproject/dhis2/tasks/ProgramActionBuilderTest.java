@@ -167,7 +167,7 @@ public class ProgramActionBuilderTest {
         assertEquals(parameterRequest.getDisplayName(),DisplayNames.ORG_UNIT);
         assertEquals(parameterRequest.getKey(),EventParams.LOCATION);
 
-        
+
         parameterRequest = itr.next();
         assertEquals(parameterRequest.getDisplayName(),attribute1.getName());
         assertEquals(parameterRequest.getKey(),attribute1.getUuid());

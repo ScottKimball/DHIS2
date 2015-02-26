@@ -63,7 +63,6 @@ public class TasksBundleIT {
     private static final String STAGE_NAME_NO_REG = "StageNameNoReg";
     private static final String STAGE_ID_NO_REG = "StageIdNoReg";
     private static final String MODULE_NAME = "org.motechproject.DHIS2";
-    private static final int ACTION_EVENT_SIZE = 5;
 
 
     @Inject
@@ -81,6 +80,7 @@ public class TasksBundleIT {
     @Inject
     private ChannelService channelService;
     private Logger logger = LoggerFactory.getLogger(TasksBundleIT.class);
+
 
     @Before
     public void setup() {
@@ -102,15 +102,11 @@ public class TasksBundleIT {
         List<ActionEvent> actionEvents = taskchannel.getActionTaskEvents();
         assertNotNull(actionEvents);
 
-        for (ActionEvent e : actionEvents) {
-            logger.debug(e.getDisplayName());
-            logger.debug(e.toString() + "\n");
-        }
         Iterator<ActionEvent> itr = actionEvents.iterator();
 
-        /*Program enrollments first*/
+        /*Program enrollments */
         ActionEvent event = itr.next();
-        logger.debug(event.getDisplayName());
+        logger.debug(event.toString());
 
         assertEquals(event.getSubject(), EventSubjects.ENROLL_IN_PROGRAM);
 
@@ -134,7 +130,7 @@ public class TasksBundleIT {
         /*Create tracked Entity instance and Enroll in program*/
         event = itr.next();
 
-        logger.debug(event.getDisplayName());
+        logger.debug(event.toString());
 
         assertEquals(event.getSubject(), EventSubjects.CREATE_AND_ENROLL);
 
@@ -161,13 +157,94 @@ public class TasksBundleIT {
         assertEquals(parameter.getKey(),ATTRIBUTE_ID);
 
 
+        /*Stages*/
+        event = itr.next();
+        logger.debug(event.toString());
+
+        assertEquals(event.getSubject(),EventSubjects.UPDATE_PROGRAM_STAGE);
+
+        actionParameters = event.getActionParameters();
+        actionParameterIterator = actionParameters.iterator();
+        assertEquals(actionParameters.size(),7);
+
+        parameter = actionParameterIterator.next();
+        assertEquals(parameter.getKey(), EventParams.EXTERNAL_ID);
+
+        parameter = actionParameterIterator.next();
+        assertEquals(parameter.getKey(), EventParams.REGISTRATION);
+        assertEquals(parameter.getValue(),"true");
+
+        parameter = actionParameterIterator.next();
+        assertEquals(parameter.getKey(), EventParams.PROGRAM);
+        assertEquals(parameter.getValue(),PROGRAM_REGISTRATION_ID);
+
+        parameter = actionParameterIterator.next();
+        assertEquals(parameter.getKey(), EventParams.STAGE);
+        assertEquals(parameter.getValue(),STAGE_ID);
+
+        parameter = actionParameterIterator.next();
+        assertEquals(parameter.getKey(), EventParams.DATE);
+
+        parameter = actionParameterIterator.next();
+        assertEquals(parameter.getKey(), EventParams.LOCATION);
+
+        parameter = actionParameterIterator.next();
+        assertEquals(parameter.getKey(), DATA_ELEMENT_ID);
+
+        event = itr.next();
+        logger.debug(event.toString());
+
+        assertEquals(event.getSubject(),EventSubjects.UPDATE_PROGRAM_STAGE);
+
+        actionParameters = event.getActionParameters();
+        actionParameterIterator = actionParameters.iterator();
+        assertEquals(actionParameters.size(),6);
 
 
+        parameter = actionParameterIterator.next();
+        assertEquals(parameter.getKey(), EventParams.REGISTRATION);
+        assertEquals(parameter.getValue(),"false");
 
-        /*todo: Stages*/
+        parameter = actionParameterIterator.next();
+        assertEquals(parameter.getKey(), EventParams.PROGRAM);
+        assertEquals(parameter.getValue(),PROGRAM_NO_REGISTRATION_ID);
+
+        parameter = actionParameterIterator.next();
+        assertEquals(parameter.getKey(), EventParams.STAGE);
+        assertEquals(parameter.getValue(),STAGE_ID_NO_REG);
+
+        parameter = actionParameterIterator.next();
+        assertEquals(parameter.getKey(), EventParams.DATE);
+
+        parameter = actionParameterIterator.next();
+        assertEquals(parameter.getKey(), EventParams.LOCATION);
+
+        parameter = actionParameterIterator.next();
+        assertEquals(parameter.getKey(), DATA_ELEMENT_ID);
+
+        /*Create tracked entity instance*/
+        event = itr.next();
+        logger.debug(event.toString());
+
+        assertEquals(event.getSubject(),EventSubjects.CREATE_ENTITY);
+
+        actionParameters = event.getActionParameters();
+        actionParameterIterator = actionParameters.iterator();
+        assertEquals(actionParameters.size(),4);
 
 
-        /*todo: Create tracked entity instance*/
+        parameter = actionParameterIterator.next();
+        assertEquals(parameter.getKey(), EventParams.EXTERNAL_ID);
+
+        parameter = actionParameterIterator.next();
+        assertEquals(parameter.getKey(), EventParams.ENTITY_TYPE);
+        assertEquals(parameter.getValue(), TRACKED_ENTITY_ID);
+
+        parameter = actionParameterIterator.next();
+        assertEquals(parameter.getKey(), EventParams.LOCATION);
+
+        parameter = actionParameterIterator.next();
+        assertEquals(parameter.getKey(),ATTRIBUTE_ID);
 
 
     }
