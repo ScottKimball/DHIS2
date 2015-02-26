@@ -11,11 +11,9 @@ import org.motechproject.dhis2.repository.ProgramDataService;
 import org.motechproject.dhis2.repository.StageDataService;
 import org.motechproject.dhis2.repository.TrackedEntityAttributeDataService;
 import org.motechproject.dhis2.repository.TrackedEntityDataService;
-import javax.inject.Inject;
+import org.motechproject.dhis2.repository.TrackedEntityInstanceDataService;
 
-/**
- * Created by scott on 2/12/15.
- */
+import javax.inject.Inject;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({EventHandlerBundleIT.class,TasksBundleIT.class})
@@ -62,7 +60,7 @@ public class Dhis2IntegrationTests {
         trackedEntityAttributeDataService.deleteAll();
         trackedEntityDataService.deleteAll();
         stageDataService.deleteAll();
-
+        trackedEntityInstanceDataService.deleteAll();
     }
 
 
