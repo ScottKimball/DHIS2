@@ -15,6 +15,7 @@ import org.motechproject.dhis2.domain.Settings;
 import org.motechproject.dhis2.rest.domain.BaseDto;
 import org.motechproject.dhis2.rest.domain.DataElementDto;
 import org.motechproject.dhis2.rest.domain.DhisEventDto;
+import org.motechproject.dhis2.rest.domain.DhisStatusResponse;
 import org.motechproject.dhis2.rest.domain.EnrollmentDto;
 import org.motechproject.dhis2.rest.domain.OrganisationUnitDto;
 import org.motechproject.dhis2.rest.domain.ProgramDto;
@@ -29,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -147,36 +149,60 @@ public class DhisWebServiceImpl implements DhisWebService {
     }
 
     @Override
-    public String createEnrollment(EnrollmentDto enrollment) {
+    public DhisStatusResponse createEnrollment(EnrollmentDto enrollment) {
         String json = parseToJson(enrollment);
 
         Settings settings = settingsService.getSettings();
         HttpUriRequest request = generatePostRequest(settings, settings.getServerURI() + ENROLLMENTS_PATH, json);
         InputStream content = getContentForRequest(request);
 
-        return content.toString();
+        DhisStatusResponse status;
+
+        try {
+            status = new ObjectMapper().readValue(content, DhisStatusResponse.class);
+        } catch (IOException e) {
+            throw new DhisWebException("Unable to parse status response", e);
+        }
+
+        return status;
     }
 
     @Override
-    public String createEvent(DhisEventDto event) {
+    public DhisStatusResponse createEvent(DhisEventDto event) {
         String json = parseToJson(event);
 
         Settings settings = settingsService.getSettings();
         HttpUriRequest request = generatePostRequest(settings, settings.getServerURI() + EVENTS_PATH, json);
         InputStream content = getContentForRequest(request);
 
-        return content.toString();
+        DhisStatusResponse status;
+
+        try {
+            status = new ObjectMapper().readValue(content, DhisStatusResponse.class);
+        } catch (IOException e) {
+            throw new DhisWebException("Unable to parse status response", e);
+        }
+
+        return status;
     }
 
     @Override
-    public String createTrackedEntityInstance(TrackedEntityInstanceDto trackedEntity) {
+    public DhisStatusResponse createTrackedEntityInstance(TrackedEntityInstanceDto trackedEntity) {
         String json = parseToJson(trackedEntity);
 
         Settings settings = settingsService.getSettings();
         HttpUriRequest request = generatePostRequest(settings, settings.getServerURI() + TRACKED_ENTITY_INSTANCES_PATH, json);
         InputStream content = getContentForRequest(request);
 
-        return content.toString();
+        DhisStatusResponse status;
+
+        try {
+            status = new ObjectMapper().readValue(content, DhisStatusResponse.class);
+        } catch (IOException e) {
+            throw new DhisWebException("Unable to parse status response", e);
+        }
+
+        return status;
     }
 
     private String parseToJson(Object object) {

@@ -2,6 +2,7 @@ package org.motechproject.dhis2.rest.service;
 
 import org.motechproject.dhis2.rest.domain.DataElementDto;
 import org.motechproject.dhis2.rest.domain.DhisEventDto;
+import org.motechproject.dhis2.rest.domain.DhisStatusResponse;
 import org.motechproject.dhis2.rest.domain.EnrollmentDto;
 import org.motechproject.dhis2.rest.domain.OrganisationUnitDto;
 import org.motechproject.dhis2.rest.domain.ProgramDto;
@@ -31,9 +32,9 @@ public interface DhisWebService {
     List<TrackedEntityDto> getTrackedEntities();
     TrackedEntityDto getTrackedEntityByHref(String href);
 
-    String createEnrollment(EnrollmentDto enrollmentDto);
-    String createEvent(DhisEventDto event);
-    String createTrackedEntityInstance(TrackedEntityInstanceDto trackedEntity);
+    DhisStatusResponse createEnrollment(EnrollmentDto enrollmentDto);
+    DhisStatusResponse createEvent(DhisEventDto event);
+    DhisStatusResponse createTrackedEntityInstance(TrackedEntityInstanceDto trackedEntity);
 }
 
 

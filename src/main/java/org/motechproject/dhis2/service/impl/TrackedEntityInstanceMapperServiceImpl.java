@@ -12,6 +12,14 @@ public class TrackedEntityInstanceMapperServiceImpl implements TrackedEntityInst
     private TrackedEntityInstanceDataService trackedEntityInstanceDataService;
 
     @Override
+    public TrackedEntityInstanceMapper create(String externalId, String dhisId) {
+        TrackedEntityInstanceMapper mapper = new TrackedEntityInstanceMapper();
+        mapper.setExternalName(externalId);
+        mapper.setDhis2Name(dhisId);
+        return trackedEntityInstanceDataService.create(mapper);
+    }
+
+    @Override
     public String getDhisId(String externalId) {
         TrackedEntityInstanceMapper mapper = trackedEntityInstanceDataService.findByExternalName(externalId);
         return mapper.getDhis2Uuid();

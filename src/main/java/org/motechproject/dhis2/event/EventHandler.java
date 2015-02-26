@@ -3,6 +3,7 @@ package org.motechproject.dhis2.event;
 import org.motechproject.dhis2.rest.domain.AttributeDto;
 import org.motechproject.dhis2.rest.domain.DataValueDto;
 import org.motechproject.dhis2.rest.domain.DhisEventDto;
+import org.motechproject.dhis2.rest.domain.DhisStatusResponse;
 import org.motechproject.dhis2.rest.domain.EnrollmentDto;
 import org.motechproject.dhis2.rest.domain.TrackedEntityInstanceDto;
 import org.motechproject.dhis2.rest.service.DhisWebService;
@@ -39,10 +40,14 @@ public class EventHandler {
 
     @MotechListener(subjects = {EventSubjects.CREATE_ENTITY })
     public void handleRegistration(MotechEvent event) {
-        TrackedEntityInstanceDto trackedEntityInstance = createTrackedEntityInstanceFromParams(event.getParameters());
-        dhisWebService.createTrackedEntityInstance(trackedEntityInstance);
+        Map<String, Object> params = event.getParameters();
+        String externalUUID = (String) params.remove(EventParams.EXTERNAL_ID);
+        TrackedEntityInstanceDto trackedEntityInstance = createTrackedEntityInstanceFromParams(params);
+        DhisStatusResponse response = dhisWebService.createTrackedEntityInstance(trackedEntityInstance);
 
-        // TODO: create a new instance in the mapper on success
+        if (response.getStatus() == "SUCCESS") {
+            trackedEntityInstanceMapperService.create(externalUUID, response.getReference());
+        }
     }
 
     @MotechListener(subjects = {EventSubjects.ENROLL_IN_PROGRAM })
@@ -59,7 +64,6 @@ public class EventHandler {
     }
 
     private TrackedEntityInstanceDto createTrackedEntityInstanceFromParams(Map<String, Object> params) {
-        String externalUUID = (String) params.remove(EventParams.EXTERNAL_ID);
         String trackedEntity = (String) params.remove(EventParams.ENTITY_TYPE);
 
         /*Get org Unit*/
