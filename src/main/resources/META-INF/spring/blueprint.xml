@@ -55,5 +55,7 @@
 
     <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay"/>
 
+    <osgi:reference id="channelService" interface= "org.motechproject.tasks.service.ChannelService" />
+
     <osgi:reference id="mdsLookupService" interface="org.motechproject.mds.service.MDSLookupService" />
 </beans>
