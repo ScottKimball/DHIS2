@@ -17,18 +17,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 
 @Controller
-public class SettingsController {
-
+public class DhisSettingsController {
     private SettingsService settingsService;
     private SyncService syncService;
     private TasksService tasksService;
     private DhisWebService dhisWebService;
 
     @Autowired
-    public SettingsController(@Qualifier("dhisSettingsService") SettingsService settingsService,
-                              SyncService syncService,
-                              TasksService tasksService,
-                              DhisWebService dhisWebService) {
+    public DhisSettingsController(@Qualifier("dhisSettingsService") SettingsService settingsService,
+                                  SyncService syncService,
+                                  TasksService tasksService,
+                                  DhisWebService dhisWebService) {
         this.settingsService = settingsService;
         this.syncService = syncService;
         this.tasksService = tasksService;

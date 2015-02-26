@@ -1,5 +1,6 @@
 package org.motechproject.dhis2.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 /**
@@ -43,6 +44,7 @@ public class Settings {
         this.password = password;
     }
 
+    @JsonIgnore
     public String getURIForResource(String resourceName) {
         return String.format(serverURI + "/api/%s");
     }

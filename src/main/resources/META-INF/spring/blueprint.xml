@@ -16,7 +16,7 @@
     <context:annotation-config/>
     <context:component-scan base-package="org.motechproject.dhis2"/>
 
-    <bean id="dhis2Settings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
+    <bean id="dhisSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
         <property name="rawConfigFiles">
             <list>
                 <value>classpath:dhis2-settings.json</value>
@@ -24,10 +24,9 @@
         </property>
     </bean>
 
-
     <bean id="moduleRegistrationData" class="org.motechproject.osgi.web.ModuleRegistrationData">
-        <constructor-arg name="moduleName" value="dhis2"/>
         <constructor-arg name="url" value="../dhis2/resources/index.html"/>
+        <constructor-arg name="moduleName" value="dhis2"/>
         <constructor-arg name="angularModules">
             <list>
                 <value>dhis2</value>
@@ -38,8 +37,8 @@
                 <entry key="messages" value="../dhis2/resources/messages/"/>
             </map>
         </constructor-arg>
-        <property name="defaultURL" value="/dhis2/settings"/>
         <property name="settingsURL" value="/dhis2/settings"/>
+        <property name="defaultURL" value="/dhis2/settings"/>
     </bean>
 
 
@@ -56,11 +55,5 @@
 
     <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay"/>
 
-    <osgi:reference id="eventListenerRegistry"
-                    interface="org.motechproject.event.listener.EventListenerRegistryService"/>
-
-    <osgi:service ref="dhisSettingsService" interface="org.motechproject.dhis2.service.SettingsService" />
-
-    <osgi:reference id="channelService" interface= "org.motechproject.tasks.service.ChannelService" />
-
+    <osgi:reference id="mdsLookupService" interface="org.motechproject.mds.service.MDSLookupService" />
 </beans>

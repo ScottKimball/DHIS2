@@ -37,7 +37,7 @@ public class SettingsServiceImpl implements SettingsService {
     }
 
     @Autowired
-    public SettingsServiceImpl(@Qualifier("dhis2Settings") SettingsFacade settingsFacade) {
+    public SettingsServiceImpl(@Qualifier("dhisSettings") SettingsFacade settingsFacade) {
         this.settingsFacade = settingsFacade;
         loadSettings();
     }

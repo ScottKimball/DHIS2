@@ -9,9 +9,9 @@ import org.motechproject.dhis2.tasks.ChannelRequestBuilder;
 import org.motechproject.tasks.service.ChannelService;
 import org.osgi.framework.BundleContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service("tasksService")
 public class TasksServiceImpl implements TasksService {
 
     private BundleContext bundleContext;
@@ -26,12 +26,14 @@ public class TasksServiceImpl implements TasksService {
                             ProgramService programService,
                             StageService stageService,
                             TrackedEntityService trackedEntityService,
-                            TrackedEntityAttributeService trackedEntityAttributeService) {
+                            TrackedEntityAttributeService trackedEntityAttributeService,
+                            ChannelService channelService) {
         this.bundleContext = bundleContext;
         this.programService = programService;
         this.stageService = stageService;
         this.trackedEntityService = trackedEntityService;
         this.trackedEntityAttributeService = trackedEntityAttributeService;
+        this.channelService = channelService;
     }
 
     @Override

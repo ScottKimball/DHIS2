@@ -16,4 +16,14 @@ public class TrackedEntityInstanceMapperServiceImpl implements TrackedEntityInst
         TrackedEntityInstanceMapper mapper = trackedEntityInstanceDataService.findByExternalName(externalId);
         return mapper.getDhis2Uuid();
     }
+
+    @Override
+    public TrackedEntityInstanceMapper findByExternalId(String externalId) {
+        return trackedEntityInstanceDataService.findByExternalName(externalId);
+    }
+
+    @Override
+    public void deleteAll() {
+        trackedEntityInstanceDataService.deleteAll();
+    }
 }

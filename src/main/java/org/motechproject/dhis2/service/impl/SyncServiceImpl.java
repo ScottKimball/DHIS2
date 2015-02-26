@@ -1,6 +1,5 @@
 package org.motechproject.dhis2.service.impl;
 
-import com.jayway.jsonpath.PathNotFoundException;
 import org.motechproject.dhis2.domain.DataElement;
 import org.motechproject.dhis2.domain.Program;
 import org.motechproject.dhis2.domain.Stage;
@@ -22,16 +21,16 @@ import org.motechproject.dhis2.service.StageService;
 import org.motechproject.dhis2.service.SyncService;
 import org.motechproject.dhis2.service.TrackedEntityAttributeService;
 import org.motechproject.dhis2.service.TrackedEntityService;
-import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-@Component
+@Service("syncService")
 public class SyncServiceImpl implements SyncService {
     @Autowired
     private DhisWebService dhisWebService;
@@ -83,7 +82,7 @@ public class SyncServiceImpl implements SyncService {
                     TimeUnit.NANOSECONDS) + "seconds");
 
             return true;
-        } catch (PathNotFoundException e) {
+        } catch (Exception e) {
 
             programService.deleteAll();
             trackedEntityAttributeService.deleteAll();

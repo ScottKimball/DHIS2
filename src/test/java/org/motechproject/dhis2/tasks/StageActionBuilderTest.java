@@ -17,9 +17,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-/**
- * Created by scottkimball on 1/27/15.
- */
 public class StageActionBuilderTest {
 
     private StageActionBuilder stageActionBuilder;
