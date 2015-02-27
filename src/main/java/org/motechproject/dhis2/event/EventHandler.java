@@ -45,7 +45,7 @@ public class EventHandler {
         TrackedEntityInstanceDto trackedEntityInstance = createTrackedEntityInstanceFromParams(params);
         DhisStatusResponse response = dhisWebService.createTrackedEntityInstance(trackedEntityInstance);
 
-        if (response.getStatus() == "SUCCESS") {
+        if ("SUCCESS".equals(response.getStatus())) {
             trackedEntityInstanceMapperService.create(externalUUID, response.getReference());
         }
     }
@@ -168,7 +168,7 @@ public class EventHandler {
         dhisWebService.createTrackedEntityInstance(instance);
 
         MotechEvent newEvent = new MotechEvent(EventSubjects.ENROLL_IN_PROGRAM, params);
-        EnrollmentDto enrollmentDto = createEnrollmentFromParams(event.getParameters());
+        EnrollmentDto enrollmentDto = createEnrollmentFromParams(newEvent.getParameters());
         dhisWebService.createEnrollment(enrollmentDto);
     }
 }
