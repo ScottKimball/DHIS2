@@ -3,6 +3,7 @@ package org.motechproject.dhis2.service.impl;
 import org.motechproject.dhis2.domain.TrackedEntityInstanceMapper;
 import org.motechproject.dhis2.repository.TrackedEntityInstanceDataService;
 import org.motechproject.dhis2.service.TrackedEntityInstanceMapperService;
+import org.motechproject.dhis2.service.TrackedEntityInstanceMappingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +16,18 @@ public class TrackedEntityInstanceMapperServiceImpl implements TrackedEntityInst
     public TrackedEntityInstanceMapper create(String externalId, String dhisId) {
         TrackedEntityInstanceMapper mapper = new TrackedEntityInstanceMapper();
         mapper.setExternalName(externalId);
-        mapper.setDhis2Name(dhisId);
+        mapper.setDhis2Uuid(dhisId);
         return trackedEntityInstanceDataService.create(mapper);
     }
 
     @Override
-    public String getDhisId(String externalId) {
+    public String mapFromExternalId(String externalId) {
         TrackedEntityInstanceMapper mapper = trackedEntityInstanceDataService.findByExternalName(externalId);
+
+        if (mapper == null) {
+            throw new TrackedEntityInstanceMappingException("Failed to map for externalId: " + externalId);
+        }
+
         return mapper.getDhis2Uuid();
     }
 

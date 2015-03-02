@@ -36,6 +36,7 @@ import java.util.List;
 
 @Service("dhisWebService")
 public class DhisWebServiceImpl implements DhisWebService {
+    private static final String API_ENDPOINT = "/api";
     private static final String ENROLLMENTS_PATH = "/enrollments";
     private static final String EVENTS_PATH = "/events";
     private static final String TRACKED_ENTITY_INSTANCES_PATH = "/trackedEntityInstances";
@@ -153,7 +154,7 @@ public class DhisWebServiceImpl implements DhisWebService {
         String json = parseToJson(enrollment);
 
         Settings settings = settingsService.getSettings();
-        HttpUriRequest request = generatePostRequest(settings, settings.getServerURI() + ENROLLMENTS_PATH, json);
+        HttpUriRequest request = generatePostRequest(settings, settings.getServerURI() + API_ENDPOINT + ENROLLMENTS_PATH, json);
         InputStream content = getContentForRequest(request);
 
         DhisStatusResponse status;
@@ -172,7 +173,7 @@ public class DhisWebServiceImpl implements DhisWebService {
         String json = parseToJson(event);
 
         Settings settings = settingsService.getSettings();
-        HttpUriRequest request = generatePostRequest(settings, settings.getServerURI() + EVENTS_PATH, json);
+        HttpUriRequest request = generatePostRequest(settings, settings.getServerURI() + API_ENDPOINT + EVENTS_PATH, json);
         InputStream content = getContentForRequest(request);
 
         DhisStatusResponse status;
@@ -191,7 +192,7 @@ public class DhisWebServiceImpl implements DhisWebService {
         String json = parseToJson(trackedEntity);
 
         Settings settings = settingsService.getSettings();
-        HttpUriRequest request = generatePostRequest(settings, settings.getServerURI() + TRACKED_ENTITY_INSTANCES_PATH, json);
+        HttpUriRequest request = generatePostRequest(settings, settings.getServerURI() + API_ENDPOINT + TRACKED_ENTITY_INSTANCES_PATH, json);
         InputStream content = getContentForRequest(request);
 
         DhisStatusResponse status;
