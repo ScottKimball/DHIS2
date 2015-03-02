@@ -4,15 +4,20 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DhisStatusResponse {
-    private String status;
+    public static enum DhisStatus {
+        SUCCESS,
+        ERROR
+    }
+
+    private DhisStatus status;
     private ImportCount importCount;
     private String reference;
 
-    public String getStatus() {
+    public DhisStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(DhisStatus status) {
         this.status = status;
     }
 
