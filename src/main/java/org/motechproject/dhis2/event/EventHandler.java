@@ -8,12 +8,10 @@ import org.motechproject.dhis2.rest.domain.EnrollmentDto;
 import org.motechproject.dhis2.rest.domain.TrackedEntityInstanceDto;
 import org.motechproject.dhis2.rest.service.DhisWebService;
 import org.motechproject.dhis2.service.OrgUnitService;
-import org.motechproject.dhis2.service.SettingsService;
 import org.motechproject.dhis2.service.TrackedEntityInstanceMapperService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,11 +22,6 @@ import java.util.Map.Entry;
 
 @Service
 public class EventHandler {
-
-    @Autowired
-    @Qualifier("dhisSettingsService")
-    private SettingsService settingsService;
-
     @Autowired
     private DhisWebService dhisWebService;
 
