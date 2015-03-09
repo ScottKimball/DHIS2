@@ -5,9 +5,6 @@ import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;
 
-/**
- * Created by scott on 1/6/15.
- */
 public interface StageDataService extends MotechDataService<Stage> {
 
     @Lookup

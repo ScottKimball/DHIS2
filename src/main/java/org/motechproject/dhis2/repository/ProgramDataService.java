@@ -7,9 +7,6 @@ import org.motechproject.mds.service.MotechDataService;
 
 import java.util.List;
 
-/**
- * Created by scott on 1/6/15.
- */
 public interface ProgramDataService extends MotechDataService<Program> {
 
     @Lookup

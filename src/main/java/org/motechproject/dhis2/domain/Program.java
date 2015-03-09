@@ -7,10 +7,6 @@ import org.motechproject.mds.annotations.Field;
 import javax.jdo.annotations.Unique;
 import java.util.List;
 
-/**
- * Created by scott on 1/6/15.
- */
-
 @Entity
 public class Program {
     @Field(required = true)

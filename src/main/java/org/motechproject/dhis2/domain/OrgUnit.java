@@ -5,11 +5,6 @@ import org.motechproject.mds.annotations.Field;
 
 import javax.jdo.annotations.Unique;
 
-
-/**
- * Created by scott on 1/8/15.
- */
-
 @Entity
 public class OrgUnit {
     @Field(required = true)

@@ -5,10 +5,6 @@ import org.motechproject.mds.annotations.Field;
 
 import javax.jdo.annotations.Unique;
 
-/**
- * Created by scott on 10/22/14.
- */
-
 @Entity
 public class TrackedEntityInstanceMapper {
 
