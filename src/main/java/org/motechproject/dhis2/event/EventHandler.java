@@ -71,6 +71,20 @@ public class EventHandler {
         dhisWebService.createEvent(dhisEventDto);
     }
 
+    @MotechListener(subjects = {EventSubjects.CREATE_AND_ENROLL })
+    public void handleCreateAndEnroll(MotechEvent event) {
+        Map<String, Object> params = new HashMap<String, Object>(event.getParameters());
+        Map<String, Object> enrollmentParams = new HashMap<String, Object>();
+
+        enrollmentParams.put(EventParams.PROGRAM, params.remove(EventParams.PROGRAM));
+        enrollmentParams.put(EventParams.DATE, params.remove(EventParams.DATE));
+
+        enrollmentParams.put(EventParams.EXTERNAL_ID, params.get(EventParams.EXTERNAL_ID));
+
+        handleCreate(new MotechEvent(EventSubjects.CREATE_ENTITY, params));
+        handleEnrollment(new MotechEvent(EventSubjects.ENROLL_IN_PROGRAM, enrollmentParams));
+    }
+
     private TrackedEntityInstanceDto createTrackedEntityInstanceFromParams(Map<String, Object> params) {
         String trackedEntity = (String) params.remove(EventParams.ENTITY_TYPE);
 
@@ -158,16 +172,5 @@ public class EventHandler {
         dhisEventDto.setDataValues(dataValues);
 
         return dhisEventDto;
-    }
-
-    @MotechListener(subjects = {EventSubjects.CREATE_AND_ENROLL })
-    public void handleCreateAndEnroll(MotechEvent event) {
-        Map<String, Object> enrollmentParams = new HashMap<String, Object>();
-        enrollmentParams.put(EventParams.PROGRAM, event.getParameters().remove(EventParams.PROGRAM));
-        enrollmentParams.put(EventParams.DATE, event.getParameters().remove(EventParams.DATE));
-        enrollmentParams.put(EventParams.EXTERNAL_ID, event.getParameters().get(EventParams.EXTERNAL_ID));
-
-        handleCreate(event);
-        handleEnrollment(new MotechEvent(EventSubjects.ENROLL_IN_PROGRAM, enrollmentParams));
     }
 }

@@ -7,10 +7,17 @@ import org.motechproject.dhis2.service.OrgUnitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service("orgUnitService")
 public class OrgUnitServiceImpl implements OrgUnitService {
     @Autowired
     private OrgUnitDataService orgUnitDataService;
+
+    @Override
+    public List<OrgUnit> findAll() {
+        return orgUnitDataService.retrieveAll();
+    }
 
     @Override
     public OrgUnit findById(String id) {
@@ -28,6 +35,16 @@ public class OrgUnitServiceImpl implements OrgUnitService {
         orgUnit.setUuid(details.getId());
         orgUnit.setName(details.getName());
         return orgUnitDataService.create(orgUnit);
+    }
+
+    @Override
+    public void update(OrgUnit orgUnit) {
+        orgUnitDataService.update(orgUnit);
+    }
+
+    @Override
+    public void delete(OrgUnit orgUnit) {
+        orgUnitDataService.delete(orgUnit);
     }
 
     @Override

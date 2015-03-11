@@ -157,47 +157,29 @@ public class DhisWebServiceImpl implements DhisWebService {
     @Override
     public DhisStatusResponse createEnrollment(EnrollmentDto enrollment) {
         String json = parseToJson(enrollment);
-
         Settings settings = settingsService.getSettings();
-        HttpUriRequest request = generatePostRequest(settings, settings.getServerURI() + API_ENDPOINT + ENROLLMENTS_PATH, json);
-        InputStream content = getContentForRequest(request);
 
-        DhisStatusResponse status;
-
-        try {
-            status = new ObjectMapper().readValue(content, DhisStatusResponse.class);
-        } catch (IOException e) {
-            throw new DhisWebException("Unable to parse status response", e);
-        }
-
-        return status;
+        return createEntity(settings, settings.getServerURI() + API_ENDPOINT + ENROLLMENTS_PATH, json);
     }
 
     @Override
     public DhisStatusResponse createEvent(DhisEventDto event) {
         String json = parseToJson(event);
-
         Settings settings = settingsService.getSettings();
-        HttpUriRequest request = generatePostRequest(settings, settings.getServerURI() + API_ENDPOINT + EVENTS_PATH, json);
-        InputStream content = getContentForRequest(request);
 
-        DhisStatusResponse status;
-
-        try {
-            status = new ObjectMapper().readValue(content, DhisStatusResponse.class);
-        } catch (IOException e) {
-            throw new DhisWebException("Unable to parse status response", e);
-        }
-
-        return status;
+        return createEntity(settings, settings.getServerURI() + API_ENDPOINT + EVENTS_PATH, json);
     }
 
     @Override
     public DhisStatusResponse createTrackedEntityInstance(TrackedEntityInstanceDto trackedEntity) {
         String json = parseToJson(trackedEntity);
-
         Settings settings = settingsService.getSettings();
-        HttpUriRequest request = generatePostRequest(settings, settings.getServerURI() + API_ENDPOINT + TRACKED_ENTITY_INSTANCES_PATH, json);
+
+        return createEntity(settings, settings.getServerURI() + API_ENDPOINT + TRACKED_ENTITY_INSTANCES_PATH, json);
+    }
+
+    private DhisStatusResponse createEntity(Settings settings, String uri, String json) {
+        HttpUriRequest request = generatePostRequest(settings, uri, json);
         InputStream content = getContentForRequest(request);
 
         DhisStatusResponse status;

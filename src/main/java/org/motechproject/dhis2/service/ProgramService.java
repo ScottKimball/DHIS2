@@ -6,9 +6,11 @@ import org.motechproject.dhis2.rest.domain.ProgramDto;
 import java.util.List;
 
 public interface ProgramService {
-    Program findById(String id);
-    void update(Program program);
-    Program createFromDetails(ProgramDto details);
-    void deleteAll();
+    List<Program> findAll();
     List<Program> findByRegistration(boolean registration);
+    Program findById(String id);
+    Program createFromDetails(ProgramDto details);
+    void update(Program program);
+    void delete(Program program);
+    void deleteAll();
 }

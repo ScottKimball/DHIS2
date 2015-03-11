@@ -35,6 +35,16 @@ public class StageServiceImpl implements StageService {
     }
 
     @Override
+    public void update(Stage stage) {
+        stageDataService.update(stage);
+    }
+
+    @Override
+    public void delete(Stage stage) {
+        stageDataService.delete(stage);
+    }
+
+    @Override
     public void deleteAll() {
         stageDataService.deleteAll();
     }

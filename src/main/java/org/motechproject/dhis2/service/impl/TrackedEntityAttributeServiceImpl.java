@@ -33,6 +33,16 @@ public class TrackedEntityAttributeServiceImpl implements TrackedEntityAttribute
     }
 
     @Override
+    public void update(TrackedEntityAttribute trackedEntityAttribute) {
+        trackedEntityAttributeDataService.update(trackedEntityAttribute);
+    }
+
+    @Override
+    public void delete(TrackedEntityAttribute trackedEntityAttribute) {
+        trackedEntityAttributeDataService.delete(trackedEntityAttribute);
+    }
+
+    @Override
     public void deleteAll() {
         trackedEntityAttributeDataService.deleteAll();
     }

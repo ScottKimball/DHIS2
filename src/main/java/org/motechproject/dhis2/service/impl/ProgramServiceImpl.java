@@ -25,6 +25,11 @@ public class ProgramServiceImpl implements ProgramService {
     }
 
     @Override
+    public void delete(Program program) {
+        programDataService.delete(program);
+    }
+
+    @Override
     public Program createFromDetails(ProgramDto details) {
         Program program = new Program();
         program.setUuid(details.getId());
@@ -37,6 +42,11 @@ public class ProgramServiceImpl implements ProgramService {
     @Override
     public void deleteAll() {
         programDataService.deleteAll();
+    }
+
+    @Override
+    public List<Program> findAll() {
+        return programDataService.retrieveAll();
     }
 
     @Override

@@ -9,5 +9,7 @@ public interface TrackedEntityAttributeService {
     List<TrackedEntityAttribute> findAll();
     TrackedEntityAttribute findById(String id);
     TrackedEntityAttribute createFromDetails(TrackedEntityAttributeDto details);
+    void update(TrackedEntityAttribute trackedEntityAttribute);
+    void delete(TrackedEntityAttribute trackedEntityAttribute);
     void deleteAll();
 }

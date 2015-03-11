@@ -7,10 +7,17 @@ import org.motechproject.dhis2.service.DataElementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service("dataElementService")
 public class DataElementServiceImpl implements DataElementService {
     @Autowired
     private DataElementDataService dataElementDataService;
+
+    @Override
+    public List<DataElement> findAll() {
+        return dataElementDataService.retrieveAll();
+    }
 
     @Override
     public DataElement findById(String id) {
@@ -23,6 +30,16 @@ public class DataElementServiceImpl implements DataElementService {
         dataElement.setUuid(details.getId());
         dataElement.setName(details.getName());
         return dataElementDataService.create(dataElement);
+    }
+
+    @Override
+    public void update(DataElement dataElement) {
+        dataElementDataService.update(dataElement);
+    }
+
+    @Override
+    public void delete(DataElement dataElement) {
+        dataElementDataService.delete(dataElement);
     }
 
     @Override

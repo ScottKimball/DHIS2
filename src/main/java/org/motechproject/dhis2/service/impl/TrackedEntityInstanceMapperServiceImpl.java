@@ -7,6 +7,8 @@ import org.motechproject.dhis2.service.TrackedEntityInstanceMappingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service("trackedEntityInstanceMapperService")
 public class TrackedEntityInstanceMapperServiceImpl implements TrackedEntityInstanceMapperService {
     @Autowired
@@ -29,6 +31,21 @@ public class TrackedEntityInstanceMapperServiceImpl implements TrackedEntityInst
         }
 
         return mapper.getDhis2Uuid();
+    }
+
+    @Override
+    public void update(TrackedEntityInstanceMapper mapper) {
+        trackedEntityInstanceDataService.update(mapper);
+    }
+
+    @Override
+    public void delete(TrackedEntityInstanceMapper mapper) {
+        trackedEntityInstanceDataService.delete(mapper);
+    }
+
+    @Override
+    public List<TrackedEntityInstanceMapper> findAll() {
+        return trackedEntityInstanceDataService.retrieveAll();
     }
 
     @Override

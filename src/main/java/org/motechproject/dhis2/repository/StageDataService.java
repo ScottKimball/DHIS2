@@ -6,7 +6,6 @@ import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;
 
 public interface StageDataService extends MotechDataService<Stage> {
-
     @Lookup
     Stage findByUuid(@LookupField(name = "uuid") String uuid);
 }

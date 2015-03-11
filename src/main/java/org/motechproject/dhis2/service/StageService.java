@@ -9,5 +9,7 @@ public interface StageService {
     List<Stage> findAll();
     Stage findById(String id);
     Stage createFromDetails(ProgramStageDto details, String programId, boolean hasRegistration);
+    void update(Stage stage);
+    void delete(Stage stage);
     void deleteAll();
 }
