@@ -142,4 +142,22 @@ public class DhisEventDto {
     public void setFollowup(boolean followup) {
         this.followup = followup;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof DhisEventDto) {
+            DhisEventDto dto = (DhisEventDto) obj;
+
+            for (DataValueDto value : dto.getDataValues()) {
+                if (!(this.getDataValues().contains(value)))
+                    return false;
+            }
+
+            return dto.getProgram().equals(this.getProgram())
+                    && dto.getTrackedEntityInstance().equals(this.getTrackedEntityInstance())
+                    && dto.getOrgUnit().equals(this.getOrgUnit())
+                    && dto.getProgramStage().equals(this.getProgramStage());
+        }
+        return false;
+    }
 }

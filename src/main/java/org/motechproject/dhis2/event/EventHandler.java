@@ -127,7 +127,7 @@ public class EventHandler {
         DhisEventDto dhisEventDto = new DhisEventDto();
 
         String registationString = (String) params.remove(EventParams.REGISTRATION);
-        boolean registration = registationString.contains("true") ? true : false;
+        boolean registration = registationString.contains("true");
 
         String trackedEntityInstanceId = trackedEntityInstanceMapperService.mapFromExternalId((String) params.remove(EventParams.EXTERNAL_ID));
 
@@ -138,12 +138,8 @@ public class EventHandler {
 
         String orgUnitName = (String) params.remove(EventParams.LOCATION);
         String orgUnitId = orgUnitService.findByName(orgUnitName).getUuid();
-
         String program = (String) params.remove(EventParams.PROGRAM);
-
         String date = (String) params.remove(EventParams.DATE);
-
-        /*Get stage UUID. Once dynamic actions are implemented, event should directly pass DHIS2 UUID*/
         String stage = (String) params.remove(EventParams.STAGE);
 
         List<DataValueDto> dataValues = new ArrayList<>();

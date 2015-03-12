@@ -19,4 +19,15 @@ public class DataValueDto {
     public void setDataElement(String dataElement) {
         this.dataElement = dataElement;
     }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof DataValueDto) {
+            DataValueDto dto = (DataValueDto) obj;
+            return dto.getDataElement().equals(this.getDataElement());
+        }
+
+        return false;
+    }
 }

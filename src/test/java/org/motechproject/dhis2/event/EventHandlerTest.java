@@ -11,10 +11,13 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.motechproject.dhis2.domain.DataElement;
 import org.motechproject.dhis2.domain.OrgUnit;
 import org.motechproject.dhis2.domain.Settings;
 import org.motechproject.dhis2.domain.TrackedEntityInstanceMapper;
 import org.motechproject.dhis2.rest.domain.AttributeDto;
+import org.motechproject.dhis2.rest.domain.DataValueDto;
+import org.motechproject.dhis2.rest.domain.DhisEventDto;
 import org.motechproject.dhis2.rest.domain.DhisStatusResponse;
 import org.motechproject.dhis2.rest.domain.EnrollmentDto;
 import org.motechproject.dhis2.rest.domain.TrackedEntityInstanceDto;
@@ -59,13 +62,16 @@ public class EventHandlerTest {
     private static final String ORGUNIT_ID = "orgUnitID";
     private static final String ENTITY_TYPE_PERSON = "person";
     private static final String ENTITY_INSTANCE_ID = "externalID";
-
     private static final String ATTRIBUTE_VALUE = "attributeValue";
     private static final String ATTRIBUTE_ID = "attributeID";
-
     private static final String INSTANCE_DHIS_ID = "dhis2uuid";
     private static final String PROGRAM_ID = "programID";
     private static final String DATE = "2014-01-01";
+    private static final String REGISTRATION = "true";
+    private static final String STAGE_ID = "stageId";
+    private static final String DATA_ELEMENT_ID = "dataElementID";
+    private static final String DATA_ELEMENT_VALUE = "value";
+
 
 
     private EventHandler handler;
@@ -81,8 +87,6 @@ public class EventHandlerTest {
     private DhisWebService dhisWebservice;
 
     private DhisStatusResponse response;
-
-
 
 
     @Before
@@ -181,6 +185,43 @@ public class EventHandlerTest {
         handler.handleEnrollment(event);
         verify(trackedEntityInstanceMapperService).mapFromExternalId(ENTITY_INSTANCE_ID);
         verify(dhisWebservice).createEnrollment(enrollment);
+
+    }
+
+    @Test
+    public void testEventWithRegistration() throws Exception {
+
+        List<DataValueDto> dataValues = new ArrayList<>();
+        DataValueDto datavalue = new DataValueDto();
+        datavalue.setDataElement(DATA_ELEMENT_ID);
+        datavalue.setValue(DATA_ELEMENT_VALUE);
+        dataValues.add(datavalue);
+
+        DhisEventDto programStageDto = new DhisEventDto();
+        programStageDto.setDataValues(dataValues);
+        programStageDto.setTrackedEntityInstance(INSTANCE_DHIS_ID);
+        programStageDto.setProgram(PROGRAM_ID);
+        programStageDto.setEventDate(DATE);
+        programStageDto.setOrgUnit(ORGUNIT_ID);
+        programStageDto.setProgramStage(STAGE_ID);
+
+        when(dhisWebservice.createEvent(programStageDto)).thenReturn(response);
+        when(trackedEntityInstanceMapperService.mapFromExternalId(ENTITY_INSTANCE_ID))
+                .thenReturn(INSTANCE_DHIS_ID);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put(EventParams.REGISTRATION, REGISTRATION);
+        params.put(EventParams.EXTERNAL_ID, ENTITY_INSTANCE_ID);
+        params.put(EventParams.LOCATION, ORGUNIT_NAME);
+        params.put(EventParams.PROGRAM, PROGRAM_ID);
+        params.put(EventParams.DATE, DATE);
+        params.put(EventParams.STAGE,STAGE_ID);
+
+        MotechEvent event = new MotechEvent(EventSubjects.UPDATE_PROGRAM_STAGE, params);
+        handler.handleStageUpdate(event);
+
+        verify(trackedEntityInstanceMapperService).mapFromExternalId(ENTITY_INSTANCE_ID);
+        verify(dhisWebservice).createEvent(programStageDto);
 
     }
 
