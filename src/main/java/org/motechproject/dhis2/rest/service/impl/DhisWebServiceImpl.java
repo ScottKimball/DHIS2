@@ -54,6 +54,11 @@ public class DhisWebServiceImpl implements DhisWebService {
     @Qualifier("dhisSettingsService")
     private SettingsService settingsService;
 
+
+    public DhisWebServiceImpl(SettingsService settingsService) {
+        this.settingsService = settingsService;
+    }
+
     @Override
     public List<DataElementDto> getDataElements() {
         return getResources(DATA_ELEMENTS, DataElementDto.class);

@@ -32,8 +32,20 @@ public class EventHandler {
     @Autowired
     private OrgUnitService orgUnitService;
 
+    public EventHandler(DhisWebService webService,
+                        TrackedEntityInstanceMapperService trackedEntityInstanceMapperService,
+                        OrgUnitService orgUnitService) {
+
+        this.dhisWebService = webService;
+        this.trackedEntityInstanceMapperService = trackedEntityInstanceMapperService;
+        this.orgUnitService = orgUnitService;
+
+    }
+
+
+
     @MotechListener(subjects = {EventSubjects.CREATE_ENTITY })
-    public void handleRegistration(MotechEvent event) {
+    public void handleCreate(MotechEvent event) {
         Map<String, Object> params = new HashMap<String, Object>(event.getParameters());
         String externalUUID = (String) params.remove(EventParams.EXTERNAL_ID);
         TrackedEntityInstanceDto trackedEntityInstance = createTrackedEntityInstanceFromParams(params);
@@ -159,7 +171,7 @@ public class EventHandler {
         enrollmentParams.put(EventParams.DATE, event.getParameters().remove(EventParams.DATE));
         enrollmentParams.put(EventParams.EXTERNAL_ID, event.getParameters().get(EventParams.EXTERNAL_ID));
 
-        handleRegistration(event);
+        handleCreate(event);
         handleEnrollment(new MotechEvent(EventSubjects.ENROLL_IN_PROGRAM, enrollmentParams));
     }
 }

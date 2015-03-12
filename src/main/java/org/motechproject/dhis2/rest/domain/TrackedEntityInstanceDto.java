@@ -52,4 +52,6 @@ public class TrackedEntityInstanceDto {
     public void setAttributes(List<AttributeDto> attributes) {
         this.attributes = attributes;
     }
+
+
 }
