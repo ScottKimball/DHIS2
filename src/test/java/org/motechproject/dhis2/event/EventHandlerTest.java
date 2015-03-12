@@ -124,18 +124,6 @@ public class EventHandlerTest {
         instance.setAttributes(attributeDtos);
         instance.setOrgUnit(ORGUNIT_ID);
 
-        DhisStatusResponse.ImportCount importCount = new DhisStatusResponse.ImportCount();
-        importCount.setImported(1);
-        importCount.setUpdated(0);
-        importCount.setIgnored(0);
-        importCount.setDeleted(0);
-
-        DhisStatusResponse response = new DhisStatusResponse();
-        response.setReference(INSTANCE_DHIS_ID);
-        response.setStatus(DhisStatusResponse.DhisStatus.SUCCESS);
-        response.setImportCount(importCount);
-
-        String dhisResponse = objectMapper.writeValueAsString(response);
 
         when(dhisWebservice.createTrackedEntityInstance(instance)).thenReturn(response);
 
@@ -222,6 +210,53 @@ public class EventHandlerTest {
 
         verify(trackedEntityInstanceMapperService).mapFromExternalId(ENTITY_INSTANCE_ID);
         verify(dhisWebservice).createEvent(programStageDto);
+
+    }
+
+    @Test
+    public void testCreateAndEnroll () throws Exception {
+
+        List<AttributeDto> attributeDtos = new ArrayList<>();
+        AttributeDto dto = new AttributeDto();
+        dto.setAttribute(ATTRIBUTE_ID);
+        dto.setValue(ATTRIBUTE_VALUE);
+        attributeDtos.add(dto);
+
+        EnrollmentDto enrollment = new EnrollmentDto();
+        enrollment.setAttributes(attributeDtos);
+        enrollment.setDateOfEnrollment(DATE);
+        enrollment.setProgram(PROGRAM_ID);
+        enrollment.setTrackedEntityInstance(INSTANCE_DHIS_ID);
+
+
+        TrackedEntityInstanceDto instance = new TrackedEntityInstanceDto();
+        instance.setTrackedEntity(ENTITY_TYPE_PERSON);
+        instance.setAttributes(attributeDtos);
+        instance.setOrgUnit(ORGUNIT_ID);
+
+
+
+        when(dhisWebservice.createTrackedEntityInstance(instance)).thenReturn(response);
+        when(dhisWebservice.createEnrollment(enrollment)).thenReturn(response);
+        when(trackedEntityInstanceMapperService.mapFromExternalId(ENTITY_INSTANCE_ID))
+                .thenReturn(INSTANCE_DHIS_ID);
+
+        Map<String,Object> params = new HashMap<>();
+        params.put(EventParams.EXTERNAL_ID,ENTITY_INSTANCE_ID);
+        params.put(EventParams.ENTITY_TYPE, ENTITY_TYPE_PERSON );
+        params.put(EventParams.LOCATION,ORGUNIT_NAME);
+        params.put(ATTRIBUTE_ID, ATTRIBUTE_VALUE);
+        params.put(EventParams.PROGRAM,PROGRAM_ID );
+        params.put(EventParams.DATE, DATE);
+
+        MotechEvent event = new MotechEvent(EventSubjects.CREATE_AND_ENROLL,params);
+
+        handler.handleCreateAndEnroll(event);
+
+
+        verify(dhisWebservice).createTrackedEntityInstance(instance);
+        verify(dhisWebservice).createEnrollment(enrollment);
+
 
     }
 
