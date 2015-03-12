@@ -16,6 +16,7 @@ import org.motechproject.dhis2.domain.Settings;
 import org.motechproject.dhis2.domain.TrackedEntityInstanceMapper;
 import org.motechproject.dhis2.rest.domain.AttributeDto;
 import org.motechproject.dhis2.rest.domain.DhisStatusResponse;
+import org.motechproject.dhis2.rest.domain.EnrollmentDto;
 import org.motechproject.dhis2.rest.domain.TrackedEntityInstanceDto;
 import org.motechproject.dhis2.rest.service.DhisWebService;
 import org.motechproject.dhis2.rest.service.impl.DhisWebServiceImpl;
@@ -63,6 +64,8 @@ public class EventHandlerTest {
     private static final String ATTRIBUTE_ID = "attributeID";
 
     private static final String INSTANCE_DHIS_ID = "dhis2uuid";
+    private static final String PROGRAM_ID = "programID";
+    private static final String DATE = "2014-01-01";
 
 
     private EventHandler handler;
@@ -77,11 +80,24 @@ public class EventHandlerTest {
     @Mock
     private DhisWebService dhisWebservice;
 
+    private DhisStatusResponse response;
+
 
 
 
     @Before
     public void setup() throws Exception{
+
+        DhisStatusResponse.ImportCount importCount = new DhisStatusResponse.ImportCount();
+        importCount.setImported(1);
+        importCount.setUpdated(0);
+        importCount.setIgnored(0);
+        importCount.setDeleted(0);
+
+        response = new DhisStatusResponse();
+        response.setReference(INSTANCE_DHIS_ID);
+        response.setStatus(DhisStatusResponse.DhisStatus.SUCCESS);
+        response.setImportCount(importCount);
 
 
 
@@ -92,8 +108,6 @@ public class EventHandlerTest {
 
     @Test
     public void testCreate () throws Exception {
-
-
 
         List<AttributeDto> attributeDtos = new ArrayList<>();
         AttributeDto dto = new AttributeDto();
@@ -119,7 +133,7 @@ public class EventHandlerTest {
 
         String dhisResponse = objectMapper.writeValueAsString(response);
 
-        when(dhisWebservice.createTrackedEntityInstance(argThat(new InstanceMatcher(instance)))).thenReturn(response);
+        when(dhisWebservice.createTrackedEntityInstance(instance)).thenReturn(response);
 
         Map<String,Object> params = new HashMap<>();
         params.put(EventParams.EXTERNAL_ID,ENTITY_INSTANCE_ID);
@@ -131,31 +145,44 @@ public class EventHandlerTest {
 
         handler.handleCreate(event);
         verify(trackedEntityInstanceMapperService).create(ENTITY_INSTANCE_ID,INSTANCE_DHIS_ID);
-        verify(dhisWebservice).createTrackedEntityInstance(argThat(new InstanceMatcher(instance)));
+        verify(dhisWebservice).createTrackedEntityInstance(instance);
 
     }
 
-    private class InstanceMatcher extends ArgumentMatcher<TrackedEntityInstanceDto> {
 
-        private TrackedEntityInstanceDto dto;
+    @Test
+    public void testEnrollment() throws Exception {
 
-        public InstanceMatcher(TrackedEntityInstanceDto dto) {
-            this.dto = dto;
-        }
+        List<AttributeDto> attributeDtos = new ArrayList<>();
+        AttributeDto dto = new AttributeDto();
+        dto.setAttribute(ATTRIBUTE_ID);
+        dto.setValue(ATTRIBUTE_VALUE);
+        attributeDtos.add(dto);
 
-        @Override
-        public boolean matches(Object o) {
-            TrackedEntityInstanceDto other = (TrackedEntityInstanceDto) o;
-            if (other.getTrackedEntityInstance() != null && dto.getTrackedEntityInstance() != null)
-                return other.getTrackedEntityInstance().equals(dto.getTrackedEntityInstance());
+        EnrollmentDto enrollment = new EnrollmentDto();
+        enrollment.setAttributes(attributeDtos);
+        enrollment.setDateOfEnrollment(DATE);
+        enrollment.setProgram(PROGRAM_ID);
+        enrollment.setTrackedEntityInstance(INSTANCE_DHIS_ID);
 
+        when(trackedEntityInstanceMapperService.mapFromExternalId(ENTITY_INSTANCE_ID))
+                .thenReturn(INSTANCE_DHIS_ID);
 
-            return other.getTrackedEntity().equals(dto.getTrackedEntity())
-                    && other.getOrgUnit().equals(dto.getOrgUnit())
-                    && other.getAttributes().size() == dto.getAttributes().size();
-        }
+        when(dhisWebservice.createEnrollment(enrollment)).thenReturn(response);
+
+        Map<String,Object> params = new HashMap<>();
+        params.put(EventParams.PROGRAM,PROGRAM_ID );
+        params.put(EventParams.EXTERNAL_ID, ENTITY_INSTANCE_ID);
+        params.put(EventParams.DATE, DATE);
+        params.put(ATTRIBUTE_ID, ATTRIBUTE_VALUE);
+
+        MotechEvent event = new MotechEvent(EventSubjects.ENROLL_IN_PROGRAM,params);
+
+        handler.handleEnrollment(event);
+        verify(trackedEntityInstanceMapperService).mapFromExternalId(ENTITY_INSTANCE_ID);
+        verify(dhisWebservice).createEnrollment(enrollment);
+
     }
-
 
 
 }

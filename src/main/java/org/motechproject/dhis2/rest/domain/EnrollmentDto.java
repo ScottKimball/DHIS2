@@ -61,4 +61,25 @@ public class EnrollmentDto {
     public void setFollowup(boolean followup) {
         this.followup = followup;
     }
+
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (obj instanceof EnrollmentDto) {
+            EnrollmentDto dto = (EnrollmentDto) obj;
+
+            for (AttributeDto attributeDto : dto.getAttributes()) {
+                if (!(this.getAttributes().contains(attributeDto)))
+                    return false;
+            }
+
+            return dto.getTrackedEntityInstance().equals(this.getTrackedEntityInstance())
+                    && dto.getDateOfEnrollment().equals(this.getDateOfEnrollment())
+                    && dto.getProgram().equals(this.getProgram());
+
+        }
+
+        return false;
+    }
 }

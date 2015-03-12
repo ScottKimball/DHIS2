@@ -54,4 +54,20 @@ public class TrackedEntityInstanceDto {
     }
 
 
+    @Override
+    public boolean equals(Object obj) {
+        TrackedEntityInstanceDto other = (TrackedEntityInstanceDto) obj;
+
+        if (other.getTrackedEntityInstance() != null && this.getTrackedEntityInstance() != null)
+            return other.getTrackedEntityInstance().equals(this.getTrackedEntityInstance());
+
+        for (AttributeDto attribute : other.getAttributes() ) {
+            if (!(this.getAttributes().contains(attribute)))
+                return false;
+        }
+
+        return other.getTrackedEntity().equals(this.getTrackedEntity())
+                && other.getOrgUnit().equals(this.getOrgUnit());
+
+    }
 }

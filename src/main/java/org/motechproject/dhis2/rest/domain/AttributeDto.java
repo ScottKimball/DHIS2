@@ -50,4 +50,14 @@ public class AttributeDto {
     public void setValue(String value) {
         this.value = value;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof AttributeDto) {
+            AttributeDto other = (AttributeDto)obj;
+            return this.getAttribute().equals(other.getAttribute());
+        }
+
+        return false;
+    }
 }
