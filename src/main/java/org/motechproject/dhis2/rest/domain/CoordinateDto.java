@@ -1,5 +1,8 @@
 package org.motechproject.dhis2.rest.domain;
 
+/**
+ * A class to model coordinates for program stage events.
+ */
 public class CoordinateDto {
     private Double latitude;
     private Double longitude;

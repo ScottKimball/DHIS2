@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import java.util.List;
 
+/**
+ * A class to model tracked entity instances posted to the DHIS2 API.
+ */
 @JsonInclude(Include.NON_NULL)
 public class TrackedEntityInstanceDto {
     private String trackedEntity;

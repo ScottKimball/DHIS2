@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import java.util.List;
 
+/**
+ * A class to model enrollments posted to the DHIS2 API.
+ */
 @JsonInclude(Include.NON_NULL)
 public class EnrollmentDto {
     private String trackedEntityInstance;

@@ -2,6 +2,9 @@ package org.motechproject.dhis2.rest.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+/**
+ * A class to model DHIS2 responses that result from creating entities.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DhisStatusResponse {
     public static enum DhisStatus {

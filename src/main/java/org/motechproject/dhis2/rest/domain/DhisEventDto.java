@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import java.util.List;
 
+/**
+ * A class to model program stage events posted to the DHIS2 API.
+ */
 @JsonInclude(Include.NON_NULL)
 public class DhisEventDto {
     private String event;

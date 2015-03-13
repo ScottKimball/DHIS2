@@ -3,6 +3,9 @@ package org.motechproject.dhis2.rest.domain;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+/**
+ * A class to model the DHIS2 API's attributes resource.
+ */
 @JsonInclude(Include.NON_NULL)
 public class AttributeDto {
     private String displayName;
