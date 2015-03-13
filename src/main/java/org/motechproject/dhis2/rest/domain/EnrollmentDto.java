@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A class to model enrollments posted to the DHIS2 API.
@@ -65,24 +66,25 @@ public class EnrollmentDto {
         this.followup = followup;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(trackedEntityInstance, program, dateOfEnrollment, dateOfIncident, attributes, followup);
+    }
 
     @Override
     public boolean equals(Object obj) {
-
-        if (obj instanceof EnrollmentDto) {
-            EnrollmentDto dto = (EnrollmentDto) obj;
-
-            for (AttributeDto attributeDto : dto.getAttributes()) {
-                if (!(this.getAttributes().contains(attributeDto)))
-                    return false;
-            }
-
-            return dto.getTrackedEntityInstance().equals(this.getTrackedEntityInstance())
-                    && dto.getDateOfEnrollment().equals(this.getDateOfEnrollment())
-                    && dto.getProgram().equals(this.getProgram());
-
+        if (this == obj) {
+            return true;
         }
-
-        return false;
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final EnrollmentDto other = (EnrollmentDto) obj;
+        return Objects.equals(this.trackedEntityInstance, other.trackedEntityInstance)
+                && Objects.equals(this.program, other.program)
+                && Objects.equals(this.dateOfEnrollment, other.dateOfEnrollment)
+                && Objects.equals(this.dateOfIncident, other.dateOfIncident)
+                && Objects.equals(this.attributes, other.attributes)
+                && Objects.equals(this.followup, other.followup);
     }
 }

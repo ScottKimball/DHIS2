@@ -1,5 +1,7 @@
 package org.motechproject.dhis2.rest.domain;
 
+import java.util.Objects;
+
 /**
  * A class to model data values associated with program stage events in the DHIS2 API.
  */
@@ -23,14 +25,21 @@ public class DataValueDto {
         this.dataElement = dataElement;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(value, dataElement);
+    }
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof DataValueDto) {
-            DataValueDto dto = (DataValueDto) obj;
-            return dto.getDataElement().equals(this.getDataElement());
+        if (this == obj) {
+            return true;
         }
-
-        return false;
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final DataValueDto other = (DataValueDto) obj;
+        return Objects.equals(this.value, other.value)
+                && Objects.equals(this.dataElement, other.dataElement);
     }
 }

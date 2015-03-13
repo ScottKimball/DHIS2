@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A class to model tracked entity instances posted to the DHIS2 API.
@@ -56,21 +57,24 @@ public class TrackedEntityInstanceDto {
         this.attributes = attributes;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(trackedEntity, trackedEntityInstance, orgUnit, created, attributes);
+    }
 
     @Override
     public boolean equals(Object obj) {
-        TrackedEntityInstanceDto other = (TrackedEntityInstanceDto) obj;
-
-        if (other.getTrackedEntityInstance() != null && this.getTrackedEntityInstance() != null)
-            return other.getTrackedEntityInstance().equals(this.getTrackedEntityInstance());
-
-        for (AttributeDto attribute : other.getAttributes() ) {
-            if (!(this.getAttributes().contains(attribute)))
-                return false;
+        if (this == obj) {
+            return true;
         }
-
-        return other.getTrackedEntity().equals(this.getTrackedEntity())
-                && other.getOrgUnit().equals(this.getOrgUnit());
-
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final TrackedEntityInstanceDto other = (TrackedEntityInstanceDto) obj;
+        return Objects.equals(this.trackedEntity, other.trackedEntity)
+                && Objects.equals(this.trackedEntityInstance, other.trackedEntityInstance)
+                && Objects.equals(this.orgUnit, other.orgUnit)
+                && Objects.equals(this.created, other.created)
+                && Objects.equals(this.attributes, other.attributes);
     }
 }

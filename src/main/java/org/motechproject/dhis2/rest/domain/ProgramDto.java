@@ -2,6 +2,7 @@ package org.motechproject.dhis2.rest.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -66,5 +67,27 @@ public class ProgramDto extends BaseDto {
 
     public void setProgramTrackedEntityAttributes(List<ProgramTrackedEntityAttributeDto> programTrackedEntityAttributes) {
         this.programTrackedEntityAttributes = programTrackedEntityAttributes;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(registration, singleEvent, trackedEntity, programStages, organisationUnits, programTrackedEntityAttributes);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final ProgramDto other = (ProgramDto) obj;
+        return Objects.equals(this.registration, other.registration)
+                && Objects.equals(this.singleEvent, other.singleEvent)
+                && Objects.equals(this.trackedEntity, other.trackedEntity)
+                && Objects.equals(this.programStages, other.programStages)
+                && Objects.equals(this.organisationUnits, other.organisationUnits)
+                && Objects.equals(this.programTrackedEntityAttributes, other.programTrackedEntityAttributes);
     }
 }

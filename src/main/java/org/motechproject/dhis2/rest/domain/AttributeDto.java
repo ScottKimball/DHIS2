@@ -3,6 +3,8 @@ package org.motechproject.dhis2.rest.domain;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import java.util.Objects;
+
 /**
  * A class to model the DHIS2 API's attributes resource.
  */
@@ -55,12 +57,23 @@ public class AttributeDto {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof AttributeDto) {
-            AttributeDto other = (AttributeDto)obj;
-            return this.getAttribute().equals(other.getAttribute());
-        }
+    public int hashCode() {
+        return Objects.hash(displayName, attribute, type, code, value);
+    }
 
-        return false;
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final AttributeDto other = (AttributeDto) obj;
+        return Objects.equals(this.displayName, other.displayName)
+                && Objects.equals(this.attribute, other.attribute)
+                && Objects.equals(this.type, other.type)
+                && Objects.equals(this.code, other.code)
+                && Objects.equals(this.value, other.value);
     }
 }

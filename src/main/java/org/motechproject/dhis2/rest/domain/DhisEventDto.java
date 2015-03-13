@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A class to model program stage events posted to the DHIS2 API.
@@ -147,20 +148,33 @@ public class DhisEventDto {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(event, program, programStage, enrollment, enrollmentStatus, trackedEntityInstance, orgUnit, orgUnitName, eventDate, dueDate, coordinate, status, storedBy, dataValues, followup);
+    }
+
+    @Override //NO CHECKSTYLE CyclomaticComplexity
     public boolean equals(Object obj) {
-        if (obj instanceof DhisEventDto) {
-            DhisEventDto dto = (DhisEventDto) obj;
-
-            for (DataValueDto value : dto.getDataValues()) {
-                if (!(this.getDataValues().contains(value)))
-                    return false;
-            }
-
-            return dto.getProgram().equals(this.getProgram())
-                    && dto.getTrackedEntityInstance().equals(this.getTrackedEntityInstance())
-                    && dto.getOrgUnit().equals(this.getOrgUnit())
-                    && dto.getProgramStage().equals(this.getProgramStage());
+        if (this == obj) {
+            return true;
         }
-        return false;
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final DhisEventDto other = (DhisEventDto) obj;
+        return Objects.equals(this.event, other.event)
+                && Objects.equals(this.program, other.program)
+                && Objects.equals(this.programStage, other.programStage)
+                && Objects.equals(this.enrollment, other.enrollment)
+                && Objects.equals(this.enrollmentStatus, other.enrollmentStatus)
+                && Objects.equals(this.trackedEntityInstance, other.trackedEntityInstance)
+                && Objects.equals(this.orgUnit, other.orgUnit)
+                && Objects.equals(this.orgUnitName, other.orgUnitName)
+                && Objects.equals(this.eventDate, other.eventDate)
+                && Objects.equals(this.dueDate, other.dueDate)
+                && Objects.equals(this.coordinate, other.coordinate)
+                && Objects.equals(this.status, other.status)
+                && Objects.equals(this.storedBy, other.storedBy)
+                && Objects.equals(this.dataValues, other.dataValues)
+                && Objects.equals(this.followup, other.followup);
     }
 }
