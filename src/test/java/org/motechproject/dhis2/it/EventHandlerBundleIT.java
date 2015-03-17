@@ -4,14 +4,17 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.dhis2.domain.OrgUnit;
 import org.motechproject.dhis2.domain.Settings;
 import org.motechproject.dhis2.domain.TrackedEntityInstanceMapper;
 import org.motechproject.dhis2.event.EventParams;
 import org.motechproject.dhis2.event.EventSubjects;
+import org.motechproject.dhis2.repository.OrgUnitDataService;
 import org.motechproject.dhis2.rest.domain.AttributeDto;
 import org.motechproject.dhis2.service.SettingsService;
 import org.motechproject.dhis2.service.TrackedEntityInstanceMapperService;
 import org.motechproject.event.MotechEvent;
+import org.motechproject.event.listener.EventRelay;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.testing.osgi.http.SimpleHttpServer;
@@ -35,6 +38,7 @@ public class EventHandlerBundleIT extends BasePaxIT {
     private static final String ENTITY_TYPE_ID = "entityUUID"; // Person
     private static final String INSTANCE_EXT_ID = "externalId";
     private static final String ORGUNIT_NAME = "OrgUnitName";
+    private static final String ORGUNIT_ID = "OrgUnitID";
     private static final String ATTRIBUTE_UUID_1 = "attributeUuid1";
     private static final String ATTRIBUTE_VALUE_1 = "attributeValue1";
     private static final String ATTRIBUTE_UUID_2 = "attributeUuid2";
@@ -46,10 +50,15 @@ public class EventHandlerBundleIT extends BasePaxIT {
     @Inject
     private SettingsService settingsService;
 
+    @Inject
+    private EventRelay relay;
+
+    @Inject
+    private OrgUnitDataService orgUnitDataService;
+
     @Before
     public void setup() {
-        Settings settings = new Settings("http://fakeurl.fake","name","password");
-        settingsService.updateSettings(settings);
+        orgUnitDataService.create(new OrgUnit(ORGUNIT_NAME,ORGUNIT_ID));
     }
 
     @After
@@ -87,6 +96,7 @@ public class EventHandlerBundleIT extends BasePaxIT {
 
 
         MotechEvent event = new MotechEvent(EventSubjects.CREATE_ENTITY,params);
+        relay.sendEventMessage(event);
 
         /*Need to wait for event to be processed*/
         Thread.sleep(1000);

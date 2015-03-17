@@ -16,11 +16,8 @@ import org.motechproject.dhis2.repository.TrackedEntityInstanceDataService;
 import javax.inject.Inject;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({TasksBundleIT.class})
+@Suite.SuiteClasses({TasksBundleIT.class, EventHandlerBundleIT.class})
 public class Dhis2IntegrationTests {
-
-    private static final String ORGUNIT_NAME = "OrgUnitName";
-    private static final String ORGUNIT_ID = "OrgUnitID";
 
     @Inject
     private OrgUnitDataService orgUnitDataService;
@@ -40,7 +37,7 @@ public class Dhis2IntegrationTests {
     @Before
     public void setup() {
         clearDatabase();
-        populateDatabase();
+
     }
 
     @After
@@ -48,10 +45,6 @@ public class Dhis2IntegrationTests {
         clearDatabase();
     }
 
-    private void populateDatabase () {
-        orgUnitDataService.create(new OrgUnit(ORGUNIT_NAME,ORGUNIT_ID));
-
-    }
 
     private void clearDatabase () {
         orgUnitDataService.deleteAll();
