@@ -59,4 +59,8 @@
     <osgi:reference id="channelService" interface= "org.motechproject.tasks.service.ChannelService" />
 
     <osgi:reference id="mdsLookupService" interface="org.motechproject.mds.service.MDSLookupService" />
+
+    <osgi:service id="tasksServiceOsgi" ref="tasksServiceImpl"
+                  interface="org.motechproject.dhis2.service.TasksService"/>
+
 </beans>

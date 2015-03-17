@@ -43,6 +43,8 @@ public class EventHandler {
     }
 
 
+    public EventHandler() {
+    }
 
     @MotechListener(subjects = {EventSubjects.CREATE_ENTITY })
     public void handleCreate(MotechEvent event) {

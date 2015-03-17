@@ -11,7 +11,7 @@ import org.osgi.framework.BundleContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service("tasksService")
+@Service
 public class TasksServiceImpl implements TasksService {
 
     private BundleContext bundleContext;

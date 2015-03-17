@@ -64,6 +64,8 @@ public class DhisWebServiceImpl implements DhisWebService {
     @Qualifier("dhisSettingsService")
     private SettingsService settingsService;
 
+    public DhisWebServiceImpl() {
+    }
 
     public DhisWebServiceImpl(SettingsService settingsService) {
         this.settingsService = settingsService;

@@ -16,7 +16,7 @@ import org.motechproject.dhis2.repository.TrackedEntityInstanceDataService;
 import javax.inject.Inject;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({EventHandlerBundleIT.class,TasksBundleIT.class})
+@Suite.SuiteClasses({TasksBundleIT.class})
 public class Dhis2IntegrationTests {
 
     private static final String ORGUNIT_NAME = "OrgUnitName";
