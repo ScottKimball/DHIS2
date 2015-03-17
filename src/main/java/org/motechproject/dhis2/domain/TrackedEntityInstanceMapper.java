@@ -5,6 +5,9 @@ import org.motechproject.mds.annotations.Field;
 
 import javax.jdo.annotations.Unique;
 
+/**
+ * Maps an External ID to a DHIS2 ID
+ */
 @Entity
 public class TrackedEntityInstanceMapper {
 

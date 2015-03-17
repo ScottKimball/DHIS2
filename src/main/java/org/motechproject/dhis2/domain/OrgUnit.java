@@ -5,6 +5,9 @@ import org.motechproject.mds.annotations.Field;
 
 import javax.jdo.annotations.Unique;
 
+/**
+ * Represents a DHIS2 Organisation Unit
+ */
 @Entity
 public class OrgUnit {
     @Field(required = true)

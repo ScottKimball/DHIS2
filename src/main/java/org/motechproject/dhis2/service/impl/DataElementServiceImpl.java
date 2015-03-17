@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Implementation of {@link org.motechproject.dhis2.service.DataElementService}
+ */
 @Service("dataElementService")
 public class DataElementServiceImpl implements DataElementService {
     @Autowired

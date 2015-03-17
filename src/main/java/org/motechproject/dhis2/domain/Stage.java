@@ -6,6 +6,9 @@ import org.motechproject.mds.annotations.Field;
 import javax.jdo.annotations.Unique;
 import java.util.List;
 
+/**
+ * Represents a DHIS2 program stage event
+ */
 @Entity
 public class Stage {
     @Field(required = true)

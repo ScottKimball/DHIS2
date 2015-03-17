@@ -5,6 +5,9 @@ import org.motechproject.dhis2.rest.domain.TrackedEntityAttributeDto;
 
 import java.util.List;
 
+/**
+ * Manages CRUD operations for a {@link org.motechproject.dhis2.domain.TrackedEntityAttribute}
+ */
 public interface TrackedEntityAttributeService {
     List<TrackedEntityAttribute> findAll();
     TrackedEntityAttribute findById(String id);

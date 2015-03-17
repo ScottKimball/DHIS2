@@ -5,6 +5,9 @@ import org.motechproject.mds.annotations.Field;
 
 import javax.jdo.annotations.Unique;
 
+/**
+ * Represents a DHIS2 tracked entity type
+ */
 @Entity
 public class TrackedEntity {
     @Field(required = true)

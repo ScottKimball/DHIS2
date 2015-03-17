@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
+/**
+ * Implementation of {@link org.motechproject.dhis2.service.TrackedEntityService}
+ */
 @Service("trackedEntityService")
 public class TrackedEntityServiceImpl implements TrackedEntityService {
     @Autowired

@@ -15,6 +15,10 @@ import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 
+
+/**
+ * Implementation of {@link org.motechproject.dhis2.service.SettingsService}
+ */
 @Service("dhisSettingsService")
 public class SettingsServiceImpl implements SettingsService {
     private static final String SETTINGS_FILE_NAME = "dhis2-settings.json";

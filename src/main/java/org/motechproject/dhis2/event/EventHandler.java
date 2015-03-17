@@ -21,6 +21,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+/**
+ * Event Handler for the DHIS2 module. The public methods listen for the event subjects listed in
+ * {@link org.motechproject.dhis2.event.EventSubjects}
+ *
+ */
 @Service
 public class EventHandler {
     @Autowired
@@ -43,9 +48,14 @@ public class EventHandler {
     }
 
 
-    public EventHandler() {
-    }
+    public EventHandler() {}
 
+    /**
+     * Parses the MotechEvent and creates a {@link org.motechproject.dhis2.rest.domain.TrackedEntityInstanceDto}
+     * which is then sent to the DHIS2 server via {@link org.motechproject.dhis2.rest.service.DhisWebService}
+     *
+     * @param event MotechEvent pertaining to tracked entity instance creation.
+     */
     @MotechListener(subjects = {EventSubjects.CREATE_ENTITY })
     public void handleCreate(MotechEvent event) {
         Map<String, Object> params = new HashMap<String, Object>(event.getParameters());
@@ -58,6 +68,12 @@ public class EventHandler {
         }
     }
 
+    /**
+     * Parses the MotechEvent and creates a {@link org.motechproject.dhis2.rest.domain.EnrollmentDto}
+     * which is then sent to the DHIS2 server via {@link org.motechproject.dhis2.rest.service.DhisWebService}
+     *
+     * @param event MotechEvent pertaining to enrolling a tracked entity instance in a program.
+     */
     @MotechListener(subjects = {EventSubjects.ENROLL_IN_PROGRAM })
     public void handleEnrollment(MotechEvent event) {
         Map<String, Object> params = new HashMap<String, Object>(event.getParameters());
@@ -66,6 +82,12 @@ public class EventHandler {
     }
 
 
+    /**
+     * Parses the MotechEvent and creates a {@link org.motechproject.dhis2.rest.domain.DhisEventDto}
+     * which is then sent to the DHIS2 server via {@link org.motechproject.dhis2.rest.service.DhisWebService}
+     *
+     * @param event MotechEvent pertaining to a DHIS2 program stage event.
+     */
     @MotechListener(subjects = {EventSubjects.UPDATE_PROGRAM_STAGE })
     public void handleStageUpdate(MotechEvent event) {
         Map<String, Object> params = new HashMap<String, Object>(event.getParameters());
@@ -73,6 +95,13 @@ public class EventHandler {
         dhisWebService.createEvent(dhisEventDto);
     }
 
+    /**
+     * Parses the event and creates a{@link org.motechproject.dhis2.rest.domain.TrackedEntityInstanceDto}
+     * and a {@link org.motechproject.dhis2.rest.domain.EnrollmentDto} which is then sent to the DHIS2 server
+     * via {@link org.motechproject.dhis2.rest.service.DhisWebService}
+     *
+     * @param event
+     */
     @MotechListener(subjects = {EventSubjects.CREATE_AND_ENROLL })
     public void handleCreateAndEnroll(MotechEvent event) {
         Map<String, Object> params = new HashMap<String, Object>(event.getParameters());

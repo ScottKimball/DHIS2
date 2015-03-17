@@ -7,6 +7,10 @@ import org.motechproject.mds.annotations.Field;
 import javax.jdo.annotations.Unique;
 import java.util.List;
 
+/**
+ * Represents a DHIS2 Program
+ */
+
 @Entity
 public class Program {
     @Field(required = true)

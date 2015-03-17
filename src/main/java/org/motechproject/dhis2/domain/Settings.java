@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 /**
- * DHIS 2 server configuration details.
+ * DHIS2 server configuration details.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Settings {

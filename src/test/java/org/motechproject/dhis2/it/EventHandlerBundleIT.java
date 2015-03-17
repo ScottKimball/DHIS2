@@ -29,6 +29,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
@@ -43,6 +44,8 @@ public class EventHandlerBundleIT extends BasePaxIT {
     private static final String ATTRIBUTE_VALUE_1 = "attributeValue1";
     private static final String ATTRIBUTE_UUID_2 = "attributeUuid2";
     private static final String ATTRIBUTE_VALUE_2 = "attributeValue2";
+
+    private static final int MAX_WAIT = 10;
 
     @Inject
     private TrackedEntityInstanceMapperService trackedEntityInstanceMapperService;
@@ -99,10 +102,21 @@ public class EventHandlerBundleIT extends BasePaxIT {
         relay.sendEventMessage(event);
 
         /*Need to wait for event to be processed*/
-        Thread.sleep(1000);
-
         TrackedEntityInstanceMapper mapper = trackedEntityInstanceMapperService.findByExternalId(INSTANCE_EXT_ID);
-        assertNotNull(mapper);
+        int counter = 0;
+        while (mapper == null ) {
+
+            if (counter++ == MAX_WAIT) {
+                getLogger().error("Waited " + (MAX_WAIT * 100) + " milliseconds for event to process");
+                getLogger().error("Exiting test");
+                fail();
+            }
+
+            Thread.sleep(100);
+            mapper = trackedEntityInstanceMapperService.findByExternalId(INSTANCE_EXT_ID);
+
+        }
+
         assertEquals(mapper.getExternalName(),INSTANCE_EXT_ID);
         assertNotNull(mapper.getDhis2Uuid());
         assertEquals(mapper.getDhis2Uuid(),"IbqmvQFz0zW");

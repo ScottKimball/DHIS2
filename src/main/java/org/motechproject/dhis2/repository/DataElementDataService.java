@@ -5,6 +5,9 @@ import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;
 
+/**
+ * MDS data service for {@link org.motechproject.dhis2.domain.DataElement}
+ */
 public interface DataElementDataService extends MotechDataService<DataElement> {
 
     @Lookup

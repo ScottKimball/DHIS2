@@ -5,6 +5,9 @@ import org.motechproject.mds.annotations.Field;
 
 import javax.jdo.annotations.Unique;
 
+/**
+ * Represents a DHIS2 Data Element
+ */
 @Entity
 public class DataElement {
     @Field(required = true)

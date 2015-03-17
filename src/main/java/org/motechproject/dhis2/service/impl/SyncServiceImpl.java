@@ -30,6 +30,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Implementation of {@link org.motechproject.dhis2.service.SyncService}
+ */
 @Service("syncService")
 public class SyncServiceImpl implements SyncService {
     @Autowired

@@ -5,6 +5,9 @@ import org.motechproject.dhis2.rest.domain.ProgramDto;
 
 import java.util.List;
 
+/**
+ * Manages CRUD operations for a {@link org.motechproject.dhis2.domain.Program}
+ */
 public interface ProgramService {
     List<Program> findAll();
     List<Program> findByRegistration(boolean registration);

@@ -5,6 +5,9 @@ import org.motechproject.dhis2.rest.domain.ProgramStageDto;
 
 import java.util.List;
 
+/**
+ * Manages CRUD operations for a {@link org.motechproject.dhis2.domain.Stage}
+ */
 public interface StageService {
     List<Stage> findAll();
     Stage findById(String id);

@@ -11,6 +11,10 @@ import org.osgi.framework.BundleContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
+/**
+ * Implementation of {@link org.motechproject.dhis2.service.TasksService}
+ */
 @Service
 public class TasksServiceImpl implements TasksService {
 

@@ -4,6 +4,9 @@ import org.motechproject.dhis2.domain.TrackedEntityInstanceMapper;
 
 import java.util.List;
 
+/**
+ * Manages CRUD operations for a {@link org.motechproject.dhis2.domain.TrackedEntityInstanceMapper}
+ */
 public interface TrackedEntityInstanceMapperService {
     List<TrackedEntityInstanceMapper> findAll();
     TrackedEntityInstanceMapper findByExternalId(String externalId);

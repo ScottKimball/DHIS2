@@ -5,6 +5,10 @@ import org.motechproject.dhis2.rest.domain.DataElementDto;
 
 import java.util.List;
 
+
+/**
+ * Manages CRUD operations for a {@link org.motechproject.dhis2.domain.DataElement}
+ */
 public interface DataElementService {
     List<DataElement> findAll();
     DataElement findById(String id);

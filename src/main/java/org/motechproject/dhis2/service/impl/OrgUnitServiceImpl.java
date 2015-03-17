@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Implementation of {@link org.motechproject.dhis2.service.OrgUnitService}
+ */
 @Service("orgUnitService")
 public class OrgUnitServiceImpl implements OrgUnitService {
     @Autowired
