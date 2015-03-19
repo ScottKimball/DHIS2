@@ -66,7 +66,6 @@ public class DhisSettingsController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public boolean sync() {
-
         boolean success = syncService.sync();
 
         if (success) {

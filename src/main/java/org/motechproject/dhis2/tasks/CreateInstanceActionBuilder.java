@@ -14,12 +14,22 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+/**
+ * Builds task action requests for tracked entity instance creation for each entity type in the DHIS2 schema.
+ */
 public class CreateInstanceActionBuilder {
 
     private static final String UNICODE = "UNICODE";
     private static final int ATTRIBUTE_COUNT = 3;
 
 
+    /**
+     * Takes a list of attributes and tracked entity types and builds a list of action event requests
+     * for tracked entity instance creation.
+     * @param attributes
+     * @param trackedEntities
+     * @return a list of action event requests for creating instances of each tracked entity type
+     */
     public List<ActionEventRequest> build(List<TrackedEntityAttribute> attributes, List<TrackedEntity> trackedEntities) {
 
         List<ActionEventRequest> actionEventRequests = new ArrayList<>();
@@ -76,6 +86,7 @@ public class CreateInstanceActionBuilder {
         return actionEventRequests;
     }
 
+    /*adds action parameters for each tracked entity attribute in the DHIS2 schema*/
     private SortedSet<ActionParameterRequest> buildAttributeActionParameters(List<TrackedEntityAttribute> attributes) {
 
         int count = ATTRIBUTE_COUNT;

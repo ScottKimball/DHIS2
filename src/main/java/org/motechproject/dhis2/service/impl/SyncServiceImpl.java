@@ -100,7 +100,7 @@ public class SyncServiceImpl implements SyncService {
         }
     }
 
-    /**
+    /*
      * Request data elements from DHIS and persist in MDS. The partial data element objects returned by the top-level api
      * endpoint suffice for current needs.
      */
@@ -112,7 +112,7 @@ public class SyncServiceImpl implements SyncService {
         }
     }
 
-    /**
+    /*
      * Request tracked entity attributes from DHIS and persist in MDS. The partial tracked entity attribute objects returned by
      * the top-level api endpoint suffice for current needs.
      */
@@ -123,7 +123,7 @@ public class SyncServiceImpl implements SyncService {
         }
     }
 
-    /**
+    /*
      * Request tracked entities from DHIS and persist in MDS. The partial tracked entity objects returned by the top-level
      * api endpoint suffice for current needs.
      */
@@ -134,7 +134,7 @@ public class SyncServiceImpl implements SyncService {
         }
     }
 
-    /**
+    /*
      * Request programs from DHIS and persist in MDS. Since we need data from full program objects, we load the partial
      * objects from the top-level endpoints and then iterate through the links for the complete objects.
      */
@@ -164,13 +164,9 @@ public class SyncServiceImpl implements SyncService {
         }
     }
 
-    /**
+    /*
      * Helper to load the program's tracked entity from MDS, if we've already persisted it, or make a request to DHIS and persist,
      * if we haven't.
-     * @param partialDto
-     *  The partial tracked entity dto from the program dto.
-     * @return
-     *  The MDS-managed tracked entity.
      */
     private TrackedEntity getProgramTrackedEntityFromDto(TrackedEntityDto partialDto) {
         TrackedEntity trackedEntity = trackedEntityService.findById(partialDto.getId());
@@ -182,17 +178,9 @@ public class SyncServiceImpl implements SyncService {
     }
 
 
-    /**
+    /*
      * Helper to load the program's program stages from MDS, if we've already persisted them, or make a request to DHIS, persist,
      * if we haven't.
-     * @param partialStageDtos
-     *  The program's partial stage dtos.
-     * @param programId
-     *  The id of the program.
-     * @param hasRegistration
-     *  Whether or not the stage's program is registered.
-     * @return
-     *  The MDS-managed program stages.
      */
     private List<Stage> getStagesFromDtos(List<ProgramStageDto> partialStageDtos, String programId, boolean hasRegistration) {
         List<Stage> stages = new ArrayList<Stage>();
@@ -211,13 +199,9 @@ public class SyncServiceImpl implements SyncService {
         return stages;
     }
 
-    /**
+    /*
      * Helper to load the program stage's data elements from MDS, if we've already persisted them, or make a request to DHIS,
      * persist, if we haven't.
-     * @param programStageDataElementDtos
-     *  The program stage's partial data element dtos.
-     * @return
-     *  The MDS-managed data elements.
      */
     private List<DataElement> getStageDataElementsFromDtos(List<ProgramStageDataElementDto> programStageDataElementDtos) {
         List<DataElement> dataElements = new ArrayList<DataElement>();
@@ -234,11 +218,9 @@ public class SyncServiceImpl implements SyncService {
     }
 
 
-    /**
+    /*
      * Helper to laod the program's program tracked entity attributes from MDS, if we've already persisted them, or make a
      * request to DHIS and persist, if we haven't.
-     * @param programTrackedEntityAttributeDtos
-     * @return
      */
     private List<TrackedEntityAttribute> getTrackedEntityAttributesFromDtos(List<ProgramTrackedEntityAttributeDto> programTrackedEntityAttributeDtos) {
         List<TrackedEntityAttribute> trackedEntityAttributes = new ArrayList<TrackedEntityAttribute>();
@@ -254,7 +236,7 @@ public class SyncServiceImpl implements SyncService {
         return trackedEntityAttributes;
     }
 
-    /**
+    /*
      * Request organisation units from DHIS and persist in MDS. The partial organisation unit objects returned by the top-level
      * api endpoint suffice for current needs.
      */

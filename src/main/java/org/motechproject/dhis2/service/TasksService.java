@@ -8,7 +8,7 @@ package org.motechproject.dhis2.service;
 public interface TasksService {
 
     /**
-     * Builds a channel request from the infomation saved in MDS and then updates the channel for this
+     * Builds a channel request from the information saved in MDS and then updates the channel for this
      * module.
      */
     void updateChannel();

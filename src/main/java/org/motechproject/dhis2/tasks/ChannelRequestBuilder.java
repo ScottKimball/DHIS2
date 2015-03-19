@@ -16,6 +16,11 @@ import org.osgi.framework.BundleContext;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Builds a channel request from the records in MDS pertaining to the DHIS2 instance schema.
+ *
+ */
+
 public class ChannelRequestBuilder  {
 
     private BundleContext bundleContext;
@@ -36,6 +41,11 @@ public class ChannelRequestBuilder  {
         this.trackedEntityService = trackedEntityService;
     }
 
+    /**
+     * Creates task action event requests for tracked entity instance creation,
+     * program enrollment, and program stage events.
+     * @return the new Channel Request
+     */
     public ChannelRequest build() {
 
         ProgramActionBuilder programActionBuilder = new ProgramActionBuilder();

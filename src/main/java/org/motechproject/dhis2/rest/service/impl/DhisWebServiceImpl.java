@@ -37,6 +37,9 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Implementation of {@link org.motechproject.dhis2.rest.service.DhisWebService}
+ */
 @Service("dhisWebService")
 public class DhisWebServiceImpl implements DhisWebService {
     private static final String MODULE_NAME = "dhis2";

@@ -5,6 +5,4 @@
 
     var services = angular.module('dhis2.services', ['ngResource']);
 
-
-
 }());

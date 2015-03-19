@@ -14,11 +14,20 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+
+/**
+ * Builds task action requests for program stage events for each program stage.
+ */
 public class StageActionBuilder {
 
     private static final String UNICODE = "UNICODE";
     private int counter;
 
+    /**
+     * Builds a list of action event request from a list of program stages.
+     * @param stages
+     * @return a list of ActionEventRequests
+     */
     public List<ActionEventRequest> build(List<Stage> stages) {
 
         List<ActionEventRequest> actionEventRequests = new ArrayList<>();
@@ -35,7 +44,6 @@ public class StageActionBuilder {
 
             if (stage.hasRegistration()) {
                 registration = "true";
-                    /*External ID*/
                 actionParameterBuilder = new ActionParameterRequestBuilder()
                         .setDisplayName(DisplayNames.EXTERNAL_ID)
                         .setKey(EventParams.EXTERNAL_ID)
@@ -116,6 +124,7 @@ public class StageActionBuilder {
         return actionEventRequests;
     }
 
+    /*adds ActionParameterRequests for each Data Element in the program stage*/
     private List<ActionParameterRequest> buildRequestForStage(Stage stage) {
 
         List<ActionParameterRequest> parameterRequests = new ArrayList<>();

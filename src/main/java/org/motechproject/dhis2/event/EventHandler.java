@@ -118,8 +118,6 @@ public class EventHandler {
 
     private TrackedEntityInstanceDto createTrackedEntityInstanceFromParams(Map<String, Object> params) {
         String trackedEntity = (String) params.remove(EventParams.ENTITY_TYPE);
-
-        /*Get org Unit*/
         String orgUnitName = (String) params.remove(EventParams.LOCATION);
         String orgUnitId = orgUnitService.findByName(orgUnitName).getUuid();
 
@@ -176,7 +174,6 @@ public class EventHandler {
 
         String trackedEntityInstanceId = trackedEntityInstanceMapperService.mapFromExternalId((String) params.remove(EventParams.EXTERNAL_ID));
 
-        /*Get instance uuid*/
         if (registration) {
             dhisEventDto.setTrackedEntityInstance(trackedEntityInstanceId);
         }

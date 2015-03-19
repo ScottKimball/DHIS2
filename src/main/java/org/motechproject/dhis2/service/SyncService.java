@@ -6,8 +6,9 @@ package org.motechproject.dhis2.service;
 public interface SyncService {
 
     /**
-     * Queries the DHIS2 server to get the current schema for that instance and then persists that
-     * information in MDS
+     * Queries the DHIS2 server to get the current schema and then persists that
+     * information in MDS. If the process fails, all of the records pertaining to the DHIS2 schema
+     * are deleted.
      * @return true if successful; false otherwise
      */
     boolean sync();
