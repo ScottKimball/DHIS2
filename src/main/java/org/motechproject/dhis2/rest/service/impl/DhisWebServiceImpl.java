@@ -158,6 +158,7 @@ public class DhisWebServiceImpl implements DhisWebService {
         return createEntity(settings, settings.getServerURI() + API_ENDPOINT + TRACKED_ENTITY_INSTANCES_PATH, json);
     }
 
+    /*Gets the resource in the form of a dto*/
     private <T extends BaseDto> T getResource(String uri, Class<T>  clazz) {
         Settings settings = settingsService.getSettings();
         HttpUriRequest request = generateHttpRequest(settings, uri);
@@ -178,6 +179,7 @@ public class DhisWebServiceImpl implements DhisWebService {
         return resource;
     }
 
+    /*Gets a list of dtos*/
     private <T extends BaseDto> List<T> getResources(String resourceName, Class<T> clazz) {
         Settings settings = settingsService.getSettings();
         HttpUriRequest request = generateHttpRequest(settings, getURIForResource(settings.getServerURI(), resourceName));
@@ -200,6 +202,7 @@ public class DhisWebServiceImpl implements DhisWebService {
         return resources;
     }
 
+    /*Attempts to create the an entity in the DHIS2 system. Returns the response from DHIS2*/
     private DhisStatusResponse createEntity(Settings settings, String uri, String json) {
         HttpUriRequest request = generatePostRequest(settings, uri, json);
         HttpResponse response = getResponseForRequest(request);
@@ -218,6 +221,7 @@ public class DhisWebServiceImpl implements DhisWebService {
         return status;
     }
 
+    /*Converts the object to json*/
     private String parseToJson(Object object) {
         String json;
 
@@ -231,6 +235,7 @@ public class DhisWebServiceImpl implements DhisWebService {
         return json;
     }
 
+    /*Generates an HTTP get request*/
     private HttpUriRequest generateHttpRequest(Settings settings, String url) {
         HttpGet request = new HttpGet(url);
         request.addHeader("accept", "application/json");
@@ -242,6 +247,7 @@ public class DhisWebServiceImpl implements DhisWebService {
         return request;
     }
 
+    /*Generates an HTTP post request*/
     private HttpUriRequest generatePostRequest(Settings settings, String url, String body) {
         HttpPost request = new HttpPost(url);
         request.addHeader("Content-Type", "application/json");
@@ -267,6 +273,7 @@ public class DhisWebServiceImpl implements DhisWebService {
         return request;
     }
 
+    /*Attempts an HTTP request. Returns the response*/
     private HttpResponse getResponseForRequest(HttpUriRequest request) {
         HttpResponse response;
 
@@ -289,6 +296,7 @@ public class DhisWebServiceImpl implements DhisWebService {
         return response;
     }
 
+    /*Gets an input stream from the HTTP response*/
     private InputStream getContentForResponse(HttpResponse response) {
         InputStream content;
 
@@ -303,6 +311,7 @@ public class DhisWebServiceImpl implements DhisWebService {
         return content;
     }
 
+    /*Builds the URL for a particular resource*/
     private String getURIForResource(String baseURI, String resourceName) {
         return String.format(baseURI + "/api/%s" + NO_PAGING, resourceName);
     }
