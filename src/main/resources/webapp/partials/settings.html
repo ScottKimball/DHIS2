@@ -30,6 +30,8 @@
                                 <button class="btn btn-default">{{msg('dhis2.web.settings.cancel')}}</button>
                                 <button class="btn btn-primary" ng-click="submit()">{{msg('dhis2.web.settings.save')}}</button>
                             </div>
+                            <div ng-show="retrievalError" class="alert alert-danger">{{msg('dhis2.web.settings.error.retrieval')}}</div>
+                            <div ng-show="updateError" class="alert alert-danger">{{msg('dhis2.web.settings.error.update')}}</div>
                         </form>
                     </div>
                 </div>

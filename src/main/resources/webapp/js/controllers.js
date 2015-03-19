@@ -6,13 +6,15 @@
 
     controllers.controller('Dhis2SettingsCtrl', function ($scope, $http) {
 
+        $scope.retrievalError = false;
+        $scope.updateError = false;
         $http.get('../dhis2/dhis2-settings')
             .success(function (response) {
                 $scope.settings = response;
                 $scope.originalSettings = angular.copy($scope.settings);
             })
             .error(function (response) {
-                // TODO: error handling
+                $scope.retrievalError = true;
             });
 
         $scope.sync = function () {
@@ -38,7 +40,7 @@
                     $scope.originalSettings = angular.copy($scope.configs);
                 })
                 .error(function (response) {
-                    // TODO: error handling
+                    $scope.updateError = true;
                 });
         };
     });
