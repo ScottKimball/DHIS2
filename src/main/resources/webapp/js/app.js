@@ -10,6 +10,10 @@
                     when('/dhis2/settings', {
                         templateUrl: '../dhis2/resources/partials/settings.html',
                         controller: 'Dhis2SettingsCtrl'
+                    }).
+                    when('/dhis2/programs', {
+                        templateUrl: '../dhis2/resources/partials/programs.html',
+                        controller: 'Dhis2ProgramsCtrl'
                     });
 
             }]);

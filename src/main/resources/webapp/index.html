@@ -3,13 +3,14 @@
         <ul class="breadcrumb" role="navigation">
             <li><a role="menu" href=".">{{msg('server.home')}}</a></li>
             <li><a role="menu" href="#/settings">{{msg('dhis2.settings')}}</a></li>
-            <li ng-show="active('#/dhis2/settings')" ng-class="active('#/dhis2/settings')">{{msg('dhis2.settings')}}
-            </li>
+            <li ng-show="active('#/dhis2/settings')" ng-class="active('#/dhis2/settings')">{{msg('dhis2.settings')}}</li>
+            <li ng-show="active('#/dhis2/programs')" ng-class="active('#/dhis2/programs')">{{msg('dhis2.programs')}}</li>
         </ul>
     </div>
     <div class="header-footer">
         <ul id="content-tabs" class="nav nav-tabs">
             <li ng-class="active('#/dhis2/settings')"><a href="#/dhis2/settings">{{msg('dhis2.settings')}}</a></li>
+            <li ng-class="active('#/dhis2/programs')"><a href="#/dhis2/programs">{{msg('dhis2.programs')}}</a></li>
         </ul>
     </div>
     <div class="ui-layout-content">
@@ -25,7 +26,7 @@
     <div class="header-toolbar header-footer"></div>
     <div class="ui-layout-content">
         <div class="inside">
-            
+
         </div>
     </div>
 </div>

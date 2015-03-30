@@ -45,5 +45,18 @@
         };
     });
 
+    controllers.controller('Dhis2ProgramsCtrl', function ($scope, Programs) {
+        $scope.formError = false;
+        blockUI();
+        $scope.programs = Programs.query(function () {
+            $scope.formError = false;
+            unblockUI();
+        }, function () {
+            $scope.formError = true;
+            unblockUI();
+        });
+        innerLayout({});
+    });
+
 
 }());
