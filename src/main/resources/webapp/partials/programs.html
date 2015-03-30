@@ -2,17 +2,22 @@
     <div class="inside">
         <div class="row">
             <div class="panel-group">
-                <div class="panel panel-default program" ng-repeat="program in programs">
-                    <div class="panel-heading">
-                        {{program.name}}
-                    </div>
-                    <div class="panel-body">
-                    </div>
-                    <ul class="list-group">
-                        <li class="list-group-item" ng-repeat="stage in program.stages">
-                            {{stage.name}}
-                        </li>
-                    </ul>
+                <div>
+                    <div class="panel panel-default dhis2-program" ng-repeat="program in programs">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">{{program.name}}</h3>
+                        </div>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <strong>Program Details</strong>
+                                <button type="button" class="btn btn-default btn-sm">View</button>
+                            </li>
+                            <li class="list-group-item" ng-repeat="stage in program.stages">
+                                {{stage.name}}
+                                <button type="button" class="btn btn-default btn-sm">View</button>
+                            </li>
+                        </ul>
+                     </div>
                 </div>
             </div>
         </div>

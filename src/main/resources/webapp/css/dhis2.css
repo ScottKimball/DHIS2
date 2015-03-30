@@ -1,0 +1,5 @@
+.dhis2-program .list-group li button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
