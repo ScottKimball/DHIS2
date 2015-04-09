@@ -1,0 +1,13 @@
+
+<div>
+    <table class="table">
+            <tr>
+                <th>{{msg('dhis2.name')}}</th>
+                <th>{{msg('dhis2.id')}}</th>
+            </tr>
+        <tr ng-repeat="trackedEntityAttribute in trackedEntityAttributes">
+            <td>{{trackedEntityAttribute.name}}</td>
+            <td>{{trackedEntityAttribute.uuid}}</td>
+        </tr>
+    </table>
+</div>

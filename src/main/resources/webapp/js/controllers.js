@@ -58,5 +58,44 @@
         innerLayout({});
     });
 
+    controllers.controller('Dhis2TrackedEntityAttributesCtrl', function($scope, TrackedEntityAttributes) {
+        blockUI();
+        $scope.trackedEntityAttributes = TrackedEntityAttributes.query(function() {
+            unblockUI();
+        }, function () {
+           unblockUI();
+        });
+        innerLayout({});
+    });
+
+    controllers.controller('Dhis2TrackedEntitiesCtrl', function($scope, TrackedEntities) {
+        blockUI();
+        $scope.trackedEntities = TrackedEntities.query(function() {
+            unblockUI();
+        }, function () {
+            unblockUI();
+        });
+        innerLayout({});
+    });
+
+    controllers.controller('Dhis2OrgUnitsCtrl', function($scope, OrgUnits) {
+        blockUI();
+        $scope.orgUnits = OrgUnits.query(function() {
+            unblockUI();
+        }, function () {
+            unblockUI();
+        });
+        innerLayout({});
+    });
+
+    controllers.controller('Dhis2DataElementsCtrl', function($scope, DataElements) {
+        blockUI();
+        $scope.dataElements = DataElements.query(function() {
+            unblockUI();
+        }, function () {
+            unblockUI();
+        });
+        innerLayout({});
+    });
 
 }());

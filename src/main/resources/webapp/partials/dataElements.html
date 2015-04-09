@@ -1,0 +1,12 @@
+<div>
+    <table class="table" d>
+        <tr>
+            <th>{{msg('dhis2.name')}}</th>
+            <th>{{msg('dhis2.id')}}</th>
+        </tr>
+        <tr ng-repeat="dataElement in dataElements">
+            <td>{{dataElement.name}}</td>
+            <td>{{dataElement.uuid}}</td>
+        </tr>
+    </table>
+</div>
