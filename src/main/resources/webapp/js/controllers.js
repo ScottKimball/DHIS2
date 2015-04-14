@@ -56,6 +56,21 @@
             unblockUI();
         });
         innerLayout({});
+
+        $scope.getTypeOfProgram = function(program) {
+           if (program.singleEvent) {
+
+               if (program.registration) {
+                   return "dhis2.programType.singleEventWithRegistration"
+
+               } else {
+                   return "dhis2.programType.singleEventWithoutRegistration";
+               }
+
+           } else {
+               return "dhis2.programType.MultipleEventsWithRegistration";
+           }
+        };
     });
 
     controllers.controller('Dhis2TrackedEntityAttributesCtrl', function($scope, TrackedEntityAttributes) {
