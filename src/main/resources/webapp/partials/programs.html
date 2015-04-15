@@ -6,11 +6,11 @@
                 <div>
                     <div class="panel panel-default dhis2-program" ng-repeat="program in programs">
 
-                        <div class="panel-heading" id="heading"  >
-                            <h2 class="panel-title">{{program.name}}</h2>
+                        <div class="panel-heading dhis2-program-panel-heading" id="heading"  ng-click="collapse(program)" >
+                            <h2 class="panel-title" >{{program.name}}</h2>
                         </div>
 
-                        <div>
+                        <div ng-if="!program.collapsed">
                             <ul class="list-group"  >
 
                                 <li class="list-group-item">
@@ -34,15 +34,16 @@
 
 
 
-                                <li class="list-group-item panel panel-default dhis2-program " ng-if="program.attributes.length > 0" >
+                                <li class="list-group-item panel panel-default dhis2-program" ng-if="program.attributes.length > 0">
 
-                                    <div class="panel-heading"   >
-                                        <h2 class="panel-title">Tracked Entity attributes</h2>
+                                    <div class="panel-heading dhis2-program-subelement-panel-heading"
+                                         ng-click="collapse(program.attributes)"  >
+                                        <h2 class="panel-title">{{msg('dhis2.trackedEntityAttributes')}}</h2>
                                     </div>
 
-                                    <ul class="list-group">
+                                    <ul class="list-group" ng-if="!program.attributes.collapsed">
 
-                                        <li class="list-group-item" ng-repeat="attribute in program.attributes" >
+                                        <li class="list-group-item" ng-repeat="attribute in program.attributes">
                                             <p>{{attribute.name}}</p>
                                         </li>
                                     </ul>
@@ -51,23 +52,27 @@
 
                                 <li class="list-group-item panel panel-default dhis2-program " >
 
-                                        <div class="panel-heading"   >
+                                        <div class="panel-heading dhis2-program-subelement-panel-headng" ng-click="collapse(program.stages)">
                                             <h2 class="panel-title">{{msg('dhis2.programs.stages')}}</h2>
                                         </div>
 
-                                        <ul class="list-group">
+                                        <ul class="list-group" ng-if="!program.stages.collapsed">
 
                                             <li class="list-group-item" >
                                                 <div class="panel panel-default dhis2-program" ng-repeat="stage in program.stages">
 
-                                                    <div class="panel-heading">
+                                                    <div class="panel-heading" ng-click="collapse(stage)">
                                                         <h4 class="panel-title"> {{stage.name}}</h4>
                                                     </div>
 
-                                                    <div>
+                                                    <div ng-if="!stage.collapsed">
                                                         <ul class="list-group">
                                                             <li class="list-group-item">
-                                                                <strong>{{msg('dhis2.dataElements')}}</strong>
+                                                                <strong>{{msg('dhis2.id') + ":"}}</strong>
+                                                                <p>{{stage.uuid}}</p>
+                                                            </li>
+                                                            <li class="list-group-item">
+                                                                <strong>{{msg('dhis2.dataElements') +":"}}</strong>
                                                             </li>
                                                             <li class="list-group-item" ng-repeat="dataElement in stage.dataElements">
                                                                 <p>{{dataElement.name}}</p>

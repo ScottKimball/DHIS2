@@ -48,14 +48,32 @@
     controllers.controller('Dhis2ProgramsCtrl', function ($scope, Programs) {
         $scope.formError = false;
         blockUI();
+
         $scope.programs = Programs.query(function () {
             $scope.formError = false;
+
+            angular.forEach($scope.programs, function(program) {
+                program.collapsed = true;
+                program.attributes.collapsed = true;
+                program.stages.collapsed = true;
+
+                angular.forEach(program.stages, function(stage) {
+                   stage.collapsed= true;
+                });
+
+            });
+
             unblockUI();
         }, function () {
             $scope.formError = true;
             unblockUI();
         });
         innerLayout({});
+
+        $scope.collapse = function (item) {
+            item.collapsed = !item.collapsed;
+
+        };
 
         $scope.getTypeOfProgram = function(program) {
            if (program.singleEvent) {
