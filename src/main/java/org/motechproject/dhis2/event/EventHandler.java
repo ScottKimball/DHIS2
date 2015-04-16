@@ -116,6 +116,12 @@ public class EventHandler {
         handleEnrollment(new MotechEvent(EventSubjects.ENROLL_IN_PROGRAM, enrollmentParams));
     }
 
+
+    @MotechListener(subjects = EventSubjects.SEND_DATA_VALUE)
+    public void handleDataValue (MotechEvent event) {
+
+    }
+
     private TrackedEntityInstanceDto createTrackedEntityInstanceFromParams(Map<String, Object> params) {
         String trackedEntity = (String) params.remove(EventParams.ENTITY_TYPE);
         String orgUnitName = (String) params.remove(EventParams.LOCATION);

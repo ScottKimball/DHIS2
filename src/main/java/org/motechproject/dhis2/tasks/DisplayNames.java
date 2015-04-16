@@ -15,4 +15,11 @@ public final class DisplayNames {
     public static final String ORG_UNIT = "Organisation Unit";
     public static final String PROGRAM_NAME = "Program Name";
     public static final String EVENT_DATE = "Event Date";
+
+    public static final String SEND_DATA_VALUE = "Send Data Value";
+    public static final String DATA_ELEMENT = "Data Element";
+    public static final String VALUE = "Value";
+    public static final String PERIOD ="Period";
+
+
 }
