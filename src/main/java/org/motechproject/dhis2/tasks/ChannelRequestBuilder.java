@@ -10,6 +10,7 @@ import org.motechproject.dhis2.service.ProgramService;
 import org.motechproject.dhis2.service.StageService;
 import org.motechproject.dhis2.service.TrackedEntityAttributeService;
 import org.motechproject.dhis2.service.TrackedEntityService;
+import org.motechproject.mds.docs.swagger.model.ParameterType;
 import org.motechproject.tasks.contract.ActionEventRequest;
 import org.motechproject.tasks.contract.ActionEventRequestBuilder;
 import org.motechproject.tasks.contract.ActionParameterRequest;
@@ -116,9 +117,7 @@ public class ChannelRequestBuilder  {
                 .setName(DisplayNames.SEND_DATA_VALUE);
 
         actions.add(eventRequestBuilder.createActionEventRequest());
-
-
-
+        
         return actions;
     }
 }

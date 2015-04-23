@@ -1,5 +1,8 @@
 package org.motechproject.dhis2.event;
 
+import org.motechproject.dhis2.domain.DataElement;
+import org.motechproject.dhis2.domain.OrgUnit;
+import org.motechproject.dhis2.repository.DataElementDataService;
 import org.motechproject.dhis2.rest.domain.AttributeDto;
 import org.motechproject.dhis2.rest.domain.DataValueDto;
 import org.motechproject.dhis2.rest.domain.DhisEventDto;
@@ -36,6 +39,9 @@ public class EventHandler {
 
     @Autowired
     private OrgUnitService orgUnitService;
+
+    @Autowired
+    private DataElementDataService dataElementDataService;
 
     public EventHandler(DhisWebService webService,
                         TrackedEntityInstanceMapperService trackedEntityInstanceMapperService,
@@ -109,7 +115,6 @@ public class EventHandler {
 
         enrollmentParams.put(EventParams.PROGRAM, params.remove(EventParams.PROGRAM));
         enrollmentParams.put(EventParams.DATE, params.remove(EventParams.DATE));
-
         enrollmentParams.put(EventParams.EXTERNAL_ID, params.get(EventParams.EXTERNAL_ID));
 
         handleCreate(new MotechEvent(EventSubjects.CREATE_ENTITY, params));
@@ -117,8 +122,26 @@ public class EventHandler {
     }
 
 
+    /**
+     * Parses the event and creates a{@link org.motechproject.dhis2.rest.domain.DataValueDto}which
+     * is then sent to the DHIS2 server via {@link org.motechproject.dhis2.rest.service.DhisWebService}
+     *
+     * @param event
+     */
     @MotechListener(subjects = EventSubjects.SEND_DATA_VALUE)
     public void handleDataValue (MotechEvent event) {
+        DataValueDto dataValueDto = new DataValueDto();
+        Map<String, Object> params = event.getParameters();
+
+
+        DataElement dataElement = dataElementDataService.findByName((String) params.get(EventParams.DATA_ELEMENT));
+        OrgUnit orgUnit = orgUnitService.findByName((String)params.get(EventParams.LOCATION));
+        dataValueDto.setDataElement(dataElement.getUuid());
+        dataValueDto.setValue((String)params.get(EventParams.VALUE));
+        dataValueDto.setOrgUnit(orgUnit.getUuid());
+        dataValueDto.setPeriod((String)params.get(EventParams.PERIOD));
+
+        dhisWebService.sendDataValue(dataValueDto);
 
     }
 
