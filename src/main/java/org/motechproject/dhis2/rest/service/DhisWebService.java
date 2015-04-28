@@ -3,6 +3,7 @@ package org.motechproject.dhis2.rest.service;
 import org.motechproject.dhis2.rest.domain.DataElementDto;
 import org.motechproject.dhis2.rest.domain.DataValueDto;
 import org.motechproject.dhis2.rest.domain.DataValueSetDto;
+import org.motechproject.dhis2.rest.domain.DhisDataValueStatusResponse;
 import org.motechproject.dhis2.rest.domain.DhisEventDto;
 import org.motechproject.dhis2.rest.domain.DhisStatusResponse;
 import org.motechproject.dhis2.rest.domain.EnrollmentDto;
@@ -140,7 +141,7 @@ public interface DhisWebService {
      * @param dataValueDto
      * @return {@link org.motechproject.dhis2.rest.domain.DhisStatusResponse} indicating success or failure
      */
-    DhisStatusResponse sendDataValue(DataValueDto dataValueDto);
+    DhisDataValueStatusResponse sendDataValue(DataValueDto dataValueDto);
 
     /**
      * Attempts to send a data value set to DHIS2 via an HTTP post request.
@@ -148,7 +149,7 @@ public interface DhisWebService {
      * @param dataValueSetDto
      * @return
      */
-    DhisStatusResponse sendDataValueSet(DataValueSetDto dataValueSetDto);
+    DhisDataValueStatusResponse sendDataValueSet(DataValueSetDto dataValueSetDto);
 }
 
 

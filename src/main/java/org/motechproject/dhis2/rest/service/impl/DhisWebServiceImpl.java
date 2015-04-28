@@ -19,6 +19,7 @@ import org.motechproject.dhis2.rest.domain.BaseDto;
 import org.motechproject.dhis2.rest.domain.DataElementDto;
 import org.motechproject.dhis2.rest.domain.DataValueDto;
 import org.motechproject.dhis2.rest.domain.DataValueSetDto;
+import org.motechproject.dhis2.rest.domain.DhisDataValueStatusResponse;
 import org.motechproject.dhis2.rest.domain.DhisEventDto;
 import org.motechproject.dhis2.rest.domain.DhisStatusResponse;
 import org.motechproject.dhis2.rest.domain.EnrollmentDto;
@@ -36,6 +37,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -49,7 +51,6 @@ public class DhisWebServiceImpl implements DhisWebService {
     private static final String ENROLLMENTS_PATH = "/enrollments";
     private static final String EVENTS_PATH = "/events";
     private static final String TRACKED_ENTITY_INSTANCES_PATH = "/trackedEntityInstances";
-    private static final String DATA_VALUES_PATH = "/dataValues";
     private static final String DATA_VALUE_SETS_PATH = "/dataValueSets";
 
     private static final String DATA_ELEMENTS = "dataElements";
@@ -163,19 +164,26 @@ public class DhisWebServiceImpl implements DhisWebService {
     }
 
     @Override
-    public DhisStatusResponse sendDataValue(DataValueDto dataValueDto) {
-        String json = parseToJson(dataValueDto);
+    public DhisDataValueStatusResponse sendDataValue(DataValueDto dataValueDto) {
         Settings settings = settingsService.getSettings();
+        String uri =  settings.getServerURI() + API_ENDPOINT + DATA_VALUE_SETS_PATH;
 
-        return createEntity(settings, settings.getServerURI() + API_ENDPOINT + DATA_VALUES_PATH, json);
+        DataValueSetDto dataValueSetDto = new DataValueSetDto();
+        List<DataValueDto> dataValueDtos = new ArrayList<>();
+        dataValueDtos.add(dataValueDto);
+        dataValueSetDto.setDataValues(dataValueDtos);
+
+        String json = parseToJson(dataValueSetDto);
+
+        return importDataValues(settings, uri, json);
     }
 
     @Override
-    public DhisStatusResponse sendDataValueSet(DataValueSetDto dataValueSetDto) {
+    public DhisDataValueStatusResponse sendDataValueSet(DataValueSetDto dataValueSetDto) {
         String json = parseToJson(dataValueSetDto);
         Settings settings = settingsService.getSettings();
 
-        return createEntity(settings, settings.getServerURI() + API_ENDPOINT + DATA_VALUE_SETS_PATH, json);
+        return importDataValues(settings, settings.getServerURI() + API_ENDPOINT + DATA_VALUE_SETS_PATH, json);
     }
 
     /*Gets the resource in the form of a dto*/
@@ -240,6 +248,26 @@ public class DhisWebServiceImpl implements DhisWebService {
 
         return status;
     }
+
+    private DhisDataValueStatusResponse importDataValues(Settings settings, String uri, String json) {
+        HttpUriRequest request = generatePostRequest(settings, uri, json);
+        HttpResponse response = getResponseForRequest(request);
+        InputStream content = getContentForResponse(response);
+
+        DhisDataValueStatusResponse status;
+
+        try {
+            status = new ObjectMapper().readValue(content, DhisDataValueStatusResponse.class);
+        } catch (Exception e) {
+            String msg = String.format("Error parsing response from uri: %s, exception: %s", uri, e.toString());
+            statusMessageService.warn(msg, MODULE_NAME);
+            throw new DhisWebException(msg, e);
+        }
+
+        return status;
+    }
+
+
 
 
 
