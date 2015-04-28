@@ -163,20 +163,7 @@ public class DhisWebServiceImpl implements DhisWebService {
         return createEntity(settings, settings.getServerURI() + API_ENDPOINT + TRACKED_ENTITY_INSTANCES_PATH, json);
     }
 
-    @Override
-    public DhisDataValueStatusResponse sendDataValue(DataValueDto dataValueDto) {
-        Settings settings = settingsService.getSettings();
-        String uri =  settings.getServerURI() + API_ENDPOINT + DATA_VALUE_SETS_PATH;
 
-        DataValueSetDto dataValueSetDto = new DataValueSetDto();
-        List<DataValueDto> dataValueDtos = new ArrayList<>();
-        dataValueDtos.add(dataValueDto);
-        dataValueSetDto.setDataValues(dataValueDtos);
-
-        String json = parseToJson(dataValueSetDto);
-
-        return importDataValues(settings, uri, json);
-    }
 
     @Override
     public DhisDataValueStatusResponse sendDataValueSet(DataValueSetDto dataValueSetDto) {

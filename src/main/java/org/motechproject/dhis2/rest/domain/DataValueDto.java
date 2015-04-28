@@ -14,7 +14,24 @@ public class DataValueDto {
     private String dataElement;
     private String period;
     private String orgUnit;
+    private String categoryOptionCombo;
+    private String comment;
 
+    public String getCategoryOptionCombo() {
+        return categoryOptionCombo;
+    }
+
+    public void setCategoryOptionCombo(String categoryOptionCombo) {
+        this.categoryOptionCombo = categoryOptionCombo;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
 
     public String getValue() {
         return value;

@@ -135,13 +135,7 @@ public interface DhisWebService {
      */
     DhisStatusResponse createTrackedEntityInstance(TrackedEntityInstanceDto trackedEntity);
 
-    /**
-     * Attempts to send a data value to DHIS2 via an HTTP post request
-     *
-     * @param dataValueDto
-     * @return {@link org.motechproject.dhis2.rest.domain.DhisStatusResponse} indicating success or failure
-     */
-    DhisDataValueStatusResponse sendDataValue(DataValueDto dataValueDto);
+
 
     /**
      * Attempts to send a data value set to DHIS2 via an HTTP post request.

@@ -13,6 +13,9 @@ public class DataValueSetDto {
     private String orgUnit;
     private String attributeOptionCombo;
     private List<DataValueDto> dataValues;
+    private String dataSet;
+    private String comment;
+    private String categoryOptionCombo;
 
     public String getCompleteDate() {
         return completeDate;
@@ -52,5 +55,29 @@ public class DataValueSetDto {
 
     public void setDataValues(List<DataValueDto> dataValues) {
         this.dataValues = dataValues;
+    }
+
+    public String getDataSet() {
+        return dataSet;
+    }
+
+    public void setDataSet(String dataSet) {
+        this.dataSet = dataSet;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public String getCategoryOptionCombo() {
+        return categoryOptionCombo;
+    }
+
+    public void setCategoryOptionCombo(String categoryOptionCombo) {
+        this.categoryOptionCombo = categoryOptionCombo;
     }
 }

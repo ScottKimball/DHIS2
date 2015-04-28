@@ -59,7 +59,7 @@ public class ChannelRequestBuilderTest {
     private List<TrackedEntity> trackedEntities;
 
     private ChannelRequest request;
-    private static final int EXPECTED_ACTIONS_SIZE = 9;
+    private static final int EXPECTED_ACTIONS_SIZE = 10;
 
     @Before
     public void setup() {
