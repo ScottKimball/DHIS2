@@ -131,10 +131,8 @@ public class EventHandler {
      */
     @MotechListener(subjects = EventSubjects.SEND_DATA_VALUE)
     public void handleDataValue (MotechEvent event) {
-        DataValueDto dataValueDto = new DataValueDto();
+
         Map<String, Object> params = event.getParameters();
-
-
 
         DataElement dataElement = dataElementService.findByName((String) params.get(EventParams.DATA_ELEMENT));
         OrgUnit orgUnit = orgUnitService.findByName((String)params.get(EventParams.LOCATION));
@@ -143,6 +141,7 @@ public class EventHandler {
         String categoryOptionCombo = (String) params.get(EventParams.CATEGORY_OPTION_COMBO);
         String comment = (String)params.get(EventParams.COMMENT);
 
+        DataValueDto dataValueDto = new DataValueDto();
         dataValueDto.setDataElement(dataElement.getUuid());
         dataValueDto.setValue(value);
         dataValueDto.setOrgUnit(orgUnit.getUuid());
@@ -159,6 +158,12 @@ public class EventHandler {
 
     }
 
+    /**
+     * Parses the event and creates a{@link org.motechproject.dhis2.rest.domain.DataValueSetDto}which
+     * is then sent to the DHIS2 server via {@link org.motechproject.dhis2.rest.service.DhisWebService}
+     *
+     * @param event
+     */
     @MotechListener(subjects = EventSubjects.SEND_DATA_VALUE_SET)
     public void handleDataValueSet (MotechEvent event) {
         Map<String, Object> params = event.getParameters();

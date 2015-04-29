@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
 
 
+/**
+ * A class to model a DHIS2 Data Value Set
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DataValueSetDto {
 

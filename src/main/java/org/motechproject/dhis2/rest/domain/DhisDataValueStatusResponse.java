@@ -3,6 +3,9 @@ package org.motechproject.dhis2.rest.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+/**
+ * A class to model DHIS2 responses that result from importing data values and data value sets.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DhisDataValueStatusResponse {
 
@@ -44,7 +47,6 @@ public class DhisDataValueStatusResponse {
     public void setImportCountDto(ImportCountDto importCountDto) {
         this.importCountDto = importCountDto;
     }
-
 
     public boolean isDataSetComplete() {
         return dataSetComplete;

@@ -82,9 +82,9 @@ public class ChannelRequestBuilder  {
 
 
     private ActionEventRequest addSendDataValueSet() {
+        int order = 0;
         ActionParameterRequestBuilder builder = new ActionParameterRequestBuilder();
         SortedSet<ActionParameterRequest> actionParameterRequests = new TreeSet<>();
-        int order = 0;
 
         builder.setDisplayName(DisplayNames.DATA_SET)
                 .setKey(EventParams.DATA_SET)
@@ -150,9 +150,6 @@ public class ChannelRequestBuilder  {
 
     private ActionEventRequest addSendDataValue() {
         int order = 0;
-
-
-        /*Data value*/
         SortedSet<ActionParameterRequest> actionParameterRequests = new TreeSet<>();
         ActionParameterRequestBuilder builder = new ActionParameterRequestBuilder();
 
