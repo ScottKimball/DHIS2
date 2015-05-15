@@ -1,13 +1,17 @@
 package org.motechproject.dhis2.event;
 
+import org.motechproject.dhis2.domain.DataElement;
+import org.motechproject.dhis2.domain.OrgUnit;
 import org.motechproject.dhis2.rest.domain.AttributeDto;
 import org.motechproject.dhis2.rest.domain.DataValueDto;
+import org.motechproject.dhis2.rest.domain.DataValueSetDto;
 import org.motechproject.dhis2.rest.domain.DhisEventDto;
 import org.motechproject.dhis2.rest.domain.DhisStatusResponse;
-import org.motechproject.dhis2.rest.domain.DhisStatusResponse.DhisStatus;
+import org.motechproject.dhis2.rest.domain.DhisStatus;
 import org.motechproject.dhis2.rest.domain.EnrollmentDto;
 import org.motechproject.dhis2.rest.domain.TrackedEntityInstanceDto;
 import org.motechproject.dhis2.rest.service.DhisWebService;
+import org.motechproject.dhis2.service.DataElementService;
 import org.motechproject.dhis2.service.OrgUnitService;
 import org.motechproject.dhis2.service.TrackedEntityInstanceMapperService;
 import org.motechproject.event.MotechEvent;
@@ -36,6 +40,9 @@ public class EventHandler {
 
     @Autowired
     private OrgUnitService orgUnitService;
+
+    @Autowired
+    private DataElementService dataElementService;
 
     public EventHandler(DhisWebService webService,
                         TrackedEntityInstanceMapperService trackedEntityInstanceMapperService,
@@ -109,11 +116,93 @@ public class EventHandler {
 
         enrollmentParams.put(EventParams.PROGRAM, params.remove(EventParams.PROGRAM));
         enrollmentParams.put(EventParams.DATE, params.remove(EventParams.DATE));
-
         enrollmentParams.put(EventParams.EXTERNAL_ID, params.get(EventParams.EXTERNAL_ID));
 
         handleCreate(new MotechEvent(EventSubjects.CREATE_ENTITY, params));
         handleEnrollment(new MotechEvent(EventSubjects.ENROLL_IN_PROGRAM, enrollmentParams));
+    }
+
+
+    /**
+     * Parses the event and creates a{@link org.motechproject.dhis2.rest.domain.DataValueDto}which
+     * is then sent to the DHIS2 server via {@link org.motechproject.dhis2.rest.service.DhisWebService}
+     *
+     * @param event
+     */
+    @MotechListener(subjects = EventSubjects.SEND_DATA_VALUE)
+    public void handleDataValue (MotechEvent event) {
+
+        Map<String, Object> params = event.getParameters();
+
+        DataElement dataElement = dataElementService.findByName((String) params.get(EventParams.DATA_ELEMENT));
+        OrgUnit orgUnit = orgUnitService.findByName((String)params.get(EventParams.LOCATION));
+        String period = (String) params.get(EventParams.PERIOD);
+        String value = (String) params.get(EventParams.VALUE);
+        String categoryOptionCombo = (String) params.get(EventParams.CATEGORY_OPTION_COMBO);
+        String comment = (String)params.get(EventParams.COMMENT);
+
+        DataValueDto dataValueDto = new DataValueDto();
+        dataValueDto.setDataElement(dataElement.getUuid());
+        dataValueDto.setValue(value);
+        dataValueDto.setOrgUnit(orgUnit.getUuid());
+        dataValueDto.setPeriod(period);
+        dataValueDto.setCategoryOptionCombo(categoryOptionCombo);
+        dataValueDto.setComment(comment);
+
+        DataValueSetDto dataValueSetDto = new DataValueSetDto();
+        List<DataValueDto> dataValueDtos = new ArrayList<>();
+        dataValueDtos.add(dataValueDto);
+        dataValueSetDto.setDataValues(dataValueDtos);
+
+        dhisWebService.sendDataValueSet(dataValueSetDto);
+
+    }
+
+    /**
+     * Parses the event and creates a{@link org.motechproject.dhis2.rest.domain.DataValueSetDto}which
+     * is then sent to the DHIS2 server via {@link org.motechproject.dhis2.rest.service.DhisWebService}
+     *
+     * @param event
+     */
+    @MotechListener(subjects = EventSubjects.SEND_DATA_VALUE_SET)
+    public void handleDataValueSet (MotechEvent event) {
+        Map<String, Object> params = event.getParameters();
+        String dataSet = (String) params.get(EventParams.DATA_SET);
+        String completeDate = (String) params.get(EventParams.COMPLETE_DATE);
+        String period = (String) params.get(EventParams.PERIOD);
+        String orgUnit = (String) params.get(EventParams.LOCATION);
+        String categoryOptionCombo = (String) params.get(EventParams.CATEGORY_OPTION_COMBO);
+        String comment = (String) params.get(EventParams.COMMENT);
+        String attributeOptionCombo = (String) params.get(EventParams.ATTRIBUTE_OPTION_COMBO);
+        Map<String, Object> dataValues = (Map<String, Object>) params.get(EventParams.DATA_VALUES);
+
+        String orgUnitID = orgUnitService.findByName(orgUnit).getUuid();
+
+        List<DataValueDto> dataValueDtos = new ArrayList<>();
+
+        for (Object o : dataValues.entrySet()) {
+            Entry pair = (Entry) o;
+            String dataElement = (String) pair.getKey();
+            String dataElementId = dataElementService.findByName(dataElement).getUuid();
+            String value = (String) pair.getValue();
+            DataValueDto dataValueDto = new DataValueDto();
+            dataValueDto.setDataElement(dataElementId);
+            dataValueDto.setValue(value);
+
+            dataValueDtos.add(dataValueDto);
+        }
+
+        DataValueSetDto dataValueSetDto = new DataValueSetDto();
+        dataValueSetDto.setDataSet(dataSet);
+        dataValueSetDto.setPeriod(period);
+        dataValueSetDto.setCompleteDate(completeDate);
+        dataValueSetDto.setOrgUnit(orgUnitID);
+        dataValueSetDto.setDataValues(dataValueDtos);
+        dataValueSetDto.setAttributeOptionCombo(attributeOptionCombo);
+        dataValueSetDto.setCategoryOptionCombo(categoryOptionCombo);
+        dataValueSetDto.setComment(comment);
+        dhisWebService.sendDataValueSet(dataValueSetDto);
+
     }
 
     private TrackedEntityInstanceDto createTrackedEntityInstanceFromParams(Map<String, Object> params) {

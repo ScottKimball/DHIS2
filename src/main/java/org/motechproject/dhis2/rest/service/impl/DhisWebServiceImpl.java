@@ -17,6 +17,9 @@ import org.motechproject.admin.service.StatusMessageService;
 import org.motechproject.dhis2.domain.Settings;
 import org.motechproject.dhis2.rest.domain.BaseDto;
 import org.motechproject.dhis2.rest.domain.DataElementDto;
+import org.motechproject.dhis2.rest.domain.DataValueDto;
+import org.motechproject.dhis2.rest.domain.DataValueSetDto;
+import org.motechproject.dhis2.rest.domain.DhisDataValueStatusResponse;
 import org.motechproject.dhis2.rest.domain.DhisEventDto;
 import org.motechproject.dhis2.rest.domain.DhisStatusResponse;
 import org.motechproject.dhis2.rest.domain.EnrollmentDto;
@@ -34,6 +37,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -47,6 +51,7 @@ public class DhisWebServiceImpl implements DhisWebService {
     private static final String ENROLLMENTS_PATH = "/enrollments";
     private static final String EVENTS_PATH = "/events";
     private static final String TRACKED_ENTITY_INSTANCES_PATH = "/trackedEntityInstances";
+    private static final String DATA_VALUE_SETS_PATH = "/dataValueSets";
 
     private static final String DATA_ELEMENTS = "dataElements";
     private static final String ORG_UNITS = "organisationUnits";
@@ -158,6 +163,16 @@ public class DhisWebServiceImpl implements DhisWebService {
         return createEntity(settings, settings.getServerURI() + API_ENDPOINT + TRACKED_ENTITY_INSTANCES_PATH, json);
     }
 
+
+
+    @Override
+    public DhisDataValueStatusResponse sendDataValueSet(DataValueSetDto dataValueSetDto) {
+        String json = parseToJson(dataValueSetDto);
+        Settings settings = settingsService.getSettings();
+
+        return importDataValues(settings, settings.getServerURI() + API_ENDPOINT + DATA_VALUE_SETS_PATH, json);
+    }
+
     /*Gets the resource in the form of a dto*/
     private <T extends BaseDto> T getResource(String uri, Class<T>  clazz) {
         Settings settings = settingsService.getSettings();
@@ -220,6 +235,28 @@ public class DhisWebServiceImpl implements DhisWebService {
 
         return status;
     }
+
+    private DhisDataValueStatusResponse importDataValues(Settings settings, String uri, String json) {
+        HttpUriRequest request = generatePostRequest(settings, uri, json);
+        HttpResponse response = getResponseForRequest(request);
+        InputStream content = getContentForResponse(response);
+
+        DhisDataValueStatusResponse status;
+
+        try {
+            status = new ObjectMapper().readValue(content, DhisDataValueStatusResponse.class);
+        } catch (Exception e) {
+            String msg = String.format("Error parsing response from uri: %s, exception: %s", uri, e.toString());
+            statusMessageService.warn(msg, MODULE_NAME);
+            throw new DhisWebException(msg, e);
+        }
+
+        return status;
+    }
+
+
+
+
 
     /*Converts the object to json*/
     private String parseToJson(Object object) {

@@ -13,6 +13,7 @@ public interface DataElementService {
     List<DataElement> findAll();
     DataElement findById(String id);
     DataElement createFromDetails(DataElementDto details);
+    DataElement findByName (String name);
     void update(DataElement dataElement);
     void delete(DataElement dataElement);
     void deleteAll();

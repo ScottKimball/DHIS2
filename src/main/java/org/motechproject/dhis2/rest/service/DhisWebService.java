@@ -1,6 +1,9 @@
 package org.motechproject.dhis2.rest.service;
 
 import org.motechproject.dhis2.rest.domain.DataElementDto;
+import org.motechproject.dhis2.rest.domain.DataValueDto;
+import org.motechproject.dhis2.rest.domain.DataValueSetDto;
+import org.motechproject.dhis2.rest.domain.DhisDataValueStatusResponse;
 import org.motechproject.dhis2.rest.domain.DhisEventDto;
 import org.motechproject.dhis2.rest.domain.DhisStatusResponse;
 import org.motechproject.dhis2.rest.domain.EnrollmentDto;
@@ -20,12 +23,14 @@ public interface DhisWebService {
 
     /**
      * Gets a list of all the Data Elements from DHIS2.
+     *
      * @return a list of {@link org.motechproject.dhis2.rest.domain.DataElementDto}
      */
     List<DataElementDto> getDataElements();
 
     /**
      * Gets the Data Element specified in the URL
+     *
      * @param href
      * @return the {@link org.motechproject.dhis2.rest.domain.DataElementDto}
      */
@@ -33,12 +38,14 @@ public interface DhisWebService {
 
     /**
      * Gets a list of all the Organisation Units from DHIS2
+     *
      * @return a list of {@link org.motechproject.dhis2.rest.domain.OrganisationUnitDto}
      */
     List<OrganisationUnitDto> getOrganisationUnits();
 
     /**
      * Gets the Organisation Unit specified in the URL
+     *
      * @param href
      * @return the {@link org.motechproject.dhis2.rest.domain.OrganisationUnitDto}
      */
@@ -46,12 +53,14 @@ public interface DhisWebService {
 
     /**
      * Gets a list of all the programs from DHIS2.
+     *
      * @return a list of {@link org.motechproject.dhis2.rest.domain.ProgramDto}
      */
     List<ProgramDto> getPrograms();
 
     /**
      * Gets the program specified in the URL
+     *
      * @param href
      * @return the {@link org.motechproject.dhis2.rest.domain.ProgramDto}
      */
@@ -59,12 +68,14 @@ public interface DhisWebService {
 
     /**
      * Gets a list of all the program Stages from DHIS2
+     *
      * @return a list of {@link org.motechproject.dhis2.rest.domain.ProgramStageDto\}
      */
     List<ProgramStageDto> getProgramStages();
 
     /**
      * Gets the program stage specified in the URL
+     *
      * @param href
      * @return the {@link org.motechproject.dhis2.rest.domain.ProgramStageDto}
      */
@@ -72,12 +83,14 @@ public interface DhisWebService {
 
     /**
      * Gets a list of all the tracked entity attributes from DHIS2
+     *
      * @return a list of {@link org.motechproject.dhis2.rest.domain.TrackedEntityInstanceDto}
      */
     List<TrackedEntityAttributeDto> getTrackedEntityAttributes();
 
     /**
      * Gets the tracked entity attribute specified in the URL
+     *
      * @param href
      * @return the {@link org.motechproject.dhis2.rest.domain.TrackedEntityAttributeDto}
      */
@@ -85,12 +98,14 @@ public interface DhisWebService {
 
     /**
      * Gets a list of all the tracked entity types in DHIS2
+     *
      * @return a list of {@link org.motechproject.dhis2.rest.domain.TrackedEntityDto}
      */
     List<TrackedEntityDto> getTrackedEntities();
 
     /**
      * Gets the tracked entity specified in the URL.
+     *
      * @param href
      * @return the {@link org.motechproject.dhis2.rest.domain.TrackedEntityDto}
      */
@@ -98,6 +113,7 @@ public interface DhisWebService {
 
     /**
      * Attempts to create an enrollment in DHIS2 via an HTTP post request
+     *
      * @param enrollmentDto
      * @return a {@link org.motechproject.dhis2.rest.domain.DhisStatusResponse} indicating success or failure
      */
@@ -105,6 +121,7 @@ public interface DhisWebService {
 
     /**
      * Attempts to create a DHIS2 event in DHIS2 via an HTTP post request
+     *
      * @param event
      * @return a {@link org.motechproject.dhis2.rest.domain.DhisStatusResponse} indicating success or failure
      */
@@ -112,10 +129,21 @@ public interface DhisWebService {
 
     /**
      * Attempts to create a tracked entity instance in DHIS2 via an HTTP post request
+     *
      * @param trackedEntity
      * @returna {@link org.motechproject.dhis2.rest.domain.DhisStatusResponse} indicating success or failure
      */
     DhisStatusResponse createTrackedEntityInstance(TrackedEntityInstanceDto trackedEntity);
+
+
+
+    /**
+     * Attempts to send a data value set to DHIS2 via an HTTP post request.
+     *
+     * @param dataValueSetDto
+     * @return
+     */
+    DhisDataValueStatusResponse sendDataValueSet(DataValueSetDto dataValueSetDto);
 }
 
 
